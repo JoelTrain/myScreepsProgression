@@ -4,7 +4,7 @@ function isFull(type) {
     return false;
 }
 
-module.exports.roleSpawn = {
+const roleSpawn = {
     run: function(spawner) {
         if(spawner.spawning)
             return;
@@ -31,3 +31,4 @@ module.exports.roleSpawn = {
         console.log('Attempting to spawn creep of type', type.memory.role, `with name: ${creepName}`, '...' + string);
     },
 };
+module.exports = { roleSpawn };

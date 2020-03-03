@@ -41,4 +41,4 @@ const roleBuilder = {
     }  
 };
 
-module.exports = roleBuilder;
+module.exports = { roleBuilder };

@@ -1,13 +1,18 @@
-const roleHarvester = require('./roleHarvester');
-const roleUpgrader = require('./roleUpgrader');
-const roleBuilder = require('./roleBuilder');
+const { roleHarvester } = require('./roleHarvester');
+const { roleUpgrader } = require('./roleUpgrader');
+const { roleBuilder } = require('./roleBuilder');
 const { roleSpawn } = require('./roleSpawn');
 
 function loop() {
+    const time = Game.time;
     for(var i in Memory.creeps) {
-        if(!Game.creeps[i]) {
+        const creep = Game.creeps[i];
+        if(!creep) {
             delete Memory.creeps[i];
         }
+
+        if(creep.memory._move && time > creep.memory._move.time)
+            delete creep.memory._move;
     }
     for(const creepHash in Game.creeps){
         const creep = Game.creeps[creepHash];
@@ -73,10 +78,20 @@ function logCreepCounts(){
         'Upgrader count', countCreepsOfType(creepTypes.upgrader),
     );
 }
+
+function printEachActivity() {
+    for(const creepHash in Game.creeps){
+        const creep = Game.creeps[creepHash];
+        console.log(creep.id, creep.memory.role, creep.memory.activity);
+    }
+}
+
+
 global.workCarryMoveBody = workCarryMoveBody;
 global.creepTypes = creepTypes;
 global.totalCreepCount = totalCreepCount;
 global.countCreepsOfType = countCreepsOfType;
 global.logCreepCounts = logCreepCounts;
+global.printEachActivity = printEachActivity;
 
 module.exports.loop = loop;
