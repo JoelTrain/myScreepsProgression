@@ -9,6 +9,7 @@ function loop() {
         const creep = Game.creeps[i];
         if(!creep) {
             delete Memory.creeps[i];
+            continue;
         }
 
         if(creep.memory._move && time > creep.memory._move.time)
