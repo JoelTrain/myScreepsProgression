@@ -28,6 +28,15 @@ function changeActivity(creep, newActivity) {
     creep.memory.activity = newActivity;    
 }
 
+function changeActivityToRandomPickFromList(creep, activityList) {
+    if(!activityList.length) {
+        changeActivity(creep, 'default');
+    }
+
+    const index = Math.random() * activityList.length;
+    changeActivity(creep, activityList[index]);
+}
+
 function creepIsEmpty(creep) {
     return creep.store.getUsedCapacity() === 0;
 }
@@ -46,6 +55,9 @@ const roleHarvester = {
             changeActivity(creep, 'searching for source');
 
         this[creep.memory.activity](creep);
+    },
+    'default': function(creep) {
+        changeActivity(creep, 'searching for source');
     },
     'searching for source': function(creep) {
         if(creepIsFull(creep)) {
@@ -87,7 +99,7 @@ const roleHarvester = {
         // @TODO improve this
         const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
         if(!mySource) {
-            creep.memory.activity = 'searching for source';
+            changeActivity(creep, 'searching for source');
             return;
         }
         creep.harvest(mySource);
@@ -101,7 +113,7 @@ const roleHarvester = {
             targets = findMySpawnWithFreeSpace(creep);
         }
         if(targets.length === 0) {
-            changeActivity(creep, 'moving to controller');
+            changeActivity(creep, 'moving to build site');
             return;
         }
         const target = targets[0];
@@ -126,6 +138,39 @@ const roleHarvester = {
 
         if(creep.transfer(target, RESOURCE_ENERGY) === ERR_FULL){
             changeActivity(creep, 'moving to structures');
+        }
+    },
+    'moving to build site': function(creep) {
+        if(creep.memory._move)
+            return;
+        
+        let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+        if(!mySite) {
+            changeActivity(creep, 'moving to controller');
+            // @TODO add possibility to repair
+            return;
+        }
+        creep.memory.targetId = mySite.id;
+        if(creep.pos.inRangeTo(mySite, 3)) {
+            changeActivity(creep, 'building site');
+            return;
+        }
+        creep.moveTo(mySite, {visualizePathStyle: {} });
+    },
+    'building site': function(creep) {
+        if(creepIsEmpty(creep)) {
+            changeActivity(creep, 'searching for source');
+            return;
+        }
+
+        const target = Game.getObjectById(creep.memory.targetId);
+        if(!target) {
+            changeActivity(creep, 'moving to build site');
+            return;
+        }
+
+        if(creep.build(target) !== 0){
+            changeActivity(creep, 'moving to controller');
         }
     },
     'moving to controller': function(creep) {
