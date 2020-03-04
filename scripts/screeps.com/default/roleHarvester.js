@@ -1,3 +1,10 @@
+const { activitySetup, changeActivity } = require('./activity');
+const {
+    creepIsEmpty,
+    creepHasSpace, 
+    creepIsFull,
+} = require('./creepCommon');
+
 function findExtensionsWithFreeSpace(creep) {
     const extensions = creep.room.find(FIND_MY_STRUCTURES, {
         filter: (structure) => {
@@ -16,48 +23,18 @@ function findMySpawnWithFreeSpace(creep) {
     return spawns;
 }
 
-let callOuts = true;
-
-function changeActivity(creep, newActivity) {
-    if(creep.memory.activity === newActivity)
-        return;
-    
-    if(callOuts)
-        creep.say(newActivity);
-
-    creep.memory.activity = newActivity;    
-}
-
-function changeActivityToRandomPickFromList(creep, activityList) {
-    if(!activityList.length) {
-        changeActivity(creep, 'default');
-    }
-
-    const index = Math.random() * activityList.length;
-    changeActivity(creep, activityList[index]);
-}
-
-function creepIsEmpty(creep) {
-    return creep.store.getUsedCapacity() === 0;
-}
-
-function creepHasSpace(creep){
-    return creep.store.getFreeCapacity() > 0;
-}
-
-function creepIsFull(creep) {
-    return creep.store.getFreeCapacity() === 0;
-}
-
 const roleHarvester = {
     run: function(creep){
-        if(creep.memory.activity === undefined)
-            changeActivity(creep, 'searching for source');
+        activitySetup(creep);
 
+        if(!this[creep.memory.activity]) {
+            changeActivity(creep, 'default');
+        }
         this[creep.memory.activity](creep);
     },
     'default': function(creep) {
         changeActivity(creep, 'searching for source');
+        return;
     },
     'searching for source': function(creep) {
         if(creepIsFull(creep)) {
@@ -66,7 +43,6 @@ const roleHarvester = {
         }
         
         const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-        
         if(!mySource)
             return;
             
@@ -191,7 +167,12 @@ const roleHarvester = {
         }
 
         const controller = creep.room.controller;
-        creep.upgradeController(controller);
+        const result = creep.upgradeController(controller);
+
+        if(result !== OK){
+            changeActivity(creep, 'searching for source');
+            return;
+        }
     }
 };
 
