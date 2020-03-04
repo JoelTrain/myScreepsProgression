@@ -8,7 +8,7 @@ const roleBuilder = {
     run: function(creep){
         action = 'build';
         
-        const mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+        let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             
         const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
         if(!mySource)
