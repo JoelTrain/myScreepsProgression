@@ -1,3 +1,4 @@
+const { creepTypes } = require('./creepTypes');
 const { roleHarvester } = require('./roleHarvester');
 const { roleUpgrader } = require('./roleUpgrader');
 const { roleBuilder } = require('./roleBuilder');
@@ -32,26 +33,6 @@ function loop() {
         roleSpawn.run(spawn);
     }
 }
-
-let workCarryMoveBody = [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE];
-
-let creepTypes = {
-    harvester: {
-        body: workCarryMoveBody,
-        memory: { role: "harvester" },
-        maxCount: 8,
-    },
-    builder: {
-        body: workCarryMoveBody,
-        memory: { role: "builder" },
-        maxCount: 3,
-    },
-    upgrader: {
-        body: workCarryMoveBody,
-        memory: { role: "upgrader" },
-        maxCount: 0,
-    }
-};
 function totalCreepCount(){
     let count = 0;
     for(const creepHash in Game.creeps){
@@ -87,8 +68,6 @@ function printEachActivity() {
     }
 }
 
-
-global.workCarryMoveBody = workCarryMoveBody;
 global.creepTypes = creepTypes;
 global.totalCreepCount = totalCreepCount;
 global.countCreepsOfType = countCreepsOfType;
