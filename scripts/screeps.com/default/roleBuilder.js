@@ -1,15 +1,12 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('roleBuilder');
- * mod.thing == 'a thing'; // true
- */
+let action = 'build';
+
+function performAction(creep, arg) {
+    return creep[action](arg);
+} 
  
 const roleBuilder = {
     run: function(creep){
-        let action = creep.build;
+        action = 'build';
         
         const mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             
@@ -42,14 +39,10 @@ const roleBuilder = {
                 
                 targets.sort((a,b) => a.hits - b.hits);
                 mySite = targets[0];
-                action = creep.repair;
-                creep.moveTo(mySite, { visualizePathStyle: {} });
-                creep.repair(mySite);
+                action = 'repair';
             }
-            else {
-                creep.moveTo(mySite, { visualizePathStyle: {} });
-                creep.build(mySite);
-            }
+            creep.moveTo(mySite, { visualizePathStyle: {} });
+            performAction(creep, mySite);
         }
     }  
 };
