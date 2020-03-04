@@ -13,6 +13,15 @@ function findExtensionsWithFreeSpace(creep) {
     return extensions;
 }
 
+function findClosestExtensionWithFreeSpace(creep) {
+    const extension = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+        filter: (structure) => {
+            return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+        }
+    });
+    return extension;
+}
+
 function findMySpawnWithFreeSpace(creep) {
     const spawns = creep.room.find(FIND_MY_STRUCTURES, {
         filter: (structure) => {
@@ -77,15 +86,14 @@ const roleHarvester = {
         creep.harvest(mySource);
     },
     'moving to structures': function(creep) {
-        let targets = findExtensionsWithFreeSpace(creep);
-        if(targets.length === 0){
-            targets = findMySpawnWithFreeSpace(creep);
+        let target = findClosestExtensionWithFreeSpace(creep);
+        if(!target){
+            target = findMySpawnWithFreeSpace(creep)[0];
         }
-        if(targets.length === 0) {
+        if(!target) {
             changeActivity(creep, 'moving to build site');
             return;
         }
-        const target = targets[0];
         creep.memory.targetId = target.id;
         if(creep.pos.inRangeTo(target, 1)) {
             changeActivity(creep, 'transferring resources');
