@@ -1,50 +1,169 @@
-let action = 'build';
+const { pickRandomFromList } = require('./common');
 
-function performAction(creep, arg) {
-    return creep[action](arg);
-} 
+const {
+activitySetup,
+changeActivity, 
+changeActivityToRandomPickFromList,
+} = require('./activity');
+
+const {
+    creepIsEmpty,
+    creepHasSpace, 
+    creepIsFull,
+    clearTarget,
+} = require('./creepCommon');
  
 const roleBuilder = {
     run: function(creep){
-        action = 'build';
+        activitySetup(creep);
+
+        const activityFunc = this[creep.memory.activity];
+        if(!activityFunc) {
+            changeActivity(creep, 'default');
+        }
+        //console.log(creep.name, creep.memory.activity);
+        activityFunc(creep);
+    },
+    'default': function(creep) {
+        changeActivity(creep, 'searching for source');
+        return;
+    },
+    'searching for source': function(creep) {
+        clearTarget(creep);
+        if(creepIsFull(creep)) {
+            const nextActivity = pickRandomFromList(['moving to build site', 'searching for repair']);
+            //console.log(creep.name, nextActivity);
+            changeActivity(creep, nextActivity);
+            return;
+        }
         
-        let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-            
         const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
         if(!mySource)
             return;
+            
+        creep.moveTo(mySource, { visualizePathStyle: {} });
+        changeActivity(creep, 'moving to source');
+    },
+    'moving to source': function(creep) {
+        if(creep.memory._move)
+            return;
         
-        if(creep.store.getUsedCapacity() === 0) {
-            creep.moveTo(mySource, { visualizePathStyle: {} });
-            creep.harvest(mySource);
+        const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+    
+        if(!mySource) {
+            creep.memory.activity = 'searching for source';
+            return;
         }
-        if(creep.store.getFreeCapacity() > 0 && creep.store.getUsedCapacity() > 0) {
-            const harvestResult = creep.harvest(mySource);
-            if(harvestResult === 0)
-                return;
-            const buildResult = creep.build(mySite);
-            if(harvestResult === buildResult)
-                creep.moveTo(mySource, { visualizePathStyle: {} });
+        
+        if(creep.pos.inRangeTo(mySource, 1)) {
+            changeActivity(creep, 'harvesting from source');
+            return;
         }
-        if(creep.store.getFreeCapacity() === 0){
-            if(!mySite) {
-                const targets = creep.room.find(FIND_STRUCTURES, {
-                    filter: object => object.hits < object.hitsMax
-                });
-                
-                if(targets.length === 0) {
-                    creep.memory.role = 'harvester';
-                    return;
-                }
-                
-                targets.sort((a,b) => a.hits - b.hits);
-                mySite = targets[0];
-                action = 'repair';
-            }
-            creep.moveTo(mySite, { visualizePathStyle: {} });
-            performAction(creep, mySite);
+        creep.moveTo(mySource, { visualizePathStyle: {} });
+    },
+    'harvesting from source': function(creep) {
+        if(creepIsFull(creep)) {
+            changeActivityToRandomPickFromList(creep, ['moving to build site', 'searching for repair']);
+            return;
         }
-    }  
+
+        // @TODO improve this
+        const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+        if(!mySource) {
+            changeActivity(creep, 'searching for source');
+            return;
+        }
+        creep.harvest(mySource);
+    },
+    'moving to build site': function(creep) {
+        if(creep.memory._move)
+            return;
+        
+        let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+        if(!mySite) {
+            changeActivity(creep, 'searching for repair');
+            return;
+        }
+        creep.memory.targetId = mySite.id;
+        if(creep.pos.inRangeTo(mySite, 3)) {
+            changeActivity(creep, 'building site');
+            return;
+        }
+        creep.moveTo(mySite, {visualizePathStyle: {} });
+    },
+    'building site': function(creep) {
+        if(creepIsEmpty(creep)) {
+            changeActivity(creep, 'searching for source');
+            return;
+        }
+
+        const target = Game.getObjectById(creep.memory.targetId);
+        if(!target) {
+            changeActivity(creep, 'moving to build site');
+            return;
+        }
+
+        const buildResult = creep.build(target);
+        if(buildResult !== OK){
+            changeActivity(creep, 'searching for repair');
+        }
+    },
+    'searching for repair': function(creep) {
+        const targets = creep.room.find(FIND_STRUCTURES, {
+            filter: object => object.hits < object.hitsMax
+        });
+        
+        if(targets.length === 0) {
+            changeActivity(creep, 'searching for source');
+            return;
+        }
+        
+        targets.sort((a,b) => a.hits - b.hits);
+        const target = targets[0];
+
+        creep.memory.targetId = target.id;
+        changeActivity(creep, 'moving to repair');
+    },
+    'moving to repair': function(creep) {
+        const target = Game.getObjectById(creep.memory.targetId);
+        if(!target) {
+            console.log('could not find object by id', creep.memory.targetId, 'for creep', creep.name);
+            changeActivity(creep, 'searching for repair');
+            return;
+        }
+
+        if(target.hits === target.hitsMax) {
+            changeActivity(creep, 'searching for repair');
+            return;
+        }
+
+        if(creep.pos.inRangeTo(target, 3)) {
+            changeActivity(creep, 'repairing');
+            return;
+        }
+        
+        creep.moveTo(target, {visualizePathStyle: {} });
+    },
+    'repairing': function(creep) {
+        if(creepIsEmpty(creep)) {
+            changeActivity(creep, 'searching for source');
+            return;
+        }
+
+        const target = Game.getObjectById(creep.memory.targetId);
+        if(!target) {
+            console.log('could not find object by id', creep.memory.targetId, 'for creep', creep.name);
+            changeActivity(creep, 'searching for repair');
+            return;
+        }
+
+        if(target.hits === target.hitsMax) {
+            changeActivity(creep, 'searching for repair');
+            return;
+        }
+
+        creep.repair(target)
+    },
 };
 
 module.exports = { roleBuilder };
