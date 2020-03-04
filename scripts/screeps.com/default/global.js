@@ -1,4 +1,11 @@
 const { creepTypes } = require('./creepTypes');
+global.currentTimeString = function() {
+    const d = new Date();
+    const offset = (-6 * 60 * 60 * 1000);
+    const n = new Date(d.getTime() + offset).toTimeString();
+    
+    return n.replace('GMT+0000 (Coordinated Universal Time)', '');
+};
 
 global.totalCreepCount = function(){
     return Game.creeps.reduce((count) => count + 1);
