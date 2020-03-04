@@ -39,17 +39,17 @@ let creepTypes = {
     harvester: {
         body: workCarryMoveBody,
         memory: { role: "harvester" },
-        maxCount: 5,
+        maxCount: 8,
     },
     builder: {
         body: workCarryMoveBody,
         memory: { role: "builder" },
-        maxCount: 2,
+        maxCount: 3,
     },
     upgrader: {
         body: workCarryMoveBody,
         memory: { role: "upgrader" },
-        maxCount: 3,
+        maxCount: 0,
     }
 };
 function totalCreepCount(){

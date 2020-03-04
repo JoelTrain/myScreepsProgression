@@ -8,35 +8,48 @@
  */
  
 const roleBuilder = {
-    run: function(builder){
-        const mySite = builder.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+    run: function(creep){
+        let action = creep.build;
+        
+        const mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             
-        const mySource = builder.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+        const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
         if(!mySource)
             return;
         
-        if(builder.store.getUsedCapacity() === 0) {
-            builder.moveTo(mySource, { visualizePathStyle: {} });
-            builder.harvest(mySource);
+        if(creep.store.getUsedCapacity() === 0) {
+            creep.moveTo(mySource, { visualizePathStyle: {} });
+            creep.harvest(mySource);
         }
-        if(builder.store.getFreeCapacity() > 0 && builder.store.getUsedCapacity() > 0) {
-            const harvestResult = builder.harvest(mySource);
+        if(creep.store.getFreeCapacity() > 0 && creep.store.getUsedCapacity() > 0) {
+            const harvestResult = creep.harvest(mySource);
             if(harvestResult === 0)
                 return;
-            const buildResult = builder.build(mySite);
+            const buildResult = creep.build(mySite);
             if(harvestResult === buildResult)
-                builder.moveTo(mySource, { visualizePathStyle: {} });
+                creep.moveTo(mySource, { visualizePathStyle: {} });
         }
-        if(builder.store.getFreeCapacity() === 0){
+        if(creep.store.getFreeCapacity() === 0){
             if(!mySite) {
-                const controller = builder.room.controller;
-                builder.moveTo(controller, { visualizePathStyle: {} });
-                builder.upgradeController(controller);
-                return;
+                const targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: object => object.hits < object.hitsMax
+                });
+                
+                if(targets.length === 0) {
+                    creep.memory.role = 'harvester';
+                    return;
+                }
+                
+                targets.sort((a,b) => a.hits - b.hits);
+                mySite = targets[0];
+                action = creep.repair;
+                creep.moveTo(mySite, { visualizePathStyle: {} });
+                creep.repair(mySite);
             }
-            
-            builder.moveTo(mySite, { visualizePathStyle: {} });
-            builder.build(mySite);
+            else {
+                creep.moveTo(mySite, { visualizePathStyle: {} });
+                creep.build(mySite);
+            }
         }
     }  
 };

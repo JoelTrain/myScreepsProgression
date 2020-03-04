@@ -25,7 +25,7 @@ const roleSpawn = {
     },
     spawnType: function(spawner, type){
         const creepNumber = Math.floor(Math.random() * 10000);
-        const creepName = `creepA${creepNumber}`;
+        const creepName = `creep${creepNumber}`;
         const spawnResult = spawner.spawnCreep(type.body, creepName, { memory: type.memory } );
         const string = (spawnResult === 0) ? 'success' : `fail with code ${spawnResult}`;
         console.log('Attempting to spawn creep of type', type.memory.role, `with name: ${creepName}`, '...' + string);
