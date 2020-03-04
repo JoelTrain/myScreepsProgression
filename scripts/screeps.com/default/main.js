@@ -3,6 +3,8 @@ const { roleHarvester } = require('./roleHarvester');
 const { roleUpgrader } = require('./roleUpgrader');
 const { roleBuilder } = require('./roleBuilder');
 const { roleSpawn } = require('./roleSpawn');
+const { roleManual } = require('./roleManual');
+
 
 function loop() {
     const time = Game.time;
@@ -27,6 +29,9 @@ function loop() {
             
         if(creep.memory.role === 'upgrader')
             roleUpgrader.run(creep);
+            
+        if(creep.memory.role === 'manual')
+            roleManual.run(creep);
     }
     for(const spawnHash in Game.spawns){
         const spawn = Game.spawns[spawnHash];
