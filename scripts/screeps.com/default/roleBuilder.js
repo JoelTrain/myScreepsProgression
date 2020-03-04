@@ -44,9 +44,6 @@ const roleBuilder = {
         changeActivity(creep, 'moving to source');
     },
     'moving to source': function(creep) {
-        if(creep.memory._move)
-            return;
-        
         const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
     
         if(!mySource) {
@@ -75,9 +72,6 @@ const roleBuilder = {
         creep.harvest(mySource);
     },
     'moving to build site': function(creep) {
-        if(creep.memory._move)
-            return;
-        
         let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
         if(!mySite) {
             changeActivity(creep, 'searching for repair');

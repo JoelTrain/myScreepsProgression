@@ -7,16 +7,12 @@ const { roleSpawn } = require('./roleSpawn');
 
 function main() {
     try {
-        const time = Game.time;
         for(var i in Memory.creeps) {
             const creep = Game.creeps[i];
             if(!creep) {
                 delete Memory.creeps[i];
                 continue;
             }
-
-            if(creep.memory._move && time > creep.memory._move.time)
-                delete creep.memory._move;
         }
         for(const creepHash in Game.creeps){
             const creep = Game.creeps[creepHash];

@@ -49,9 +49,6 @@ const roleHarvester = {
         changeActivity(creep, 'moving to source');
     },
     'moving to source': function(creep) {
-        if(creep.memory._move)
-            return;
-        
         const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
     
         if(!mySource) {
@@ -80,9 +77,6 @@ const roleHarvester = {
         creep.harvest(mySource);
     },
     'moving to structures': function(creep) {
-        if(creep.memory._move)
-            return;
-
         let targets = findExtensionsWithFreeSpace(creep);
         if(targets.length === 0){
             targets = findMySpawnWithFreeSpace(creep);
@@ -115,10 +109,7 @@ const roleHarvester = {
             changeActivity(creep, 'moving to structures');
         }
     },
-    'moving to build site': function(creep) {
-        if(creep.memory._move)
-            return;
-        
+    'moving to build site': function(creep) {        
         let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
         if(!mySite) {
             changeActivity(creep, 'moving to controller');
@@ -149,9 +140,6 @@ const roleHarvester = {
         }
     },
     'moving to controller': function(creep) {
-        if(creep.memory._move)
-            return;
-
         const controller = creep.room.controller;
         if(creep.pos.inRangeTo(controller, 3)) {
             changeActivity(creep, 'upgrading controller');
