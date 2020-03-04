@@ -12,7 +12,8 @@ function spawnType(spawner, type) {
     const creepName = `creep${creepNumber}`;
     const spawnResult = spawner.spawnCreep(type.body, creepName, { memory: type.memory } );
     const string = (spawnResult === 0) ? 'success' : `fail with code ${spawnResult}`;
-    console.log('Attempting to spawn creep of type', type.memory.role, `with name: ${creepName}...${string}`);
+    const cost = bodyCost(type.body);
+    console.log(`Trying to spawn type:${type.memory.role}, cost:${cost}, name:${creepName}...${string}`);
     logCreepCounts();
 }
 
