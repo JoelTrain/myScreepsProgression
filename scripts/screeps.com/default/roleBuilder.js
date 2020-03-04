@@ -107,7 +107,7 @@ const roleBuilder = {
         });
         
         if(targets.length === 0) {
-            changeActivity(creep, 'searching for source');
+            changeActivity(creep, 'moving to controller');
             return;
         }
         
@@ -157,6 +157,28 @@ const roleBuilder = {
 
         creep.repair(target);
     },
+    'moving to controller': function(creep) {
+        const controller = creep.room.controller;
+        if(creep.pos.inRangeTo(controller, 3)) {
+            changeActivity(creep, 'upgrading controller');
+            return;
+        }
+        creep.moveTo(controller, { visualizePathStyle: {} });
+    },
+    'upgrading controller': function(creep) {
+        if(creepIsEmpty(creep)) {
+            changeActivity(creep, 'searching for source');
+            return;
+        }
+
+        const controller = creep.room.controller;
+        const result = creep.upgradeController(controller);
+
+        if(result !== OK){
+            changeActivity(creep, 'searching for source');
+            return;
+        }
+    }
 };
 
 module.exports = { roleBuilder };
