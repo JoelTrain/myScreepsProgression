@@ -35,7 +35,7 @@ const roleManual = {
 
         const failCode = creep.claimController(creep.room.controller);
         if(failCode) {
-            console.log("Failed with code", failCode);
+            console.log('Failed with code', failCode);
             changeActivity(creep, 'change to harvester');
         }
     },
@@ -43,6 +43,6 @@ const roleManual = {
         creep.memory.role = 'harvester';
         changeActivity(creep, 'default');
     },
-}
+};
 
 module.exports = { roleManual };

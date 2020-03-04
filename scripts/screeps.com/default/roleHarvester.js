@@ -1,7 +1,6 @@
 const { activitySetup, changeActivity } = require('./activity');
 const {
     creepIsEmpty,
-    creepHasSpace, 
     creepIsFull,
 } = require('./creepCommon');
 

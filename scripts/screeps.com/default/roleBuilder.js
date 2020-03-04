@@ -8,7 +8,6 @@ changeActivityToRandomPickFromList,
 
 const {
     creepIsEmpty,
-    creepHasSpace, 
     creepIsFull,
     clearTarget,
 } = require('./creepCommon');
@@ -162,7 +161,7 @@ const roleBuilder = {
             return;
         }
 
-        creep.repair(target)
+        creep.repair(target);
     },
 };
 

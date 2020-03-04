@@ -1,13 +1,8 @@
 const { creepTypes } = require('./creepTypes');
 
 global.totalCreepCount = function(){
-    let count = 0;
-    for(const creepHash in Game.creeps){
-        const creep = Game.creeps[creepHash];
-        count++;
-    }
-    return count;
-}
+    return Game.creeps.reduce((count) => count + 1);
+};
 
 global.updateCurrentCreepCounts = function() {
     for(const typeVal of Object.values(creepTypes)) {
@@ -18,7 +13,7 @@ global.updateCurrentCreepCounts = function() {
         const creep = Game.creeps[creepHash];
         creepTypes[creep.memory.role].currentCount++;
     }
-}
+};
 
 global.countCreepsOfType = function(type){
     let count = 0;
@@ -28,7 +23,7 @@ global.countCreepsOfType = function(type){
             count++;
     }
     return count;
-}
+};
 
 global.logCreepCounts = function(){
     updateCurrentCreepCounts();
@@ -36,11 +31,11 @@ global.logCreepCounts = function(){
     for(const type of Object.values(creepTypes)) {
         console.log(type.memory.role, `${type.currentCount}/${type.maxCount}`);
     }
-}
+};
 
 global.printEachActivity = function() {
     for(const creepHash in Game.creeps){
         const creep = Game.creeps[creepHash];
         console.log(creep.id, creep.memory.role, creep.memory.activity);
     }
-}
+};
