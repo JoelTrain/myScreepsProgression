@@ -1,12 +1,11 @@
-const { creepTypes } = require('./creepTypes');
+require('./global');
 const { roleHarvester } = require('./roleHarvester');
 const { roleUpgrader } = require('./roleUpgrader');
 const { roleBuilder } = require('./roleBuilder');
-const { roleSpawn } = require('./roleSpawn');
 const { roleManual } = require('./roleManual');
+const { roleSpawn } = require('./roleSpawn');
 
-
-function loop() {
+function main() {
     const time = Game.time;
     for(var i in Memory.creeps) {
         const creep = Game.creeps[i];
@@ -38,45 +37,5 @@ function loop() {
         roleSpawn.run(spawn);
     }
 }
-function totalCreepCount(){
-    let count = 0;
-    for(const creepHash in Game.creeps){
-        const creep = Game.creeps[creepHash];
-        count++;
-    }
-    return count;
-}
 
-function countCreepsOfType(type){
-    let count = 0;
-    for(const creepHash in Game.creeps){
-        const creep = Game.creeps[creepHash];
-        if(creep.memory.role === type.memory.role)
-            count++;
-    }
-    return count;
-}
-
-function logCreepCounts(){
-    console.log(
-        'Num creeps', totalCreepCount(), 
-        'Harvester count', countCreepsOfType(creepTypes.harvester),
-        'Builder count', countCreepsOfType(creepTypes.builder),
-        'Upgrader count', countCreepsOfType(creepTypes.upgrader),
-    );
-}
-
-function printEachActivity() {
-    for(const creepHash in Game.creeps){
-        const creep = Game.creeps[creepHash];
-        console.log(creep.id, creep.memory.role, creep.memory.activity);
-    }
-}
-
-global.creepTypes = creepTypes;
-global.totalCreepCount = totalCreepCount;
-global.countCreepsOfType = countCreepsOfType;
-global.logCreepCounts = logCreepCounts;
-global.printEachActivity = printEachActivity;
-
-module.exports.loop = loop;
+module.exports.loop = main;
