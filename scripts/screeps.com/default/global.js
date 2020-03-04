@@ -31,9 +31,10 @@ global.countCreepsOfType = function(type){
 }
 
 global.logCreepCounts = function(){
+    updateCurrentCreepCounts();
     console.log('Num creeps', Object.keys(Game.creeps).length);
     for(const type of Object.values(creepTypes)) {
-        console.log(type.memory.role, countCreepsOfType(type));
+        console.log(type.memory.role, `${type.currentCount}/${type.maxCount}`);
     }
 }
 

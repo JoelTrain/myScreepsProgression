@@ -1,0 +1,23 @@
+{
+  "name": "screeps",
+  "version": "1.0.0",
+  "description": "Playing the game screeps and each commit is further progress along.",
+  "main": "main.js",
+  "dependencies": {
+    "eslint": "^6.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoelTrain/myScreepsProgression.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoelTrain/myScreepsProgression/issues"
+  },
+  "homepage": "https://github.com/JoelTrain/myScreepsProgression#readme"
+}
