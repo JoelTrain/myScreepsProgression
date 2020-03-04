@@ -20,10 +20,19 @@ function bodyCost (body) {
     }, 0);
 }
 
+function roomCapacities() {
+    const returnArr = [];
+    for(const room of Object.values(Game.rooms)) {
+        returnArr.push(room.name, room.energyCapacityAvailable);
+    }
+    return returnArr
+}
+
 module.exports = {
     creepIsEmpty,
     creepHasSpace, 
     creepIsFull,
     clearTarget,
     bodyCost,
+    roomCapacities,
 };
