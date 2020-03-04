@@ -1,4 +1,9 @@
 const { creepTypes } = require('./creepTypes');
+const { bodyCost, roomCapacities } = require('./creepCommon');
+
+global.bodyCost = bodyCost;
+global.roomCapacities = roomCapacities;
+
 global.currentTimeString = function() {
     const d = new Date();
     const offset = (-6 * 60 * 60 * 1000);
@@ -8,7 +13,7 @@ global.currentTimeString = function() {
 };
 
 global.totalCreepCount = function(){
-    return Game.creeps.reduce((count) => count + 1);
+    return Object.keys(Game.creeps).length;
 };
 
 global.updateCurrentCreepCounts = function() {
