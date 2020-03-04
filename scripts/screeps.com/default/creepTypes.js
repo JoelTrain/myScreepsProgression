@@ -1,25 +1,25 @@
-let workCarryMoveBody = [WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE];
+let workCarryMoveBody = [WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE];
 
 const creepTypes = {
     harvester: {
         body: workCarryMoveBody,
-        memory: { role: "harvester" },
+        memory: { role: "harvester", activity: 'default' },
         maxCount: 8,
     },
     builder: {
         body: workCarryMoveBody,
-        memory: { role: "builder" },
-        maxCount: 5,
+        memory: { role: "builder", activity: 'default' },
+        maxCount: 3,
     },
     upgrader: {
         body: workCarryMoveBody,
-        memory: { role: "upgrader" },
-        maxCount: 0,
+        memory: { role: "upgrader", activity: 'default' },
+        maxCount: 3,
     },
     manual: {
-        body: workCarryMoveBody,
-        memory: { role: "manual" },
-        maxCount: 1,
+        body: [CLAIM, MOVE, MOVE, CARRY],
+        memory: { role: "manual", activity: 'default' },
+        maxCount: 0,
     },
 };
 
