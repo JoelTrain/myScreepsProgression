@@ -1,10 +1,5 @@
 const { pickRandomFromList } = require('./common');
-
-const {
-activitySetup,
-changeActivity, 
-changeActivityToRandomPickFromList,
-} = require('./activity');
+const { activity, changeActivity } = require('./activity');
 
 const {
     creepIsEmpty,
@@ -14,18 +9,16 @@ const {
  
 const roleBuilder = {
     run: function(creep){
-        activitySetup(creep);
-
-        const activityFunc = this[creep.memory.activity];
-        if(!activityFunc) {
-            changeActivity(creep, 'default');
+        if(this[creep.memory.activity]) {
+            this[creep.memory.activity](creep);
+            return;
         }
-        //console.log(creep.name, creep.memory.activity);
-        activityFunc(creep);
-    },
-    'default': function(creep) {
-        changeActivity(creep, 'searching for source');
-        return;
+        if(activity[creep.memory.activity]) {
+            activity[creep.memory.activity](creep);
+            return;
+        }
+
+        changeActivity(creep, 'default');
     },
     'searching for source': function(creep) {
         clearTarget(creep);
@@ -42,34 +35,6 @@ const roleBuilder = {
             
         creep.moveTo(mySource, { visualizePathStyle: {} });
         changeActivity(creep, 'moving to source');
-    },
-    'moving to source': function(creep) {
-        const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-    
-        if(!mySource) {
-            creep.memory.activity = 'searching for source';
-            return;
-        }
-        
-        if(creep.pos.inRangeTo(mySource, 1)) {
-            changeActivity(creep, 'harvesting from source');
-            return;
-        }
-        creep.moveTo(mySource, { visualizePathStyle: {} });
-    },
-    'harvesting from source': function(creep) {
-        if(creepIsFull(creep)) {
-            changeActivityToRandomPickFromList(creep, ['moving to build site', 'searching for repair']);
-            return;
-        }
-
-        // @TODO improve this
-        const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-        if(!mySource) {
-            changeActivity(creep, 'searching for source');
-            return;
-        }
-        creep.harvest(mySource);
     },
     'moving to build site': function(creep) {
         let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
