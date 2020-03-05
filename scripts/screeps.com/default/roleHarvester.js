@@ -1,17 +1,8 @@
-const { activitySetup, changeActivity } = require('./activity');
+const { activity, activitySetup, changeActivity } = require('./activity');
 const {
     creepIsEmpty,
     creepIsFull,
 } = require('./creepCommon');
-
-function findExtensionsWithFreeSpace(creep) {
-    const extensions = creep.room.find(FIND_MY_STRUCTURES, {
-        filter: (structure) => {
-            return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-        }
-    });
-    return extensions;
-}
 
 function findClosestExtensionWithFreeSpace(creep) {
     const extension = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
@@ -34,11 +25,16 @@ function findMySpawnWithFreeSpace(creep) {
 const roleHarvester = {
     run: function(creep){
         activitySetup(creep);
-
-        if(!this[creep.memory.activity]) {
-            changeActivity(creep, 'default');
+        if(this[creep.memory.activity]) {
+            this[creep.memory.activity](creep);
+            return;
         }
-        this[creep.memory.activity](creep);
+        if(activity[creep.memory.activity]) {
+            activity[creep.memory.activity](creep);
+            return;
+        }
+
+        changeActivity(creep, 'default');
     },
     'default': function(creep) {
         changeActivity(creep, 'searching for source');
@@ -73,7 +69,7 @@ const roleHarvester = {
     },
     'harvesting from source': function(creep) {
         if(creepIsFull(creep)) {
-            changeActivity(creep, 'moving to structures');
+            changeActivity(creep, creep.memory.whenFull);
             return;
         }
 
@@ -147,28 +143,6 @@ const roleHarvester = {
             changeActivity(creep, 'moving to controller');
         }
     },
-    'moving to controller': function(creep) {
-        const controller = creep.room.controller;
-        if(creep.pos.inRangeTo(controller, 3)) {
-            changeActivity(creep, 'upgrading controller');
-            return;
-        }
-        creep.moveTo(controller, { visualizePathStyle: {} });
-    },
-    'upgrading controller': function(creep) {
-        if(creepIsEmpty(creep)) {
-            changeActivity(creep, 'searching for source');
-            return;
-        }
-
-        const controller = creep.room.controller;
-        const result = creep.upgradeController(controller);
-
-        if(result !== OK){
-            changeActivity(creep, 'searching for source');
-            return;
-        }
-    }
 };
 
 module.exports = { roleHarvester };
