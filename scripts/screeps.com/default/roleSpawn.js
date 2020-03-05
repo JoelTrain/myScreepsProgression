@@ -1,5 +1,6 @@
 const { creepTypes } = require('./creepTypes');
 const { bodyCost } = require('./creepCommon');
+const { activitySetup } = require('./activity');
 
 function isFull(type) {
     if(countCreepsOfType(type) >= type.maxCount)
@@ -15,6 +16,13 @@ function spawnType(spawner, type) {
     const cost = bodyCost(type.body);
     console.log(`Trying to spawn type:${type.memory.role}, cost:${cost}, name:${creepName}...${string}`);
     logCreepCounts();
+    if(spawnResult === 0) {
+        const newestCreep = Game.creeps[creepName];
+        if(!newestCreep)
+            throw Error(`Well that's weird. I really thought ${creepName} spawned.`);
+        
+        activitySetup(newestCreep);
+    }
 }
 
 const roleSpawn = {
