@@ -33,8 +33,8 @@ const roleSpawn = {
         updateCurrentCreepCounts();
 
         typeVals.sort((a,b) => {
-            const aManningFraction = a.currentCount / a.maxCount;
-            const bManningFraction = b.currentCount / b.maxCount;
+            const aManningFraction = a.currentCount / Math.max(a.maxCount, 1);
+            const bManningFraction = b.currentCount / Math.max(b.maxCount, 1);
             return aManningFraction - bManningFraction;
         });
         const typeToBuild = typeVals[0];
