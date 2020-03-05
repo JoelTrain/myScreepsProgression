@@ -30,26 +30,32 @@ const roleSpawn = {
         if(spawner.spawning)
             return;
         
-        const currentEnergy = spawner.store[RESOURCE_ENERGY];
+        const currentEnergy = spawner.room.energyAvailable;
         if(currentEnergy < 300)
             return;
 
         const typeVals = Object.values(creepTypes);
         if(typeVals.length < 1)
             return;
-        
+            
         updateCurrentCreepCounts();
-
+        
         typeVals.sort((a,b) => {
-            const aManningFraction = a.currentCount / Math.max(a.maxCount, 1);
-            const bManningFraction = b.currentCount / Math.max(b.maxCount, 1);
+            if(a.maxCount === b.maxCount)
+                return 0;
+            if(a.maxCount === 0)
+                return 999999;
+            if(b.maxCount === 0)
+                return -999999;
+            const aManningFraction = a.currentCount / a.maxCount;
+            const bManningFraction = b.currentCount / b.maxCount;
             return aManningFraction - bManningFraction;
         });
         const typeToBuild = typeVals[0];
         if(isFull(typeToBuild))
             return;
-
-        if(currentEnergy < bodyCost)
+        
+        if(currentEnergy < bodyCost(typeToBuild.body))
             return;
         
         spawnType(spawner, typeToBuild);
