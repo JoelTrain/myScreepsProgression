@@ -23,7 +23,7 @@ function bodyCost (body) {
 function roomCapacities() {
     const returnArr = [];
     for(const room of Object.values(Game.rooms)) {
-        returnArr.push(room.name, room.energyCapacityAvailable);
+        returnArr.push(`${room.name} ${room.energyAvailable}/${room.energyCapacityAvailable}\n`);
     }
     return returnArr;
 }

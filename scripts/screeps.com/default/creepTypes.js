@@ -1,6 +1,17 @@
-let workCarryMoveBody = [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
+const basicBody = [WORK, CARRY, MOVE];
+const workCarryMoveBody = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
 
 const creepTypes = {
+    basic: {
+        body: basicBody,
+        memory: { 
+            role: 'basic', 
+            activity: 'default', 
+            whenFull: 'moving to structures',
+            whenEmpty: 'searching for source',
+        },
+        maxCount: 0,
+    },
     harvester: {
         body: workCarryMoveBody,
         memory: { 
