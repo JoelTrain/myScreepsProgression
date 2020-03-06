@@ -52,6 +52,23 @@ const activity = {
         changeActivity(creep, creep.memory.whenEmpty);
         return;
     },
+    'attack': function(creep) {
+      const attackMoveTarget = Game.flags['AttackMove'];
+      const targets = creep.room.find(FIND_HOSTILE_CREEPS, {
+        filter: function(object) {
+            return object.getActiveBodyparts(ATTACK) == 0;
+        }
+      });
+      const target = creep.pos.findClosestByPath(targets);
+      if(target) {
+        if(creep.attack(target) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(target);
+        }
+      }
+      if(attackMoveTarget){
+        creep.moveTo(attackMoveTarget, { visualizePathStyle: { stroke: 'red'} });
+      }
+    },
     'searching for source': function(creep) {
         if(creepIsFull(creep)) {
             changeActivity(creep, creep.memory.whenFull);

@@ -33,6 +33,7 @@ const dispatch = {
     builder: runBuilder,
     upgrader: roleUpgrader.run,
     basic: runCommon,
+    defender: runCommon,
 };
 
 function dispatchCreeps() {

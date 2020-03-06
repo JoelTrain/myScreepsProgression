@@ -10,6 +10,7 @@ const creepTypes = {
             whenFull: 'moving to structures',
             whenEmpty: 'searching for source',
         },
+        spawnDirections: [BOTTOM],
         maxCount: 0,
     },
     harvester: {
@@ -20,7 +21,19 @@ const creepTypes = {
             whenFull: 'moving to structures',
             whenEmpty: 'searching for source',
         },
+        spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
         maxCount: 8,
+    },
+    defender: {
+        body: [MOVE, ATTACK, ATTACK, TOUGH, TOUGH, TOUGH],
+        memory: { 
+            role: 'defender', 
+            activity: 'attack', 
+            whenFull: 'attack',
+            whenEmpty: 'attack',
+        },
+        spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
+        maxCount: 2,
     },
     builder: {
         body: workCarryMoveBody,
@@ -30,6 +43,7 @@ const creepTypes = {
             whenFull: 'moving to structures',
             whenEmpty: 'searching for source',
         },
+        spawnDirections: [BOTTOM],
         maxCount: 5,
     },
     upgrader: {
@@ -40,6 +54,7 @@ const creepTypes = {
             whenFull: 'moving to controller', 
             whenEmpty: 'searching for source',
         },
+        spawnDirections: [BOTTOM],
         maxCount: 3,
     },
     manual: {
@@ -50,6 +65,7 @@ const creepTypes = {
             whenFull: 'moving to controller', 
             whenEmpty: 'searching for source',
         },
+        spawnDirections: [BOTTOM],
         maxCount: 0,
     },
 };
