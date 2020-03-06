@@ -6,20 +6,18 @@ const {
     creepIsFull,
     clearTarget,
 } = require('./creepCommon');
- 
-const roleBuilder = {
-    run: function(creep){
+
+const builderOverrides = {
         if(this[creep.memory.activity]) {
             this[creep.memory.activity](creep);
             return;
         }
-        if(activity[creep.memory.activity]) {
+        else if(activity[creep.memory.activity]) {
             activity[creep.memory.activity](creep);
             return;
         }
 
         changeActivity(creep, 'default');
-    },
     'searching for source': function(creep) {
         clearTarget(creep);
         if(creepIsFull(creep)) {
@@ -122,28 +120,19 @@ const roleBuilder = {
 
         creep.repair(target);
     },
-    'moving to controller': function(creep) {
-        const controller = creep.room.controller;
-        if(creep.pos.inRangeTo(controller, 3)) {
-            changeActivity(creep, 'upgrading controller');
-            return;
-        }
-        creep.moveTo(controller, { visualizePathStyle: {} });
-    },
-    'upgrading controller': function(creep) {
-        if(creepIsEmpty(creep)) {
-            changeActivity(creep, 'searching for source');
-            return;
-        }
-
-        const controller = creep.room.controller;
-        const result = creep.upgradeController(controller);
-
-        if(result !== OK){
-            changeActivity(creep, 'searching for source');
-            return;
-        }
-    }
 };
+ 
+function runBuilder(creep) {
+    if(builderOverrides[creep.memory.activity]) {
+        builderOverrides[creep.memory.activity](creep);
+        return;
+    }
+    else if(activity[creep.memory.activity]) {
+        activity[creep.memory.activity](creep);
+        return;
+    }
 
-module.exports = { roleBuilder };
+    changeActivity(creep, 'default');
+}
+
+module.exports = { runBuilder };
