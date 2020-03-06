@@ -29,8 +29,8 @@ const roleSpawn = {
     run: function(spawner) {
         if(spawner.spawning)
             return;
-        
         const currentEnergy = spawner.room.energyAvailable;
+        //console.log(`Spawner energy ${currentEnergy}`);
         if(currentEnergy < 300)
             return;
 
@@ -40,26 +40,34 @@ const roleSpawn = {
             
         updateCurrentCreepCounts();
         
-        typeVals.sort((a,b) => {
-            if(a.maxCount === b.maxCount)
-                return 0;
-            if(a.maxCount === 0)
-                return 999999;
-            if(b.maxCount === 0)
-                return -999999;
-            const aManningFraction = a.currentCount / a.maxCount;
-            const bManningFraction = b.currentCount / b.maxCount;
-            return aManningFraction - bManningFraction;
-        });
-        const typeToBuild = typeVals[0];
-        if(isFull(typeToBuild))
+        //typeVals.sort((a,b) => {
+            // if(a.maxCount === b.maxCount)
+            //     return 0;
+            // if(a.maxCount === 0)
+            //     return 999999;
+            // if(b.maxCount === 0)
+            //     return -999999;
+            // const aManningFraction = a.currentCount / a.maxCount;
+            // const bManningFraction = b.currentCount / b.maxCount;
+            // return aManningFraction - bManningFraction;
+        //});
+        for(const typeToBuild of typeVals) {
+            //const typeToBuild = typeVals[0];
+            if(isFull(typeToBuild))
+                continue;
+            if(bodyCost(typeToBuild.body) > currentEnergy) 
+                break;
+            if(typeToBuild.memory.role === 'basic')
+                continue;
+            spawnType(spawner, typeToBuild);
             return;
-        
-        if(currentEnergy < bodyCost(typeToBuild.body))
-            return;
-        
-        spawnType(spawner, typeToBuild);
-        return;
+        }
+
+        if(totalCreepCount() <= 5) {
+            Game.notify('Uh oh we are making basic creeps at ' + currentTimeString());
+            console.log('Sending Email!');
+            spawnType(spawner, creepTypes.basic);
+        }
     },
 };
 module.exports = { roleSpawn };
