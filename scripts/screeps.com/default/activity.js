@@ -4,7 +4,7 @@ const {
     creepIsFull,
 } = require('./creepCommon');
 
-let callOuts = false;
+let callOuts = true;
 
 function activitySetup(creep) {
     if(creep.memory.activity === undefined)
@@ -74,6 +74,7 @@ const activity = {
         }
         
         if(creep.pos.inRangeTo(mySource, 1)) {
+            creep.harvest(mySource);
             changeActivity(creep, 'harvesting from source');
             return;
         }
@@ -91,21 +92,45 @@ const activity = {
             changeActivity(creep, 'searching for source');
             return;
         }
+        const freeSpace = creep.store.getFreeCapacity();
+        const willBeFull = creep.getActiveBodyparts(WORK) * 2 > freeSpace;
         creep.harvest(mySource);
+
+        if(willBeFull) {
+          console.log(creep.name + ' will be full');
+          changeActivity(creep, creep.memory.whenFull);
+          const deltaX = creep.pos.x - mySource.pos.x;
+          const deltaY = creep.pos.y - mySource.pos.y;
+
+          const adjacentPosX = creep.pos.x + deltaX;
+          const adjacentPosY = creep.pos.y + deltaY;
+
+          const oppositeDirectionFromSource = creep.pos.getDirectionTo(adjacentPosX, adjacentPosY);
+          const result = creep.move(oppositeDirectionFromSource);
+          console.log(creep.name, ' early move result:', result);
+          return;
+        }
     },
     'moving to structures': function(creep) {
         let target = findClosestExtensionWithFreeSpace(creep);
         if(!target){
-            target = findMySpawnWithFreeSpace(creep)[0];
+          target = findMySpawnWithFreeSpace(creep)[0];
         }
         if(!target) {
-            changeActivity(creep, 'moving to build site');
-            return;
+          changeActivity(creep, 'moving to build site');
+          return;
         }
         creep.memory.targetId = target.id;
+        if(creep.pos.inRangeTo(target, 2)) {
+          creep.moveTo(target, { visualizePathStyle: {} });
+          console.log(creep.name, 'early transfer result', creep.transfer(target, RESOURCE_ENERGY));
+          changeActivity(creep, 'transferring resources');
+          return;
+        }
         if(creep.pos.inRangeTo(target, 1)) {
-            changeActivity(creep, 'transferring resources');
-            return;
+          creep.transfer(target, RESOURCE_ENERGY);
+          changeActivity(creep, 'transferring resources');
+          return;
         }
         creep.moveTo(target, { visualizePathStyle: {} });
     },
@@ -121,7 +146,7 @@ const activity = {
             return;
         }
 
-        if(creep.transfer(target, RESOURCE_ENERGY) === ERR_FULL){
+        if(creep.transfer(target, RESOURCE_ENERGY)){
             changeActivity(creep, 'moving to structures');
         }
     },

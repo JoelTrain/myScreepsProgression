@@ -51,3 +51,9 @@ global.printEachActivity = function() {
         console.log(creep.id, creep.memory.role, creep.memory.activity);
     }
 };
+
+global.try = function() {
+    
+};
+
+global.errorMessage = '';

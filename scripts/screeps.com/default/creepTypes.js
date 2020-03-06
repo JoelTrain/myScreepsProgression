@@ -30,7 +30,7 @@ const creepTypes = {
             whenFull: 'moving to structures',
             whenEmpty: 'searching for source',
         },
-        maxCount: 3,
+        maxCount: 5,
     },
     upgrader: {
         body: workCarryMoveBody,

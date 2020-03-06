@@ -19,7 +19,12 @@ function freeOldMem() {
 
 function spawn() {
     for(const spawn of Object.values(Game.spawns)){
-        roleSpawn.run(spawn);
+        try {
+          roleSpawn.run(spawn);
+        }
+        catch (error) {
+          errorMessage += error.message;
+        }
     }
 }
 
@@ -32,20 +37,37 @@ const dispatch = {
 
 function dispatchCreeps() {
     for(const creep of Object.values(Game.creeps)){
-        dispatch[creep.memory.role](creep);
+        try {
+          dispatch[creep.memory.role](creep);
+        }
+        catch (error) {
+          errorMessage += error.message;
+        }
     }
 }
 
 function main() {
+    errorMessage = '';
     try {
         freeOldMem();
+    }
+    catch (error) {
+        errorMessage += error.message;
+    }
+    try {
         spawn();
+    }
+    catch (error) {
+        errorMessage += error.message;
+    }
+    try {
         dispatchCreeps();
     }
     catch (error) {
-        error.message = error.message.concat(' at time:', currentTimeString());
-        throw error;
+        errorMessage += error.message;
     }
+    if(errorMessage.length)
+        throw Error(errorMessage + ' at time:', currentTimeString());
 }
 
 module.exports.loop = main;

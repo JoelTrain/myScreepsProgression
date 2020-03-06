@@ -56,7 +56,7 @@ const builderOverrides = {
     },
     'searching for repair': function(creep) {
         const targets = creep.room.find(FIND_STRUCTURES, {
-            filter: object => object.structureType !== STRUCTURE_WALL && object.hits / object.hitsMax < 0.8
+            filter: object => object.structureType !== STRUCTURE_WALL && ((object.hits / object.hitsMax) < 0.8)
         });
         
         if(targets.length === 0) {
