@@ -1,4 +1,4 @@
-const basicBody = [WORK, CARRY, MOVE];
+const basicBody = [WORK, CARRY, MOVE, ATTACK];
 const workCarryMoveBody = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
 
 const creepTypes = {
@@ -22,10 +22,10 @@ const creepTypes = {
             whenEmpty: 'searching for source',
         },
         spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-        maxCount: 8,
+        maxCount: 6,
     },
     defender: {
-        body: [MOVE, ATTACK, ATTACK, TOUGH, TOUGH, TOUGH],
+        body: [MOVE, ATTACK, ATTACK, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE],
         memory: { 
             role: 'defender', 
             activity: 'attack', 
@@ -44,7 +44,7 @@ const creepTypes = {
             whenEmpty: 'searching for source',
         },
         spawnDirections: [BOTTOM],
-        maxCount: 5,
+        maxCount: 3,
     },
     upgrader: {
         body: workCarryMoveBody,
