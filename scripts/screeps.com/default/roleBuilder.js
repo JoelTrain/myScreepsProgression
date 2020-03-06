@@ -8,16 +8,6 @@ const {
 } = require('./creepCommon');
 
 const builderOverrides = {
-        if(this[creep.memory.activity]) {
-            this[creep.memory.activity](creep);
-            return;
-        }
-        else if(activity[creep.memory.activity]) {
-            activity[creep.memory.activity](creep);
-            return;
-        }
-
-        changeActivity(creep, 'default');
     'searching for source': function(creep) {
         clearTarget(creep);
         if(creepIsFull(creep)) {
