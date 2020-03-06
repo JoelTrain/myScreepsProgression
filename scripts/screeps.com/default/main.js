@@ -1,37 +1,46 @@
 require('./global');
-const { roleCommon } = require('./roleCommon');
+const { runCommon } = require('./roleCommon');
 const { roleUpgrader } = require('./roleUpgrader');
-const { roleBuilder } = require('./roleBuilder');
+const { runBuilder } = require('./roleBuilder');
 const { roleSpawn } = require('./roleSpawn');
 
+
+function freeOldMem() {
+    if(Object.keys(Game.creeps).length < 5)
+      Game.notify('low creeps!', 20);
+    for(var i in Memory.creeps) {
+        const creep = Game.creeps[i];
+        if(!creep) {
+            delete Memory.creeps[i];
+            continue;
+        }
+    }
+}
+
+function spawn() {
+    for(const spawn of Object.values(Game.spawns)){
+        roleSpawn.run(spawn);
+    }
+}
+
 const dispatch = {
-    harvester: roleCommon.run,
-    builder: roleBuilder.run,
+    harvester: runCommon,
+    builder: runBuilder,
     upgrader: roleUpgrader.run,
+    basic: runCommon,
 };
+
+function dispatchCreeps() {
+    for(const creep of Object.values(Game.creeps)){
+        dispatch[creep.memory.role](creep);
+    }
+}
 
 function main() {
     try {
-        for(var i in Memory.creeps) {
-            const creep = Game.creeps[i];
-            if(!creep) {
-                delete Memory.creeps[i];
-                continue;
-            }
-        }
-        for(const creepHash in Game.creeps){
-            const creep = Game.creeps[creepHash];
-            if(creep.memory.role === 'harvester')
-                roleCommon.run(creep);
-            if(creep.memory.role === 'builder')
-                roleBuilder.run(creep);
-            if(creep.memory.role === 'upgrader')
-                roleUpgrader.run(creep);
-        }
-        for(const spawnHash in Game.spawns){
-            const spawn = Game.spawns[spawnHash];
-            roleSpawn.run(spawn);
-        }
+        freeOldMem();
+        spawn();
+        dispatchCreeps();
     }
     catch (error) {
         error.message = error.message.concat(' at time:', currentTimeString());
