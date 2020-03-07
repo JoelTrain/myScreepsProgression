@@ -55,14 +55,15 @@ const activity = {
     'attack': function(creep) {
       const attackMoveTarget = Game.flags['AttackMove'];
       const targets = creep.room.find(FIND_HOSTILE_CREEPS, {
-        filter: function(object) {
-            return object.getActiveBodyparts(ATTACK) == 0;
-        }
+        //filter: function(object) {
+            //return object.getActiveBodyparts(ATTACK) > 0;
+        //}
       });
       const target = creep.pos.findClosestByPath(targets);
       if(target) {
         if(creep.attack(target) == ERR_NOT_IN_RANGE) {
           creep.moveTo(target);
+          return;
         }
       }
       if(attackMoveTarget){
