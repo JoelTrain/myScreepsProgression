@@ -25,7 +25,7 @@ const creepTypes = {
         maxCount: 6,
     },
     defender: {
-        body: [MOVE, ATTACK, ATTACK, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE],
+        body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK],
         memory: { 
             role: 'defender', 
             activity: 'attack', 
