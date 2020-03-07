@@ -32,7 +32,7 @@ function changeActivityToRandomPickFromList(creep, activityList) {
 function findClosestExtensionWithFreeSpace(creep) {
     const extension = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
         filter: (structure) => {
-            return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+            return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
         }
     });
     return extension;
