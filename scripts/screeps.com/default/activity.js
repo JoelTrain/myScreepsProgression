@@ -12,7 +12,7 @@ function activitySetup(creep) {
   if (creep.memory.whenEmpty === undefined)
     creep.memory.whenEmpty = 'pickup';
   if (creep.memory.whenFull === undefined)
-    creep.memory.whenFull = 'moving to controller';
+    creep.memory.whenFull = 'upgrading controller';
 }
 
 function changeActivity(creep, newActivity) {
@@ -68,13 +68,16 @@ const activity = {
       changeActivity(creep, creep.memory.whenFull);
     }
 
-    let targets = creep.room.find(FIND_DROPPED_RESOURCES);
-    let target = creep.pos.findClosestByPath(targets);
+    let target = creep.pos.findClosestByPath(FIND_TOMBSTONES, {
+      filter: function (object) {
+        return object.store.getUsedCapacity() > 0;
+      }
+    });
 
     if (!target) {
-      target = creep.pos.findClosestByPath(FIND_TOMBSTONES, {
+      target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: function (object) {
-          return object.store.getUsedCapacity() > 0;
+          return object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= 100;
         }
       });
     }
@@ -88,11 +91,8 @@ const activity = {
     }
 
     if (!target) {
-      target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        filter: function (object) {
-          return object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= 100;
-        }
-      });
+      let targets = creep.room.find(FIND_DROPPED_RESOURCES);
+      target = creep.pos.findClosestByPath(targets);
     }
 
     if (!target) {
@@ -121,8 +121,14 @@ const activity = {
       creep.moveTo(spot, { visualizePathStyle: {}, ignoreCreeps: true });
       return;
     }
-
-
+    const source = creep.pos.findClosestByPath(FIND_SOURCES);
+    creep.moveTo(source, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' }, ignoreCreeps: true });
+  },
+  'move to rally point': function (creep) {
+    const rallyTarget = Game.flags[creep.memory.rallyPoint];
+    if (rallyTarget) {
+      creep.moveTo(rallyTarget, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
+    }
   },
   'attack': function (creep) {
     {
@@ -245,6 +251,13 @@ const activity = {
       target = findMySpawnWithFreeSpace(creep)[0];
     }
     if (!target) {
+      target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        filter: function (object) {
+          return object.structureType === STRUCTURE_STORAGE && object.store.getFreeCapacity() > creep.store.getUsedCapacity();
+        }
+      });
+    }
+    if (!target) {
       changeActivity(creep, 'moving to build site');
       return;
     }
@@ -275,7 +288,7 @@ const activity = {
   'moving to build site': function (creep) {
     let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
     if (!mySite) {
-      changeActivity(creep, 'moving to controller');
+      changeActivity(creep, 'upgrading controller');
       // @TODO add possibility to repair
       return;
     }
@@ -299,16 +312,8 @@ const activity = {
     }
 
     if (creep.build(target) !== 0) {
-      changeActivity(creep, 'moving to controller');
-    }
-  },
-  'moving to controller': function (creep) {
-    const controller = creep.room.controller;
-    if (creep.pos.inRangeTo(controller, 3)) {
       changeActivity(creep, 'upgrading controller');
-      return;
     }
-    creep.moveTo(controller, { visualizePathStyle: {} });
   },
   'upgrading controller': function (creep) {
     if (creepIsEmpty(creep)) {
@@ -317,12 +322,16 @@ const activity = {
     }
 
     const controller = creep.room.controller;
-    const result = creep.upgradeController(controller);
+    if (creep.pos.inRangeTo(controller, 3)) {
+      const result = creep.upgradeController(controller);
 
-    if (result !== OK) {
-      changeActivity(creep, 'default');
+      if (result !== OK) {
+        changeActivity(creep, 'default');
+      }
       return;
     }
+
+    creep.moveTo(controller, { visualizePathStyle: {}, ignoreCreeps: true });
   }
 };
 

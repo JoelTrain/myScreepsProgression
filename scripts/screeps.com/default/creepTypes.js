@@ -1,5 +1,5 @@
 const basicBody = [WORK, CARRY, MOVE, ATTACK];
-const workCarryMoveBody = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
+const workCarryMoveBody = [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
 
 const creepTypes = {
   basic: {
@@ -22,7 +22,7 @@ const creepTypes = {
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 3,
+    maxCount: 6,
   },
   heavyHarvester: {
     body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE],
@@ -64,29 +64,29 @@ const creepTypes = {
     memory: {
       role: 'builder',
       activity: 'default',
-      whenFull: 'moving to structures',
+      whenFull: 'building site',
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM],
-    maxCount: 3,
+    maxCount: 6,
   },
   upgrader: {
     body: workCarryMoveBody,
     memory: {
       role: 'upgrader',
       activity: 'default',
-      whenFull: 'moving to controller',
+      whenFull: 'upgrading controller',
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM],
-    maxCount: 3,
+    maxCount: 4,
   },
   manual: {
     body: [CLAIM, MOVE, MOVE, MOVE, WORK, CARRY],
     memory: {
       role: 'manual',
       activity: 'default',
-      whenFull: 'moving to controller',
+      whenFull: 'upgrading controller',
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM],

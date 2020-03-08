@@ -63,7 +63,7 @@ function runSpawn(spawner) {
   }
 
   if (totalCreepCount() <= 5) {
-    Game.notify('Uh oh we are making basic creeps at ' + currentTimeString());
+    Game.notify('Uh oh we are making basic creeps at ' + currentTimeString(), 120);
     console.log('Sending Email!');
     spawnType(spawner, creepTypes.basic);
   }

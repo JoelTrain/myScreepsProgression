@@ -7,7 +7,7 @@ const { runSpawn } = require('./roleSpawn');
 
 function freeOldMem() {
   if (Object.keys(Game.creeps).length < 5)
-    Game.notify('low creeps!', 20);
+    Game.notify('low creeps!', 120);
   for (var i in Memory.creeps) {
     const creep = Game.creeps[i];
     if (!creep) {
@@ -51,7 +51,7 @@ const dispatch = {
   heavyHarvester: runCommon,
   harvester: runCommon,
   builder: runBuilder,
-  upgrader: roleUpgrader.run,
+  upgrader: runCommon,
   basic: runCommon,
   defender: runCommon,
   attacker: runCommon,

@@ -8,51 +8,35 @@ const {
 } = require('./creepCommon');
 
 const builderOverrides = {
-  'searching for source': function (creep) {
-    clearTarget(creep);
-    if (creepIsFull(creep)) {
-      const nextActivity = pickRandomFromList(['moving to build site', 'searching for repair']);
-      //console.log(creep.name, nextActivity);
-      changeActivity(creep, nextActivity);
-      return;
-    }
-
-    const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-    if (!mySource)
-      return;
-
-    creep.moveTo(mySource, { visualizePathStyle: {} });
-    changeActivity(creep, 'moving to source');
-  },
-  'moving to build site': function (creep) {
-    let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-    if (!mySite) {
-      changeActivity(creep, 'searching for repair');
-      return;
-    }
-    creep.memory.targetId = mySite.id;
-    if (creep.pos.inRangeTo(mySite, 3)) {
-      changeActivity(creep, 'building site');
-      return;
-    }
-    creep.moveTo(mySite, { visualizePathStyle: {} });
-  },
+  'moving to build site': this['building site'],
   'building site': function (creep) {
     if (creepIsEmpty(creep)) {
-      changeActivity(creep, 'searching for source');
+      changeActivity(creep, creep.memory.whenEmpty);
       return;
     }
 
-    const target = Game.getObjectById(creep.memory.targetId);
+    let target = Game.getObjectById(creep.memory.targetId);
     if (!target) {
-      changeActivity(creep, 'moving to build site');
+      target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+    }
+    if (!target) {
+      clearTarget(creep);
+      changeActivity(creep, 'searching for repair');
       return;
     }
 
-    const buildResult = creep.build(target);
-    if (buildResult !== OK) {
-      changeActivity(creep, 'searching for repair');
+    creep.memory.targetId = target.id;
+
+    if (creep.pos.inRangeTo(target, 3)) {
+      const buildResult = creep.build(target);
+      if (buildResult !== OK) {
+        changeActivity(creep, 'searching for repair');
+      }
+      return;
     }
+
+    creep.moveTo(target, { visualizePathStyle: {}, ignoreCreeps: true });
+    return;
   },
   'searching for repair': function (creep) {
     const targets = creep.room.find(FIND_STRUCTURES, {
@@ -60,7 +44,7 @@ const builderOverrides = {
     });
 
     if (targets.length === 0) {
-      changeActivity(creep, 'moving to controller');
+      changeActivity(creep, 'upgrading controller');
       return;
     }
 
@@ -92,7 +76,7 @@ const builderOverrides = {
   },
   'repairing': function (creep) {
     if (creepIsEmpty(creep)) {
-      changeActivity(creep, 'searching for source');
+      changeActivity(creep, creep.memory.whenEmpty);
       return;
     }
 
