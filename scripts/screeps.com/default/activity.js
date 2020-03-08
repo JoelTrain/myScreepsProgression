@@ -29,7 +29,7 @@ function changeActivityToRandomPickFromList(creep, activityList) {
   changeActivity(creep, pickRandomFromList(activityList));
 }
 
-function findExtensionWithFreeSpace(creep) {
+function findExtensionsWithFreeSpace(creep) {
   const extensions = creep.room.find(FIND_MY_STRUCTURES, {
     filter: (structure) => {
       return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -57,12 +57,12 @@ function findStorageWithFreeSpace(creep) {
 }
 
 function findTransferTargets(creep) {
-  let targets;
+  let targets = [];
   if (!targets.length)
-    targets = findExtensionWithFreeSpace(creep);
+    targets = findExtensionsWithFreeSpace(creep);
   if (!targets.length)
     targets = findMySpawnsWithFreeSpace(creep);
-  if (!target.length)
+  if (!targets.length)
     targets = findStorageWithFreeSpace(creep);
 
   return targets;
@@ -270,7 +270,6 @@ const activity = {
       return;
     }
   },
-  'moving to structures': this['transferring'],
   'transferring': function (creep) {
     if (creepIsEmpty(creep)) {
       changeActivity(creep, creep.memory.whenEmpty);
@@ -286,6 +285,8 @@ const activity = {
     }
 
     let target = creep.pos.findClosestByPath(targets);
+    if (!target)
+      return;
 
     creep.memory.targetId = target.id;
     if (creep.pos.inRangeTo(target, 1)) {
