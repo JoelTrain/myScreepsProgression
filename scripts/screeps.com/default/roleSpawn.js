@@ -33,6 +33,17 @@ function runSpawn(spawner) {
   if (currentEnergy < 200)
     return;
 
+  const enemiesExistInRoom = spawner.room.find(FIND_HOSTILE_CREEPS, {
+    filter: function (object) {
+      return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
+    }
+  }).length;
+
+  if (enemiesExistInRoom)
+    creepTypes.defender.maxCount = 10;
+  else
+    creepTypes.defender.maxCount = 0;
+
   const typeVals = Object.values(creepTypes);
   if (typeVals.length < 1)
     return;

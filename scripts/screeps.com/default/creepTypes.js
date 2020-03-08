@@ -7,33 +7,11 @@ const creepTypes = {
     memory: {
       role: 'basic',
       activity: 'default',
-      whenFull: 'moving to structures',
+      whenFull: 'transferring',
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM],
     maxCount: 0,
-  },
-  harvester: {
-    body: workCarryMoveBody,
-    memory: {
-      role: 'harvester',
-      activity: 'default',
-      whenFull: 'moving to structures',
-      whenEmpty: 'pickup',
-    },
-    spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 6,
-  },
-  heavyHarvester: {
-    body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE],
-    memory: {
-      role: 'heavyHarvester',
-      activity: 'harvest in place',
-      whenFull: 'harvest in place',
-      whenEmpty: 'harvest in place',
-    },
-    spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 6,
   },
   defender: {
     body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK, MOVE],
@@ -46,6 +24,28 @@ const creepTypes = {
     },
     spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
     maxCount: 0,
+  },
+  harvester: {
+    body: workCarryMoveBody,
+    memory: {
+      role: 'harvester',
+      activity: 'default',
+      whenFull: 'transferring',
+      whenEmpty: 'pickup',
+    },
+    spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
+    maxCount: 4,
+  },
+  heavyHarvester: {
+    body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE],
+    memory: {
+      role: 'heavyHarvester',
+      activity: 'harvest in place',
+      whenFull: 'harvest in place',
+      whenEmpty: 'harvest in place',
+    },
+    spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
+    maxCount: 5,
   },
   attacker: {
     body: [TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK],
@@ -68,7 +68,7 @@ const creepTypes = {
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM],
-    maxCount: 6,
+    maxCount: 2,
   },
   upgrader: {
     body: workCarryMoveBody,

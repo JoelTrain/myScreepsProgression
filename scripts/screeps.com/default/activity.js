@@ -29,16 +29,16 @@ function changeActivityToRandomPickFromList(creep, activityList) {
   changeActivity(creep, pickRandomFromList(activityList));
 }
 
-function findClosestExtensionWithFreeSpace(creep) {
-  const extension = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+function findExtensionWithFreeSpace(creep) {
+  const extensions = creep.room.find(FIND_MY_STRUCTURES, {
     filter: (structure) => {
       return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
     }
   });
-  return extension;
+  return extensions;
 }
 
-function findMySpawnWithFreeSpace(creep) {
+function findMySpawnsWithFreeSpace(creep) {
   const spawns = creep.room.find(FIND_MY_STRUCTURES, {
     filter: (structure) => {
       return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -47,17 +47,34 @@ function findMySpawnWithFreeSpace(creep) {
   return spawns;
 }
 
+function findStorageWithFreeSpace(creep) {
+  const storage = creep.room.find(FIND_STRUCTURES, {
+    filter: function (object) {
+      return object.structureType === STRUCTURE_STORAGE && object.store.getFreeCapacity() > creep.store.getUsedCapacity();
+    }
+  });
+  return storage;
+}
+
+function findTransferTargets(creep) {
+  let targets;
+  if (!targets.length)
+    targets = findExtensionWithFreeSpace(creep);
+  if (!targets.length)
+    targets = findMySpawnsWithFreeSpace(creep);
+  if (!target.length)
+    targets = findStorageWithFreeSpace(creep);
+
+  return targets;
+}
+
 const activity = {
   'default': function (creep) {
     changeActivity(creep, creep.memory.whenEmpty);
     return;
   },
   'tower attack': function (tower) {
-    const targets = tower.room.find(FIND_HOSTILE_CREEPS, {
-      filter: function (object) {
-        return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
-      }
-    });
+    const targets = tower.room.find(FIND_HOSTILE_CREEPS);
     const target = tower.pos.findClosestByRange(targets);
     if (target) {
       tower.attack(target);
@@ -117,7 +134,7 @@ const activity = {
       }
     }
 
-    const spot = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+    const spot = creep.pos.findClosestByRange(FIND_STRUCTURES, {
       filter: function (object) {
         return object.structureType === STRUCTURE_CONTAINER && object.pos.lookFor(LOOK_CREEPS).length === 0;
       }
@@ -253,45 +270,35 @@ const activity = {
       return;
     }
   },
-  'moving to structures': function (creep) {
-    let target = findClosestExtensionWithFreeSpace(creep);
-    if (!target) {
-      target = findMySpawnWithFreeSpace(creep)[0];
-    }
-    if (!target) {
-      target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        filter: function (object) {
-          return object.structureType === STRUCTURE_STORAGE && object.store.getFreeCapacity() > creep.store.getUsedCapacity();
-        }
-      });
-    }
-    if (!target) {
-      changeActivity(creep, 'moving to build site');
-      return;
-    }
-    creep.memory.targetId = target.id;
-    if (creep.pos.inRangeTo(target, 1)) {
-      creep.transfer(target, RESOURCE_ENERGY);
-      changeActivity(creep, 'transferring resources');
-      return;
-    }
-    creep.moveTo(target, { visualizePathStyle: {} });
-  },
-  'transferring resources': function (creep) {
+  'moving to structures': this['transferring'],
+  'transferring': function (creep) {
     if (creepIsEmpty(creep)) {
       changeActivity(creep, creep.memory.whenEmpty);
       return;
     }
 
-    const target = Game.getObjectById(creep.memory.targetId);
-    if (!target) {
-      changeActivity(creep, 'moving to structures');
+    let targets;
+    targets = findTransferTargets(creep);
+
+    if (!targets.length) {
+      changeActivity(creep, 'moving to build site');
       return;
     }
 
-    if (creep.transfer(target, RESOURCE_ENERGY)) {
-      changeActivity(creep, 'moving to structures');
+    let target = creep.pos.findClosestByPath(targets);
+
+    creep.memory.targetId = target.id;
+    if (creep.pos.inRangeTo(target, 1)) {
+      creep.transfer(target, RESOURCE_ENERGY);
+
+      const pos = targets.indexOf(target);
+      if (pos > -1) {
+        targets.splice(pos, 1);
+        target = creep.pos.findClosestByPath(targets);
+      }
     }
+
+    creep.moveTo(target, { visualizePathStyle: {} });
   },
   'moving to build site': function (creep) {
     let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
@@ -329,7 +336,16 @@ const activity = {
       return;
     }
 
-    const controller = creep.room.controller;
+    let controller = creep.room.controller;
+    if (!controller.my) {
+      for (const room of Object.values(Game.rooms)) {
+        if (room.controller.my) {
+          controller = room.controller;
+          break;
+        }
+      }
+    }
+
     if (creep.pos.inRangeTo(controller, 3)) {
       const result = creep.upgradeController(controller);
 
