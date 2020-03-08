@@ -48,6 +48,7 @@ function towers() {
 }
 
 const dispatch = {
+  heavyHarvester: runCommon,
   harvester: runCommon,
   builder: runBuilder,
   upgrader: roleUpgrader.run,

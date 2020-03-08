@@ -10,7 +10,7 @@ function activitySetup(creep) {
   if (creep.memory.activity === undefined)
     creep.memory.activity = 'default';
   if (creep.memory.whenEmpty === undefined)
-    creep.memory.whenEmpty = 'searching for source';
+    creep.memory.whenEmpty = 'pickup';
   if (creep.memory.whenFull === undefined)
     creep.memory.whenFull = 'moving to controller';
 }
@@ -63,6 +63,47 @@ const activity = {
       tower.attack(target);
     }
   },
+  'pickup': function (creep) {
+    if (creepIsFull(creep)) {
+      changeActivity(creep, creep.memory.whenFull);
+    }
+
+    let targets = creep.room.find(FIND_DROPPED_RESOURCES);
+    let target = creep.pos.findClosestByPath(targets);
+
+    if (!target) {
+      target = creep.pos.findClosestByPath(FIND_TOMBSTONES, {
+        filter: function (object) {
+          return object.store.getUsedCapacity() > 0;
+        }
+      });
+    }
+
+    if (!target) {
+      target = creep.pos.findClosestByPath(FIND_RUINS, {
+        filter: function (object) {
+          return object.store.getUsedCapacity() > 0;
+        }
+      });
+    }
+
+    if (!target) {
+      target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        filter: function (object) {
+          return object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= 100;
+        }
+      });
+    }
+
+    if (!target) {
+      changeActivity(creep, 'searching for source');
+      return;
+    }
+
+    creep.moveTo(target, { visualizePathStyle: {} });
+    creep.pickup(target);
+    creep.withdraw(target, RESOURCE_ENERGY);
+  },
   'harvest in place': function (creep) {
     const harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
     if (harvestTarget) {
@@ -77,9 +118,11 @@ const activity = {
     });
 
     if (spot) {
-      console.log(spot);
-      creep.moveTo(spot, { visualizePathStyle: {} });
+      creep.moveTo(spot, { visualizePathStyle: {}, ignoreCreeps: true });
+      return;
     }
+
+
   },
   'attack': function (creep) {
     {

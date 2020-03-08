@@ -22,6 +22,12 @@ global.totalCreepCount = function () {
   return Object.keys(Game.creeps).length;
 };
 
+global.changeAllWhenEmpty = function (newTask) {
+  for (const creep of Object.values(Game.creeps)) {
+    creep.memory.whenEmpty = newTask;
+  }
+}
+
 global.creepsCounted = false;
 global.updateCurrentCreepCounts = function () {
   if (creepsCounted)
