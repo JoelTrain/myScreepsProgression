@@ -22,8 +22,8 @@ function spawns() {
       runSpawn(spawn);
     }
     catch (error) {
-      errorMessage += error.message;
-      errorMessage += error.stack;
+      //errorMessage += error.message;
+      errorMessage += error.stack + '\n';
     }
   }
 }
@@ -40,8 +40,8 @@ function towers() {
       runCommon(tower);
     }
     catch (error) {
-      errorMessage += error.message;
-      errorMessage += error.stack;
+      //errorMessage += error.message;
+      errorMessage += error.stack + '\n';
     }
   }
 }
@@ -54,6 +54,7 @@ const dispatch = {
   basic: runCommon,
   defender: runCommon,
   attacker: runCommon,
+  carrier: runCommon,
 };
 
 function dispatchCreeps() {
@@ -62,8 +63,8 @@ function dispatchCreeps() {
       dispatch[creep.memory.role](creep);
     }
     catch (error) {
-      errorMessage += error.message;
-      errorMessage += error.stack;
+      //errorMessage += error.message;
+      errorMessage += error.stack + '\n';
     }
   }
 }
@@ -71,35 +72,36 @@ function dispatchCreeps() {
 function main() {
   errorMessage = '';
   try {
+    creepsCounted = false;
     freeOldMem();
   }
   catch (error) {
-    errorMessage += error.message;
-    errorMessage += error.stack;
+    //errorMessage += error.message;
+    errorMessage += error.stack + '\n';
   }
   try {
     spawns();
   }
   catch (error) {
-    errorMessage += error.message;
-    errorMessage += error.stack;
+    //errorMessage += error.message;
+    errorMessage += error.stack + '\n';
   }
   try {
     towers();
   }
   catch (error) {
-    errorMessage += error.message;
-    errorMessage += error.stack;
+    //errorMessage += error.message;
+    errorMessage += error.stack + '\n';
   }
   try {
     dispatchCreeps();
   }
   catch (error) {
-    errorMessage += error.message;
-    errorMessage += error.stack;
+    //errorMessage += error.message;
+    errorMessage += error.stack + '\n';
   }
   if (errorMessage.length)
-    throw Error(errorMessage + ' at time:', currentTimeString());
+    throw Error(`At time: ${currentTimeString()} ${errorMessage}`);
 }
 
 module.exports.loop = main;

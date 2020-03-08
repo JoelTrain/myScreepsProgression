@@ -1,4 +1,4 @@
-const basicBody = [WORK, CARRY, MOVE, ATTACK];
+const basicBody = [WORK, CARRY, MOVE];
 const workCarryMoveBody = [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
 
 const creepTypes = {
@@ -24,6 +24,17 @@ const creepTypes = {
     },
     spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
     maxCount: 0,
+  },
+  carrier: {
+    body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+    memory: {
+      role: 'carrier',
+      activity: 'pickup',
+      whenFull: 'transferring',
+      whenEmpty: 'pickup',
+    },
+    spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
+    maxCount: 2,
   },
   harvester: {
     body: workCarryMoveBody,
