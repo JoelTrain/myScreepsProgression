@@ -2,7 +2,7 @@ require('./global');
 const { runCommon } = require('./roleCommon');
 const { roleUpgrader } = require('./roleUpgrader');
 const { runBuilder } = require('./roleBuilder');
-const { roleSpawn } = require('./roleSpawn');
+const { runSpawn } = require('./roleSpawn');
 
 
 function freeOldMem() {
@@ -20,7 +20,7 @@ function freeOldMem() {
 function spawn() {
     for(const spawn of Object.values(Game.spawns)){
         try {
-          roleSpawn.run(spawn);
+          runSpawn(spawn);
         }
         catch (error) {
           errorMessage += error.message;
