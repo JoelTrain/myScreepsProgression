@@ -25,7 +25,7 @@ const creepTypes = {
     maxCount: 6,
   },
   defender: {
-    body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK],
+    body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK, MOVE],
     memory: {
       role: 'defender',
       activity: 'attack',
@@ -33,7 +33,7 @@ const creepTypes = {
       whenEmpty: 'attack',
     },
     spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
-    maxCount: 2,
+    maxCount: 9,
   },
   builder: {
     body: workCarryMoveBody,
