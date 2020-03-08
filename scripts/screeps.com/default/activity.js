@@ -63,6 +63,24 @@ const activity = {
       tower.attack(target);
     }
   },
+  'harvest in place': function (creep) {
+    const harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
+    if (harvestTarget) {
+      creep.harvest(harvestTarget);
+      return;
+    }
+
+    const spot = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+      filter: function (object) {
+        return object.structureType === STRUCTURE_CONTAINER && object.pos.lookFor(LOOK_CREEPS).length === 0;
+      }
+    });
+
+    if (spot) {
+      console.log(spot);
+      creep.moveTo(spot, { visualizePathStyle: {} });
+    }
+  },
   'attack': function (creep) {
     {
       const targets = creep.room.find(FIND_HOSTILE_CREEPS, {
@@ -70,27 +88,51 @@ const activity = {
           return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
         }
       });
+      if (targets.length) {
+        const target = creep.pos.findClosestByRange(targets);
+        if (target) {
+          if (creep.attack(target) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(target, { visualizePathStyle: { stroke: 'red' } });
+          }
+          creep.rangedAttack(target);
+          return;
+        }
+      }
+    }
+    {
+      const targets = creep.room.find(FIND_HOSTILE_STRUCTURES, {
+        filter: function (object) {
+          return object.structureType !== STRUCTURE_CONTROLLER;
+        },
+      });
       const target = creep.pos.findClosestByRange(targets);
       if (target) {
         if (creep.attack(target) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(target);
+          creep.moveTo(target, { visualizePathStyle: { stroke: 'red' } });
         }
         creep.rangedAttack(target);
         return;
       }
     }
     {
-      const targets = creep.room.find(FIND_HOSTILE_STRUCTURES);
-      const target = creep.pos.findClosestByRange(targets);
-      if (target) {
-        if (creep.attack(target) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(target);
+      const targets = creep.room.find(FIND_HOSTILE_CREEPS);
+      if (targets.length) {
+        const target = creep.pos.findClosestByRange(targets);
+        if (target) {
+          if (creep.attack(target) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(target, { visualizePathStyle: { stroke: 'red' } });
+          }
+          creep.rangedAttack(target);
+          return;
         }
-        creep.rangedAttack(target);
-        return;
       }
     }
-    const attackMoveTarget = Game.flags['AttackMove'];
+    {
+      const controller = creep.room.controller;
+      if (creep.pos.inRangeTo(controller, 1))
+        creep.attackController(controller);
+    }
+    const attackMoveTarget = Game.flags[creep.memory.rallyPoint];
     if (attackMoveTarget) {
       creep.moveTo(attackMoveTarget, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
     }
@@ -164,12 +206,6 @@ const activity = {
       return;
     }
     creep.memory.targetId = target.id;
-    if (creep.pos.inRangeTo(target, 2)) {
-      creep.moveTo(target, { visualizePathStyle: {} });
-      console.log(creep.name, 'early transfer result', creep.transfer(target, RESOURCE_ENERGY));
-      changeActivity(creep, 'transferring resources');
-      return;
-    }
     if (creep.pos.inRangeTo(target, 1)) {
       creep.transfer(target, RESOURCE_ENERGY);
       changeActivity(creep, 'transferring resources');

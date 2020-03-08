@@ -17,13 +17,32 @@ function freeOldMem() {
   }
 }
 
-function spawn() {
+function spawns() {
   for (const spawn of Object.values(Game.spawns)) {
     try {
       runSpawn(spawn);
     }
     catch (error) {
       errorMessage += error.message;
+      errorMessage += error.stack;
+    }
+  }
+}
+
+function towers() {
+  for (const tower of Object.values(Game.structures)) {
+    try {
+      if (tower.structureType !== STRUCTURE_TOWER)
+        continue;
+      tower.memory = {
+        role: 'tower',
+        activity: 'tower attack',
+      };
+      runCommon(tower);
+    }
+    catch (error) {
+      errorMessage += error.message;
+      errorMessage += error.stack;
     }
   }
 }
@@ -34,6 +53,7 @@ const dispatch = {
   upgrader: roleUpgrader.run,
   basic: runCommon,
   defender: runCommon,
+  attacker: runCommon,
 };
 
 function dispatchCreeps() {
@@ -43,6 +63,7 @@ function dispatchCreeps() {
     }
     catch (error) {
       errorMessage += error.message;
+      errorMessage += error.stack;
     }
   }
 }
@@ -54,18 +75,28 @@ function main() {
   }
   catch (error) {
     errorMessage += error.message;
+    errorMessage += error.stack;
   }
   try {
-    spawn();
+    spawns();
   }
   catch (error) {
     errorMessage += error.message;
+    errorMessage += error.stack;
+  }
+  try {
+    towers();
+  }
+  catch (error) {
+    errorMessage += error.message;
+    errorMessage += error.stack;
   }
   try {
     dispatchCreeps();
   }
   catch (error) {
     errorMessage += error.message;
+    errorMessage += error.stack;
   }
   if (errorMessage.length)
     throw Error(errorMessage + ' at time:', currentTimeString());

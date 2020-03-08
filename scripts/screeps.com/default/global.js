@@ -22,7 +22,11 @@ global.totalCreepCount = function () {
   return Object.keys(Game.creeps).length;
 };
 
+global.creepsCounted = false;
 global.updateCurrentCreepCounts = function () {
+  if (creepsCounted)
+    return;
+
   for (const typeVal of Object.values(creepTypes)) {
     typeVal.currentCount = 0;
   }
@@ -31,9 +35,12 @@ global.updateCurrentCreepCounts = function () {
     const creep = Game.creeps[creepHash];
     creepTypes[creep.memory.role].currentCount++;
   }
+  creepsCounted = true;
 };
 
 global.countCreepsOfType = function (type) {
+  if (creepsCounted)
+    return type.currentCount;
   let count = 0;
   for (const creepHash in Game.creeps) {
     const creep = Game.creeps[creepHash];

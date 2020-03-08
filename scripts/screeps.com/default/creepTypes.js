@@ -22,6 +22,17 @@ const creepTypes = {
       whenEmpty: 'searching for source',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
+    maxCount: 3,
+  },
+  heavyHarvester: {
+    body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE],
+    memory: {
+      role: 'harvester',
+      activity: 'harvest in place',
+      whenFull: 'harvest in place',
+      whenEmpty: 'harvest in place',
+    },
+    spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
     maxCount: 6,
   },
   defender: {
@@ -31,9 +42,22 @@ const creepTypes = {
       activity: 'attack',
       whenFull: 'attack',
       whenEmpty: 'attack',
+      rallyPoint: 'DefenseRallyPoint',
     },
     spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
-    maxCount: 9,
+    maxCount: 0,
+  },
+  attacker: {
+    body: [TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK],
+    memory: {
+      role: 'attacker',
+      activity: 'attack',
+      whenFull: 'attack',
+      whenEmpty: 'attack',
+      rallyPoint: 'AttackMove',
+    },
+    spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
+    maxCount: 0,
   },
   builder: {
     body: workCarryMoveBody,
