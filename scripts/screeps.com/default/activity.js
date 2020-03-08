@@ -1,4 +1,8 @@
-const { pickRandomFromList } = require('./common');
+const {
+  pickRandomFromList,
+  findTransferTargets,
+  moveIgnore,
+} = require('./common');
 const {
   creepIsEmpty,
   creepIsFull,
@@ -27,45 +31,6 @@ function changeActivity(creep, newActivity) {
 
 function changeActivityToRandomPickFromList(creep, activityList) {
   changeActivity(creep, pickRandomFromList(activityList));
-}
-
-function findExtensionsWithFreeSpace(creep) {
-  const extensions = creep.room.find(FIND_MY_STRUCTURES, {
-    filter: (structure) => {
-      return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-    }
-  });
-  return extensions;
-}
-
-function findMySpawnsWithFreeSpace(creep) {
-  const spawns = creep.room.find(FIND_MY_STRUCTURES, {
-    filter: (structure) => {
-      return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-    }
-  });
-  return spawns;
-}
-
-function findStorageWithFreeSpace(creep) {
-  const storage = creep.room.find(FIND_STRUCTURES, {
-    filter: function (object) {
-      return object.structureType === STRUCTURE_STORAGE && object.store.getFreeCapacity() > creep.store.getUsedCapacity();
-    }
-  });
-  return storage;
-}
-
-function findTransferTargets(creep) {
-  let targets = [];
-  if (!targets.length)
-    targets = findExtensionsWithFreeSpace(creep);
-  if (!targets.length)
-    targets = findMySpawnsWithFreeSpace(creep);
-  if (!targets.length)
-    targets = findStorageWithFreeSpace(creep);
-
-  return targets;
 }
 
 const activity = {
@@ -151,6 +116,9 @@ const activity = {
     const rallyTarget = Game.flags[creep.memory.rallyPoint];
     if (rallyTarget) {
       creep.moveTo(rallyTarget, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
+    }
+    if (creep.pos.inRangeTo(rallyTarget, 5)) {
+      changeActivity(creep, 'default');
     }
   },
   'attack': function (creep) {

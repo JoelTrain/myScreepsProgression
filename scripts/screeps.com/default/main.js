@@ -1,6 +1,7 @@
 require('./global');
 const { runCommon } = require('./roleCommon');
 const { runBuilder } = require('./roleBuilder');
+const { runCarrier } = require('./roleCarrier');
 const { runSpawn } = require('./roleSpawn');
 
 
@@ -54,7 +55,7 @@ const dispatch = {
   basic: runCommon,
   defender: runCommon,
   attacker: runCommon,
-  carrier: runCommon,
+  carrier: runCarrier,
 };
 
 function dispatchCreeps() {
