@@ -1,6 +1,5 @@
 require('./global');
 const { runCommon } = require('./roleCommon');
-const { roleUpgrader } = require('./roleUpgrader');
 const { runBuilder } = require('./roleBuilder');
 const { runSpawn } = require('./roleSpawn');
 

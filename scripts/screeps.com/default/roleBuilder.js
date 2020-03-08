@@ -1,9 +1,7 @@
-const { pickRandomFromList } = require('./common');
 const { activity, changeActivity } = require('./activity');
 
 const {
   creepIsEmpty,
-  creepIsFull,
   clearTarget,
 } = require('./creepCommon');
 
@@ -35,7 +33,7 @@ const builderOverrides = {
       return;
     }
 
-    creep.moveTo(target, { visualizePathStyle: {}, ignoreCreeps: true });
+    creep.moveTo(target, { visualizePathStyle: {} });
     return;
   },
   'searching for repair': function (creep) {

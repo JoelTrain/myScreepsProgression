@@ -68,16 +68,19 @@ const activity = {
       changeActivity(creep, creep.memory.whenFull);
     }
 
-    let target = creep.pos.findClosestByPath(FIND_TOMBSTONES, {
-      filter: function (object) {
-        return object.store.getUsedCapacity() > 0;
-      }
-    });
-
+    let target;
     if (!target) {
       target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: function (object) {
           return object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= 100;
+        }
+      });
+    }
+
+    if (!target) {
+      target = creep.pos.findClosestByPath(FIND_TOMBSTONES, {
+        filter: function (object) {
+          return object.store.getUsedCapacity() > 0;
         }
       });
     }
@@ -105,10 +108,13 @@ const activity = {
     creep.withdraw(target, RESOURCE_ENERGY);
   },
   'harvest in place': function (creep) {
-    const harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
-    if (harvestTarget) {
-      creep.harvest(harvestTarget);
-      return;
+    const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
+    if (structuresAtMyPos[0] instanceof StructureContainer && structuresAtMyPos[0].store.getFreeCapacity() > 0) {
+      const harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
+      if (harvestTarget) {
+        creep.harvest(harvestTarget);
+        return;
+      }
     }
 
     const spot = creep.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -193,8 +199,10 @@ const activity = {
     }
 
     const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-    if (!mySource)
+    if (!mySource) {
+      changeActivity(creep, 'default');
       return;
+    }
 
     creep.moveTo(mySource, { visualizePathStyle: {} });
     changeActivity(creep, 'moving to source');
@@ -331,7 +339,7 @@ const activity = {
       return;
     }
 
-    creep.moveTo(controller, { visualizePathStyle: {}, ignoreCreeps: true });
+    creep.moveTo(controller, { visualizePathStyle: {} });
   }
 };
 
