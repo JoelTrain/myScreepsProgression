@@ -52,21 +52,32 @@ const activity = {
         changeActivity(creep, creep.memory.whenEmpty);
         return;
     },
+    'tower attack': function(tower) {
+      const targets = tower.room.find(FIND_HOSTILE_CREEPS, {
+        filter: function(object) {
+            return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
+        }
+      });
+      const target = tower.pos.findClosestByRange(targets);
+      if(target) {
+        tower.attack(target);
+      }
+    },
     'attack': function(creep) {
       const attackMoveTarget = Game.flags['AttackMove'];
       const targets = creep.room.find(FIND_HOSTILE_CREEPS, {
-        //filter: function(object) {
-            //return object.getActiveBodyparts(ATTACK) > 0;
-        //}
+        filter: function(object) {
+            return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
+        }
       });
-      const target = creep.pos.findClosestByPath(targets);
+      const target = creep.pos.findClosestByRange(targets);
       if(target) {
         if(creep.attack(target) == ERR_NOT_IN_RANGE) {
           creep.moveTo(target);
           return;
         }
       }
-      if(attackMoveTarget){
+      else if(attackMoveTarget){
         creep.moveTo(attackMoveTarget, { visualizePathStyle: { stroke: 'red'} });
       }
     },

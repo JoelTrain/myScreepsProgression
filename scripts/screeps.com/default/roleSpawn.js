@@ -31,7 +31,7 @@ const roleSpawn = {
             return;
         const currentEnergy = spawner.room.energyAvailable;
         //console.log(`Spawner energy ${currentEnergy}`);
-        if(currentEnergy < 300)
+        if(currentEnergy < 200)
             return;
 
         const typeVals = Object.values(creepTypes);
