@@ -27,8 +27,9 @@ function moveIgnore(creep, target, opts) {
   creep.memory.lastFatigue = creep.fatigue;
 
   if (failedToMove) {
+    delete creep.memory._move;
     opts.ignoreCreeps = false;
-    return creep.moveTo(target, { ignoreCreeps: false, reusePath: 0, visualizePathStyle: { stroke: 'orange' } });
+    return creep.moveTo(target, { ignoreCreeps: false, reusePath: 15, visualizePathStyle: { stroke: 'orange' } });
   }
   return moveResult;
 }
