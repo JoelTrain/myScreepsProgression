@@ -8,6 +8,7 @@ function countHeavyHarvestersAlreadyBy(source) {
     if (creep.pos.isNearTo(source))
       nearby++
   }
+  //console.log(source, nearby);
   return nearby;
 }
 

@@ -48,8 +48,11 @@ function activityAttack(creep) {
   }
   {
     const controller = creep.room.controller;
-    if (creep.pos.inRangeTo(controller, 1))
+    if (creep.pos.inRangeTo(controller, 1)) {
       creep.attackController(controller);
+      creep.claimController(controller);
+      creep.reserveController(controller);
+    }
   }
   const attackMoveTarget = Game.flags[creep.memory.rallyPoint];
   if (attackMoveTarget) {
