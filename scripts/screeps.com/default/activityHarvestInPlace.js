@@ -1,8 +1,21 @@
 const { moveIgnore } = require('./moveIgnore');
 
+function countHeavyHarvestersAlreadyBy(source) {
+  let nearby = 0;
+  for (const creep of source.room.find(FIND_MY_CREEPS)) {
+    if (creep.memory.role !== 'heavyHarvester')
+      continue;
+    if (creep.pos.isNearTo(source))
+      nearby++
+  }
+  return nearby;
+}
+
 function activityHarvestInPlace(creep) {
-  if (creep === null)
+  if (creep === null) {
     console.trace();
+    return;
+  }
   const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
   if (structuresAtMyPos[0] instanceof StructureContainer && structuresAtMyPos[0].store.getFreeCapacity() > 0) {
     const harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
@@ -22,12 +35,27 @@ function activityHarvestInPlace(creep) {
     moveIgnore(creep, spot);
     return;
   }
-  const source = creep.pos.findClosestByPath(FIND_SOURCES);
+
+  let source = creep.pos.findClosestByRange(FIND_SOURCES);
+  if (source) {
+    if (creep.pos.inRangeTo(source, 1)) {
+      creep.harvest(source);
+      return;
+    }
+  }
+
+  source = creep.pos.findClosestByPath(FIND_SOURCES, {
+    filter: function (object) {
+      return countHeavyHarvestersAlreadyBy(object) < 2;
+    }
+  });
+  if (!source)
+    return;
   if (creep.pos.inRangeTo(source, 1)) {
     creep.harvest(source);
     return;
   }
-  moveIgnore(creep, source, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
+  moveIgnore(creep, source, { reusePath: 15, visualizePathStyle: { stroke: 'yellow' } });
 }
 
 module.exports = { activityHarvestInPlace };
