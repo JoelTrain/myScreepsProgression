@@ -5,7 +5,6 @@ const {
   creepIsFull,
   activitySetup,
   changeActivity,
-  changeActivityToRandomPickFromList,
   activityPickup,
   activityHarvestInPlace,
 } = require('./common');
@@ -134,7 +133,7 @@ const activity = {
     targets = findTransferTargets(creep);
 
     if (!targets.length) {
-      changeActivity(creep, 'moving to build site');
+      changeActivity(creep, 'building site');
       return;
     }
 
@@ -157,35 +156,34 @@ const activity = {
 
     moveIgnore(creep, target);
   },
-  'moving to build site': function (creep) {
-    let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-    if (!mySite) {
-      changeActivity(creep, 'upgrading controller');
-      // @TODO add possibility to repair
-      return;
-    }
-    creep.memory.targetId = mySite.id;
-    if (creep.pos.inRangeTo(mySite, 3)) {
-      changeActivity(creep, 'building site');
-      return;
-    }
-    moveIgnore(creep, mySite);
-  },
   'building site': function (creep) {
     if (creepIsEmpty(creep)) {
       changeActivity(creep, creep.memory.whenEmpty);
       return;
     }
 
-    const target = Game.getObjectById(creep.memory.targetId);
+    let target = Game.getObjectById(creep.memory.targetId);
     if (!target) {
-      changeActivity(creep, 'moving to build site');
+      target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+    }
+    if (!target) {
+      clearTarget(creep);
+      changeActivity(creep, 'upgrading controller');
       return;
     }
 
-    if (creep.build(target) !== 0) {
-      changeActivity(creep, 'upgrading controller');
+    creep.memory.targetId = target.id;
+
+    if (creep.pos.inRangeTo(target, 3)) {
+      const buildResult = creep.build(target);
+      if (buildResult !== OK) {
+        changeActivity(creep, 'upgrading controller');
+      }
+      return;
     }
+
+    moveIgnore(creep, target);
+    return;
   },
   'upgrading controller': function (creep) {
     if (creepIsEmpty(creep)) {
@@ -220,5 +218,4 @@ module.exports = {
   activity,
   activitySetup,
   changeActivity,
-  changeActivityToRandomPickFromList,
 };

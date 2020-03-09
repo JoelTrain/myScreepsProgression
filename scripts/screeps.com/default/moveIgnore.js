@@ -17,7 +17,7 @@ function moveIgnore(creep, target, opts) {
   const lastFatigue = creep.memory.lastFatigue;
   if (lastPos !== undefined && lastFatigue !== undefined) {
     const { x, y } = creep.memory.lastPos;
-    if (x === creep.pos.x && y === creep.pos.y && creep.fatigue === 0) {
+    if (x === creep.pos.x && y === creep.pos.y && creep.memory.lastFatigue === creep.fatigue && creep.fatigue === 0) {
       //console.log(`${creep.name} is not moving since ${creep.pos}`);
       creep.say('stuck!');
       failedToMove = true;

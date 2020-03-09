@@ -34,7 +34,7 @@ const creepTypes = {
       whenEmpty: 'harvest',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 4,
+    maxCount: 2,
   },
   heavyHarvester: {
     body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE],
@@ -56,7 +56,7 @@ const creepTypes = {
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 2,
+    maxCount: 4,
   },
   attacker: {
     body: [TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK],
