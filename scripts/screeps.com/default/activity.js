@@ -194,12 +194,14 @@ const activity = {
       return;
     }
 
-    moveIgnore(creep, mySource);
+    const inRange = creep.pos.inRangeTo(mySource, 1);
+    if (!inRange)
+      moveIgnore(creep, mySource);
 
     const willBeFull = creep.getActiveBodyparts(WORK) * 2 > creep.store.getFreeCapacity();
     creep.harvest(mySource);
 
-    if (willBeFull && creep.pos.inRangeTo(mySource, 1)) {
+    if (willBeFull && inRange) {
       console.log(creep.name + ' will be full');
       changeActivity(creep, creep.memory.whenFull);
       const deltaX = creep.pos.x - mySource.pos.x;
