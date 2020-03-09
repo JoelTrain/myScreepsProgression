@@ -56,7 +56,7 @@ function runCarrier(creep) {
     return;
   }
 
-  changeActivity(creep, 'default');
+  changeActivity(creep, creep.memory.whenEmpty);
 }
 
 module.exports = { runCarrier };

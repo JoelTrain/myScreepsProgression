@@ -10,9 +10,9 @@ const roleHarvester = {
       return;
     }
 
-    changeActivity(creep, 'default');
+    changeActivity(creep, creep.memory.whenEmpty);
   },
-  'default': function (creep) {
+  creep.memory.whenEmpty: function(creep) {
     changeActivity(creep, 'searching for source');
     return;
   },

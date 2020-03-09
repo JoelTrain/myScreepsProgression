@@ -7,7 +7,7 @@ const roleManual = {
 
     this[creep.memory.activity](creep);
   },
-  'default': function (creep) {
+  creep.memory.whenEmpty: function(creep) {
     changeActivity(creep, 'moving to flag');
   },
   'moving to flag': function (creep) {
@@ -42,7 +42,7 @@ const roleManual = {
   },
   'change to harvester': function (creep) {
     creep.memory.role = 'harvester';
-    changeActivity(creep, 'default');
+    changeActivity(creep, creep.memory.whenEmpty);
   },
 };
 

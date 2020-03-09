@@ -12,7 +12,7 @@ let callOuts = true;
 
 function activitySetup(creep) {
   if (creep.memory.activity === undefined)
-    creep.memory.activity = 'default';
+    creep.memory.activity = creep.memory.whenEmpty;
   if (creep.memory.whenEmpty === undefined)
     creep.memory.whenEmpty = 'pickup';
   if (creep.memory.whenFull === undefined)
@@ -34,10 +34,6 @@ function changeActivityToRandomPickFromList(creep, activityList) {
 }
 
 const activity = {
-  'default': function (creep) {
-    changeActivity(creep, creep.memory.whenEmpty);
-    return;
-  },
   'tower attack': function (tower) {
     const targets = tower.room.find(FIND_HOSTILE_CREEPS);
     const target = tower.pos.findClosestByRange(targets);
@@ -123,7 +119,7 @@ const activity = {
       moveIgnore(creep, rallyTarget, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
     }
     if (creep.pos.inRangeTo(rallyTarget, 5)) {
-      changeActivity(creep, 'default');
+      changeActivity(creep, creep.memory.whenEmpty);
     }
   },
   'attack': function (creep) {
@@ -183,52 +179,27 @@ const activity = {
     }
   },
   'searching for source': function (creep) {
-    if (creepIsFull(creep)) {
-      changeActivity(creep, creep.memory.whenFull);
-      return;
-    }
-
-    const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-    if (!mySource) {
-      changeActivity(creep, 'default');
-      return;
-    }
-
-    moveIgnore(creep, mySource);
-    changeActivity(creep, 'moving to source');
   },
   'moving to source': function (creep) {
-    const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-
-    if (!mySource) {
-      changeActivity(creep, 'searching for source');
-      return;
-    }
-
-    if (creep.pos.inRangeTo(mySource, 1)) {
-      creep.harvest(mySource);
-      changeActivity(creep, 'harvesting from source');
-      return;
-    }
-    moveIgnore(creep, mySource);
   },
-  'harvesting from source': function (creep) {
+  'harvest': function (creep) {
     if (creepIsFull(creep)) {
       changeActivity(creep, creep.memory.whenFull);
       return;
     }
-
-    // @TODO improve this
     const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+
     if (!mySource) {
-      changeActivity(creep, 'searching for source');
+      changeActivity(creep, 'pickup');
       return;
     }
-    const freeSpace = creep.store.getFreeCapacity();
-    const willBeFull = creep.getActiveBodyparts(WORK) * 2 > freeSpace;
+
+    moveIgnore(creep, mySource);
+
+    const willBeFull = creep.getActiveBodyparts(WORK) * 2 > creep.store.getFreeCapacity();
     creep.harvest(mySource);
 
-    if (willBeFull) {
+    if (willBeFull && creep.pos.inRangeTo(mySource, 1)) {
       console.log(creep.name + ' will be full');
       changeActivity(creep, creep.memory.whenFull);
       const deltaX = creep.pos.x - mySource.pos.x;
@@ -326,7 +297,7 @@ const activity = {
       const result = creep.upgradeController(controller);
 
       if (result !== OK) {
-        changeActivity(creep, 'default');
+        changeActivity(creep, creep.memory.whenEmpty);
       }
       return;
     }

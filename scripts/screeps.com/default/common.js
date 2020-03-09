@@ -57,16 +57,13 @@ function moveIgnore(creep, target, opts) {
   let failedToMove = false;
   if (!failedToMove)
     failedToMove = moveResult === ERR_NO_PATH;
-  console.log(moveResult);
 
   const lastPos = creep.memory.lastPos;
   if (lastPos) {
-    if (JSON.stringify(creep.memory.lastPos) === JSON.stringify(creep.pos) && creep.fatigue === 0) {
+    const { x, y } = creep.memory.lastPos;
+    if (x === creep.pos.x && y === creep.pos.y && creep.fatigue === 0) {
       console.log(`${creep.name} is not moving since ${creep.pos}`);
       failedToMove = true;
-    }
-    else {
-      console.log(JSON.stringify(creep.memory.lastPos), JSON.stringify(creep.pos));
     }
   }
   creep.memory.lastPos = creep.pos;
@@ -74,7 +71,7 @@ function moveIgnore(creep, target, opts) {
   if (failedToMove) {
     opts.ignoreCreeps = false;
     console.log(creep.name, target);
-    return creep.moveTo(target);
+    return creep.moveTo(target, { ignoreCreeps: false, reusePath: 0, visualizePathStyle: { stroke: 'orange' } });
   }
   return moveResult;
 }

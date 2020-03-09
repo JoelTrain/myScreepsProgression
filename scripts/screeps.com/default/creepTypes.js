@@ -6,9 +6,9 @@ const creepTypes = {
     body: basicBody,
     memory: {
       role: 'basic',
-      activity: 'default',
+      activity: 'harvest',
       whenFull: 'transferring',
-      whenEmpty: 'pickup',
+      whenEmpty: 'harvest',
     },
     spawnDirections: [BOTTOM],
     maxCount: 0,
@@ -25,22 +25,11 @@ const creepTypes = {
     spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
     maxCount: 0,
   },
-  carrier: {
-    body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
-    memory: {
-      role: 'carrier',
-      activity: 'pickup',
-      whenFull: 'transferring',
-      whenEmpty: 'pickup',
-    },
-    spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 2,
-  },
   harvester: {
     body: workCarryMoveBody,
     memory: {
       role: 'harvester',
-      activity: 'default',
+      activity: 'pickup',
       whenFull: 'transferring',
       whenEmpty: 'pickup',
     },
@@ -58,6 +47,17 @@ const creepTypes = {
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
     maxCount: 5,
   },
+  carrier: {
+    body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+    memory: {
+      role: 'carrier',
+      activity: 'pickup',
+      whenFull: 'transferring',
+      whenEmpty: 'pickup',
+    },
+    spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
+    maxCount: 2,
+  },
   attacker: {
     body: [TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK],
     memory: {
@@ -74,7 +74,7 @@ const creepTypes = {
     body: workCarryMoveBody,
     memory: {
       role: 'builder',
-      activity: 'default',
+      activity: 'pickup',
       whenFull: 'building site',
       whenEmpty: 'pickup',
     },
@@ -85,7 +85,7 @@ const creepTypes = {
     body: workCarryMoveBody,
     memory: {
       role: 'upgrader',
-      activity: 'default',
+      activity: 'pickup',
       whenFull: 'upgrading controller',
       whenEmpty: 'pickup',
     },
@@ -96,7 +96,7 @@ const creepTypes = {
     body: [CLAIM, MOVE, MOVE, MOVE, WORK, CARRY],
     memory: {
       role: 'manual',
-      activity: 'default',
+      activity: 'pickup',
       whenFull: 'upgrading controller',
       whenEmpty: 'pickup',
     },

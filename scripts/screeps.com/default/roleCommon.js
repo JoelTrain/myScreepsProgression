@@ -5,7 +5,7 @@ function runCommon(creep) {
     return;
   }
 
-  changeActivity(creep, 'default');
+  changeActivity(creep, creep.memory.whenEmpty);
 }
 
 module.exports = { runCommon };

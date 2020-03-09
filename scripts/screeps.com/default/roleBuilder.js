@@ -105,7 +105,7 @@ function runBuilder(creep) {
     return;
   }
 
-  changeActivity(creep, 'default');
+  changeActivity(creep, creep.memory.whenEmpty);
 }
 
 module.exports = { runBuilder };
