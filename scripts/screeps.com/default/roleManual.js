@@ -1,4 +1,5 @@
 const { activitySetup, changeActivity } = require('./activity');
+const { moveIgnore } = require('./common');
 
 const roleManual = {
   run: function (creep) {
@@ -16,7 +17,7 @@ const roleManual = {
       return;
     }
 
-    creep.moveTo(flag, { visualizePathStyle: {} });
+    moveIgnore(creep, flag);
   },
   'moving to foreign controller': function (creep) {
     if (creep.pos.inRangeTo(creep.room.controller, 1)) {
@@ -24,7 +25,7 @@ const roleManual = {
       return;
     }
 
-    creep.moveTo(creep.room.controller, { visualizePathStyle: {} });
+    moveIgnore(creep, creep.room.controller);
   },
   'claiming controller': function (creep) {
     if (creep.room.controller.my) {

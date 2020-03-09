@@ -42,7 +42,7 @@ const carrierOverrides = {
       }
     }
 
-    creep.moveTo(target, { visualizePathStyle: {} });
+    moveIgnore(creep, target);
   },
 };
 

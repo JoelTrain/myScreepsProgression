@@ -47,14 +47,36 @@ function findTransferTargets(creep) {
 }
 
 function moveIgnore(creep, target, opts) {
+  if (opts === undefined)
+    opts = {};
   if (opts.visualizePathStyle === undefined)
     opts.visualizePathStyle = {};
   opts.ignoreCreeps = true;
   const moveResult = creep.moveTo(target, opts);
-  if (moveResult === ERR_NO_PATH) {
-    opts.ignoreCreeps = false;
-    creep.moveTo(target, opts);
+
+  let failedToMove = false;
+  if (!failedToMove)
+    failedToMove = moveResult === ERR_NO_PATH;
+  console.log(moveResult);
+
+  const lastPos = creep.memory.lastPos;
+  if (lastPos) {
+    if (JSON.stringify(creep.memory.lastPos) === JSON.stringify(creep.pos) && creep.fatigue === 0) {
+      console.log(`${creep.name} is not moving since ${creep.pos}`);
+      failedToMove = true;
+    }
+    else {
+      console.log(JSON.stringify(creep.memory.lastPos), JSON.stringify(creep.pos));
+    }
   }
+  creep.memory.lastPos = creep.pos;
+
+  if (failedToMove) {
+    opts.ignoreCreeps = false;
+    console.log(creep.name, target);
+    return creep.moveTo(target);
+  }
+  return moveResult;
 }
 
 module.exports = {

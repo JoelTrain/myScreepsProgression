@@ -51,11 +51,18 @@ const activity = {
     }
 
     let target;
+
+    if (!target) {
+      let targets = creep.room.find(FIND_DROPPED_RESOURCES);
+      target = creep.pos.findClosestByPath(targets, { ignoreCreeps: true });
+    }
+
     if (!target) {
       target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: function (object) {
           return object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= 100;
-        }
+        },
+        ignoreCreeps: true,
       });
     }
 
@@ -63,7 +70,8 @@ const activity = {
       target = creep.pos.findClosestByPath(FIND_TOMBSTONES, {
         filter: function (object) {
           return object.store.getUsedCapacity() > 0;
-        }
+        },
+        ignoreCreeps: true,
       });
     }
 
@@ -71,21 +79,18 @@ const activity = {
       target = creep.pos.findClosestByPath(FIND_RUINS, {
         filter: function (object) {
           return object.store.getUsedCapacity() > 0;
-        }
+        },
+        ignoreCreeps: true,
       });
     }
 
     if (!target) {
-      let targets = creep.room.find(FIND_DROPPED_RESOURCES);
-      target = creep.pos.findClosestByPath(targets);
-    }
-
-    if (!target) {
-      changeActivity(creep, 'searching for source');
+      creep.memory.rallyPoint = 'DefenseRallyPoint';
+      changeActivity(creep, 'move to rally point');
       return;
     }
 
-    creep.moveTo(target, { visualizePathStyle: {} });
+    moveIgnore(creep, target);
     creep.pickup(target);
     creep.withdraw(target, RESOURCE_ENERGY);
   },
@@ -106,16 +111,16 @@ const activity = {
     });
 
     if (spot) {
-      creep.moveTo(spot, { visualizePathStyle: {}, ignoreCreeps: true });
+      moveIgnore(creep, spot);
       return;
     }
     const source = creep.pos.findClosestByPath(FIND_SOURCES);
-    creep.moveTo(source, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' }, ignoreCreeps: true });
+    moveIgnore(creep, source, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
   },
   'move to rally point': function (creep) {
     const rallyTarget = Game.flags[creep.memory.rallyPoint];
     if (rallyTarget) {
-      creep.moveTo(rallyTarget, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
+      moveIgnore(creep, rallyTarget, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
     }
     if (creep.pos.inRangeTo(rallyTarget, 5)) {
       changeActivity(creep, 'default');
@@ -132,7 +137,7 @@ const activity = {
         const target = creep.pos.findClosestByRange(targets);
         if (target) {
           if (creep.attack(target) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(target, { visualizePathStyle: { stroke: 'red' } });
+            moveIgnore(creep, target, { visualizePathStyle: { stroke: 'red' } });
           }
           creep.rangedAttack(target);
           return;
@@ -148,7 +153,7 @@ const activity = {
       const target = creep.pos.findClosestByRange(targets);
       if (target) {
         if (creep.attack(target) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(target, { visualizePathStyle: { stroke: 'red' } });
+          moveIgnore(creep, target, { visualizePathStyle: { stroke: 'red' } });
         }
         creep.rangedAttack(target);
         return;
@@ -160,7 +165,7 @@ const activity = {
         const target = creep.pos.findClosestByRange(targets);
         if (target) {
           if (creep.attack(target) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(target, { visualizePathStyle: { stroke: 'red' } });
+            moveIgnore(creep, target, { visualizePathStyle: { stroke: 'red' } });
           }
           creep.rangedAttack(target);
           return;
@@ -174,7 +179,7 @@ const activity = {
     }
     const attackMoveTarget = Game.flags[creep.memory.rallyPoint];
     if (attackMoveTarget) {
-      creep.moveTo(attackMoveTarget, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
+      moveIgnore(creep, attackMoveTarget, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
     }
   },
   'searching for source': function (creep) {
@@ -189,7 +194,7 @@ const activity = {
       return;
     }
 
-    creep.moveTo(mySource, { visualizePathStyle: {} });
+    moveIgnore(creep, mySource);
     changeActivity(creep, 'moving to source');
   },
   'moving to source': function (creep) {
@@ -205,7 +210,7 @@ const activity = {
       changeActivity(creep, 'harvesting from source');
       return;
     }
-    creep.moveTo(mySource, { visualizePathStyle: {} });
+    moveIgnore(creep, mySource);
   },
   'harvesting from source': function (creep) {
     if (creepIsFull(creep)) {
@@ -252,9 +257,11 @@ const activity = {
       return;
     }
 
-    let target = creep.pos.findClosestByPath(targets);
-    if (!target)
+    let target = creep.pos.findClosestByPath(targets, { ignoreCreeps: true });
+    if (!target) {
+      creep.say('stuck');
       return;
+    }
 
     creep.memory.targetId = target.id;
     if (creep.pos.inRangeTo(target, 1)) {
@@ -263,11 +270,11 @@ const activity = {
       const pos = targets.indexOf(target);
       if (pos > -1) {
         targets.splice(pos, 1);
-        target = creep.pos.findClosestByPath(targets);
+        target = creep.pos.findClosestByPath(targets, { ignoreCreeps: true });
       }
     }
 
-    creep.moveTo(target, { visualizePathStyle: {} });
+    moveIgnore(creep, target);
   },
   'moving to build site': function (creep) {
     let mySite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
@@ -281,7 +288,7 @@ const activity = {
       changeActivity(creep, 'building site');
       return;
     }
-    creep.moveTo(mySite, { visualizePathStyle: {} });
+    moveIgnore(creep, mySite);
   },
   'building site': function (creep) {
     if (creepIsEmpty(creep)) {
@@ -324,7 +331,7 @@ const activity = {
       return;
     }
 
-    creep.moveTo(controller, { visualizePathStyle: {} });
+    moveIgnore(creep, controller);
   }
 };
 

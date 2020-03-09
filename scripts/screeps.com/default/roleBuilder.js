@@ -1,4 +1,5 @@
 const { activity, changeActivity } = require('./activity');
+const { moveIgnore } = require('./common');
 
 const {
   creepIsEmpty,
@@ -33,7 +34,7 @@ const builderOverrides = {
       return;
     }
 
-    creep.moveTo(target, { visualizePathStyle: {} });
+    moveIgnore(creep, target);
     return;
   },
   'searching for repair': function (creep) {
@@ -70,7 +71,7 @@ const builderOverrides = {
       return;
     }
 
-    creep.moveTo(target, { visualizePathStyle: {} });
+    moveIgnore(creep, target);
   },
   'repairing': function (creep) {
     if (creepIsEmpty(creep)) {
