@@ -1,7 +1,7 @@
 const { moveIgnore } = require('./moveIgnore');
 
 function activityHarvestInPlace(creep) {
-  if (creep === undefined)
+  if (creep === null)
     console.trace();
   const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
   if (structuresAtMyPos[0] instanceof StructureContainer && structuresAtMyPos[0].store.getFreeCapacity() > 0) {
