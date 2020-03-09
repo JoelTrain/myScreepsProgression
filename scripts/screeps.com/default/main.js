@@ -61,7 +61,8 @@ const dispatch = {
 function dispatchCreeps() {
   for (const creep of Object.values(Game.creeps)) {
     try {
-      dispatch[creep.memory.role](creep);
+      if (!creep.spawning)
+        dispatch[creep.memory.role](creep);
     }
     catch (error) {
       //errorMessage += error.message;

@@ -1,9 +1,8 @@
-const {
-  moveIgnore,
-} = require('./common');
+const { moveIgnore } = require('./moveIgnore');
 
 function activityHarvestInPlace(creep) {
-  console.log(creep.name);
+  if (creep === undefined)
+    console.trace();
   const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
   if (structuresAtMyPos[0] instanceof StructureContainer && structuresAtMyPos[0].store.getFreeCapacity() > 0) {
     const harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
@@ -24,7 +23,6 @@ function activityHarvestInPlace(creep) {
     return;
   }
   const source = creep.pos.findClosestByPath(FIND_SOURCES);
-  console.log(0);
   if (creep.pos.inRangeTo(source, 1)) {
     creep.harvest(source);
     return;
@@ -32,4 +30,4 @@ function activityHarvestInPlace(creep) {
   moveIgnore(creep, source, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
 }
 
-module.export = { activityHarvestInPlace };
+module.exports = { activityHarvestInPlace };
