@@ -31,7 +31,7 @@ const creepTypes = {
       role: 'harvester',
       activity: 'pickup',
       whenFull: 'transferring',
-      whenEmpty: 'pickup',
+      whenEmpty: 'harvest',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
     maxCount: 4,
