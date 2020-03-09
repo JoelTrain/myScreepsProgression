@@ -6,7 +6,6 @@ const {
 } = require('./common');
 
 const builderOverrides = {
-  'moving to build site': this['building site'],
   'building site': function (creep) {
     if (creepIsEmpty(creep)) {
       changeActivity(creep, creep.memory.whenEmpty);

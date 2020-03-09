@@ -14,7 +14,7 @@ const carrierOverrides = {
     if (!targets.length) {
       targets = creep.room.find(FIND_MY_CREEPS, {
         filter: function (otherCreep) {
-          return otherCreep.store.getFreeCapacity() > 50 && (otherCreep.memory.role === 'upgrader' || otherCreep.memory.role === 'harvester');
+          return otherCreep.store.getFreeCapacity() > 50 && (otherCreep.memory.role === 'upgrader' || otherCreep.memory.role === 'harvester' || otherCreep.memory.role === 'builder');
         }
       });
     }

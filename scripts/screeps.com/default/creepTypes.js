@@ -45,7 +45,7 @@ const creepTypes = {
       whenEmpty: 'harvest in place',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 5,
+    maxCount: 4,
   },
   carrier: {
     body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
@@ -56,7 +56,7 @@ const creepTypes = {
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 4,
+    maxCount: 2,
   },
   attacker: {
     body: [TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK],
@@ -79,7 +79,7 @@ const creepTypes = {
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM],
-    maxCount: 2,
+    maxCount: 3,
   },
   upgrader: {
     body: workCarryMoveBody,
