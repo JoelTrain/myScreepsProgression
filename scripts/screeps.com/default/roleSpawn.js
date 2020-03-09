@@ -10,7 +10,7 @@ function isFull(type) {
 
 function spawnType(spawner, type) {
   const creepNumber = Math.floor(Math.random() * 10000);
-  const creepName = `creep${creepNumber}`;
+  const creepName = `${type.memory.role}${creepNumber}`;
   const spawnResult = spawner.spawnCreep(type.body, creepName, { memory: type.memory, directions: type.spawnDirections });
   const string = (spawnResult === 0) ? 'success' : `fail with code ${spawnResult}`;
   const cost = bodyCost(type.body);
