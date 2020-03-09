@@ -1,5 +1,4 @@
-const { activitySetup, changeActivity } = require('./activity');
-const { moveIgnore } = require('./common');
+const { activitySetup, changeActivity, moveIgnore } = require('./activity');
 
 const roleManual = {
   run: function (creep) {

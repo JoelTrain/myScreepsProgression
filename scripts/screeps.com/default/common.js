@@ -46,6 +46,52 @@ function findTransferTargets(creep) {
   return targets;
 }
 
+function activitySetup(creep) {
+  if (creep.memory.activity === undefined)
+    creep.memory.activity = creep.memory.whenEmpty;
+  if (creep.memory.whenEmpty === undefined)
+    creep.memory.whenEmpty = 'pickup';
+  if (creep.memory.whenFull === undefined)
+    creep.memory.whenFull = 'upgrading controller';
+}
+
+let callOuts = true;
+function changeActivity(creep, newActivity) {
+  if (creep.memory.activity === newActivity)
+    return;
+
+  if (callOuts)
+    creep.say(newActivity);
+
+  creep.memory.activity = newActivity;
+}
+
+function changeActivityToRandomPickFromList(creep, activityList) {
+  changeActivity(creep, pickRandomFromList(activityList));
+}
+
+function creepIsEmpty(creep) {
+  return creep.store.getUsedCapacity() === 0;
+}
+
+function creepHasSpace(creep) {
+  return creep.store.getFreeCapacity() > 0;
+}
+
+function creepIsFull(creep) {
+  return creep.store.getFreeCapacity() === 0;
+}
+
+function clearTarget(creep) {
+  delete creep.memory.targetId;
+}
+
+function bodyCost(body) {
+  return body.reduce(function (cost, part) {
+    return cost + BODYPART_COST[part];
+  }, 0);
+}
+
 function moveIgnore(creep, target, opts) {
   if (creep.spawning)
     return;
@@ -85,4 +131,12 @@ module.exports = {
   pickRandomFromList,
   findTransferTargets,
   moveIgnore,
+  creepIsEmpty,
+  creepHasSpace,
+  creepIsFull,
+  clearTarget,
+  bodyCost,
+  activitySetup,
+  changeActivity,
+  changeActivityToRandomPickFromList,
 };

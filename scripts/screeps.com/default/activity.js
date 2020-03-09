@@ -1,37 +1,14 @@
 const {
-  pickRandomFromList,
   findTransferTargets,
   moveIgnore,
-} = require('./common');
-const {
   creepIsEmpty,
   creepIsFull,
-} = require('./creepCommon');
+  activitySetup,
+  changeActivity,
+  changeActivityToRandomPickFromList,
+} = require('./common');
 
-let callOuts = true;
-
-function activitySetup(creep) {
-  if (creep.memory.activity === undefined)
-    creep.memory.activity = creep.memory.whenEmpty;
-  if (creep.memory.whenEmpty === undefined)
-    creep.memory.whenEmpty = 'pickup';
-  if (creep.memory.whenFull === undefined)
-    creep.memory.whenFull = 'upgrading controller';
-}
-
-function changeActivity(creep, newActivity) {
-  if (creep.memory.activity === newActivity)
-    return;
-
-  if (callOuts)
-    creep.say(newActivity);
-
-  creep.memory.activity = newActivity;
-}
-
-function changeActivityToRandomPickFromList(creep, activityList) {
-  changeActivity(creep, pickRandomFromList(activityList));
-}
+const activities = require('./activities');
 
 const activity = {
   'tower attack': function (tower) {
@@ -41,55 +18,7 @@ const activity = {
       tower.attack(target);
     }
   },
-  'pickup': function (creep) {
-    if (creepIsFull(creep)) {
-      changeActivity(creep, creep.memory.whenFull);
-    }
-
-    let target;
-
-    if (!target) {
-      let targets = creep.room.find(FIND_DROPPED_RESOURCES);
-      target = creep.pos.findClosestByPath(targets, { ignoreCreeps: true });
-    }
-
-    if (!target) {
-      target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        filter: function (object) {
-          return object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= 100;
-        },
-        ignoreCreeps: true,
-      });
-    }
-
-    if (!target) {
-      target = creep.pos.findClosestByPath(FIND_TOMBSTONES, {
-        filter: function (object) {
-          return object.store.getUsedCapacity() > 0;
-        },
-        ignoreCreeps: true,
-      });
-    }
-
-    if (!target) {
-      target = creep.pos.findClosestByPath(FIND_RUINS, {
-        filter: function (object) {
-          return object.store.getUsedCapacity() > 0;
-        },
-        ignoreCreeps: true,
-      });
-    }
-
-    if (!target) {
-      creep.memory.rallyPoint = 'DefenseRallyPoint';
-      changeActivity(creep, 'move to rally point');
-      return;
-    }
-
-    moveIgnore(creep, target);
-    creep.pickup(target);
-    creep.withdraw(target, RESOURCE_ENERGY);
-  },
+  'pickup': activities['pickup'],
   'harvest in place': function (creep) {
     const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
     if (structuresAtMyPos[0] instanceof StructureContainer && structuresAtMyPos[0].store.getFreeCapacity() > 0) {

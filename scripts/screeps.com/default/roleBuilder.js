@@ -1,10 +1,9 @@
 const { activity, changeActivity } = require('./activity');
-const { moveIgnore } = require('./common');
-
 const {
+  moveIgnore,
   creepIsEmpty,
   clearTarget,
-} = require('./creepCommon');
+} = require('./common');
 
 const builderOverrides = {
   'moving to build site': this['building site'],

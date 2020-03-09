@@ -1,7 +1,5 @@
 const { activity, changeActivity } = require('./activity');
-const { findTransferTargets, moveIgnore } = require('./common');
-
-const { creepIsEmpty } = require('./creepCommon');
+const { findTransferTargets, moveIgnore, creepIsEmpty, } = require('./common');
 
 const carrierOverrides = {
   'transferring': function (creep) {
