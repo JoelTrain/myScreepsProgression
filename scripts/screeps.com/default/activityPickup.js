@@ -42,8 +42,7 @@ function activityPickup(creep) {
   }
 
   if (!target) {
-    creep.memory.rallyPoint = 'DefenseRallyPoint';
-    changeActivity(creep, 'move to rally point');
+    changeActivity(creep, 'harvest');
     return;
   }
 
