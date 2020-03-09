@@ -1,14 +1,6 @@
 const { activitySetup, changeActivity, moveIgnore } = require('./activity');
 
 const roleManual = {
-  run: function (creep) {
-    activitySetup(creep);
-
-    this[creep.memory.activity](creep);
-  },
-  creep.memory.whenEmpty: function(creep) {
-    changeActivity(creep, 'moving to flag');
-  },
   'moving to flag': function (creep) {
     const flag = Game.flags['Flag1'];
     if (creep.pos.inRangeTo(flag, 0)) {

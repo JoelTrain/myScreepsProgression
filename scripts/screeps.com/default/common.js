@@ -127,6 +127,86 @@ function moveIgnore(creep, target, opts) {
   return moveResult;
 }
 
+function activityPickup(creep) {
+  if (creepIsFull(creep)) {
+    changeActivity(creep, creep.memory.whenFull);
+  }
+
+  let target;
+
+  if (!target) {
+    let targets = creep.room.find(FIND_DROPPED_RESOURCES);
+    target = creep.pos.findClosestByPath(targets, { ignoreCreeps: true });
+  }
+
+  if (!target) {
+    target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+      filter: function (object) {
+        return object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= 100;
+      },
+      ignoreCreeps: true,
+    });
+  }
+
+  if (!target) {
+    target = creep.pos.findClosestByPath(FIND_TOMBSTONES, {
+      filter: function (object) {
+        return object.store.getUsedCapacity() > 0;
+      },
+      ignoreCreeps: true,
+    });
+  }
+
+  if (!target) {
+    target = creep.pos.findClosestByPath(FIND_RUINS, {
+      filter: function (object) {
+        return object.store.getUsedCapacity() > 0;
+      },
+      ignoreCreeps: true,
+    });
+  }
+
+  if (!target) {
+    creep.memory.rallyPoint = 'DefenseRallyPoint';
+    changeActivity(creep, 'move to rally point');
+    return;
+  }
+
+  moveIgnore(creep, target);
+  creep.pickup(target);
+  creep.withdraw(target, RESOURCE_ENERGY);
+}
+
+function activityHarvestInPlace(creep) {
+  console.log(creep.name);
+  const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
+  if (structuresAtMyPos[0] instanceof StructureContainer && structuresAtMyPos[0].store.getFreeCapacity() > 0) {
+    const harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
+    if (harvestTarget) {
+      creep.harvest(harvestTarget);
+      return;
+    }
+  }
+
+  const spot = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+    filter: function (object) {
+      return object.structureType === STRUCTURE_CONTAINER && object.pos.lookFor(LOOK_CREEPS).length === 0;
+    }
+  });
+
+  if (spot) {
+    moveIgnore(creep, spot);
+    return;
+  }
+  const source = creep.pos.findClosestByPath(FIND_SOURCES);
+  console.log(0);
+  if (creep.pos.inRangeTo(source, 1)) {
+    creep.harvest(source);
+    return;
+  }
+  moveIgnore(creep, source, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
+}
+
 module.exports = {
   pickRandomFromList,
   findTransferTargets,
@@ -139,4 +219,6 @@ module.exports = {
   activitySetup,
   changeActivity,
   changeActivityToRandomPickFromList,
+  activityPickup,
+  activityHarvestInPlace,
 };

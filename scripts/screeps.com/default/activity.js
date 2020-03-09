@@ -6,9 +6,10 @@ const {
   activitySetup,
   changeActivity,
   changeActivityToRandomPickFromList,
+  activityPickup,
+  activityHarvestInPlace,
 } = require('./common');
 
-const activities = require('./activities');
 
 const activity = {
   'tower attack': function (tower) {
@@ -18,30 +19,8 @@ const activity = {
       tower.attack(target);
     }
   },
-  'pickup': activities['pickup'],
-  'harvest in place': function (creep) {
-    const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
-    if (structuresAtMyPos[0] instanceof StructureContainer && structuresAtMyPos[0].store.getFreeCapacity() > 0) {
-      const harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
-      if (harvestTarget) {
-        creep.harvest(harvestTarget);
-        return;
-      }
-    }
-
-    const spot = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-      filter: function (object) {
-        return object.structureType === STRUCTURE_CONTAINER && object.pos.lookFor(LOOK_CREEPS).length === 0;
-      }
-    });
-
-    if (spot) {
-      moveIgnore(creep, spot);
-      return;
-    }
-    const source = creep.pos.findClosestByPath(FIND_SOURCES);
-    moveIgnore(creep, source, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
-  },
+  'pickup': activityPickup,
+  'harvest in place': activityHarvestInPlace,
   'move to rally point': function (creep) {
     const rallyTarget = Game.flags[creep.memory.rallyPoint];
     if (rallyTarget) {

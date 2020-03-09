@@ -4,7 +4,7 @@ const {
   moveIgnore,
 } = require('./common');
 
-function pickupActivity(creep) {
+function activityPickup(creep) {
   if (creepIsFull(creep)) {
     changeActivity(creep, creep.memory.whenFull);
   }
@@ -54,4 +54,4 @@ function pickupActivity(creep) {
   creep.withdraw(target, RESOURCE_ENERGY);
 }
 
-module.export = { pickupActivity };
+module.export = { activityPickup };
