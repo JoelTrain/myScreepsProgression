@@ -4,6 +4,7 @@ const {
   creepIsEmpty,
   clearTarget,
 } = require('./common');
+const { creepHasResources } = require('./creepHasResources');
 
 const builderOverrides = {
   'building site': function (creep) {
@@ -94,6 +95,9 @@ const builderOverrides = {
 };
 
 function runBuilder(creep) {
+  if (creepHasResources(creep))
+    changeActivity(creep, 'deposit');
+
   if (builderOverrides[creep.memory.activity]) {
     builderOverrides[creep.memory.activity](creep);
     return;

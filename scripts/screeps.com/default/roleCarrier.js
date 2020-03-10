@@ -1,4 +1,5 @@
 const { activity, changeActivity } = require('./activity');
+const { creepHasResources } = require('./creepHasResources');
 const { findTransferTargets, moveIgnore, creepIsEmpty, } = require('./common');
 
 const carrierOverrides = {
@@ -39,13 +40,16 @@ const carrierOverrides = {
         target = creep.pos.findClosestByPath(targets);
       }
     }
-    
-    if(target)
+
+    if (target)
       moveIgnore(creep, target);
   },
 };
 
 function runCarrier(creep) {
+  if (creepHasResources(creep))
+    changeActivity(creep, 'deposit');
+
   if (carrierOverrides[creep.memory.activity]) {
     carrierOverrides[creep.memory.activity](creep);
     return;
