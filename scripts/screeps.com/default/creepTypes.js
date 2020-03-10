@@ -6,7 +6,7 @@ const creepTypes = {
     body: basicBody,
     memory: {
       role: 'basic',
-      activity: 'harvest',
+      activity: 'withdraw',
       whenFull: 'transferring',
       whenEmpty: 'harvest',
       rallyPoint: 'DefenseRallyPoint',
@@ -30,7 +30,7 @@ const creepTypes = {
     body: workCarryMoveBody,
     memory: {
       role: 'harvester',
-      activity: 'pickup',
+      activity: 'harvest',
       whenFull: 'transferring',
       whenEmpty: 'harvest',
       rallyPoint: 'DefenseRallyPoint',
@@ -79,9 +79,9 @@ const creepTypes = {
     body: workCarryMoveBody,
     memory: {
       role: 'builder',
-      activity: 'pickup',
+      activity: 'withdraw',
       whenFull: 'building site',
-      whenEmpty: 'pickup',
+      whenEmpty: 'withdraw',
       rallyPoint: 'DefenseRallyPoint',
     },
     spawnDirections: [BOTTOM],
@@ -91,9 +91,9 @@ const creepTypes = {
     body: workCarryMoveBody,
     memory: {
       role: 'upgrader',
-      activity: 'pickup',
+      activity: 'withdraw',
       whenFull: 'upgrading controller',
-      whenEmpty: 'pickup',
+      whenEmpty: 'withdraw',
       rallyPoint: 'DefenseRallyPoint',
     },
     spawnDirections: [BOTTOM],

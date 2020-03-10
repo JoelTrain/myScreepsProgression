@@ -10,7 +10,7 @@ function activityHarvest(creep) {
   const mySource = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
 
   if (!mySource) {
-    changeActivity(creep, 'pickup');
+    changeActivity(creep, 'move to rally point');
     return;
   }
 
