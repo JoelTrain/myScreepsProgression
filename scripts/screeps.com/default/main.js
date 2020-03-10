@@ -56,6 +56,7 @@ const dispatch = {
   defender: runCommon,
   attacker: runCommon,
   carrier: runCarrier,
+  manual: runCommon,
 };
 
 function dispatchCreeps() {

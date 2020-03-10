@@ -100,16 +100,16 @@ const creepTypes = {
     maxCount: 4,
   },
   manual: {
-    body: [CLAIM, MOVE, MOVE, MOVE, WORK, CARRY],
+    body: [CLAIM, CLAIM, MOVE, MOVE, RANGED_ATTACK, MOVE, MOVE, MOVE, WORK, CARRY],
     memory: {
       role: 'manual',
-      activity: 'pickup',
-      whenFull: 'upgrading controller',
-      whenEmpty: 'pickup',
-      rallyPoint: 'DefenseRallyPoint',
+      activity: 'attack',
+      whenFull: 'attack',
+      whenEmpty: 'attack',
+      rallyPoint: 'AttackMove',
     },
     spawnDirections: [BOTTOM],
-    maxCount: 0,
+    maxCount: 2,
   },
 };
 
