@@ -42,7 +42,10 @@ function activityPickup(creep) {
   }
 
   if (!target) {
-    changeActivity(creep, 'move to rally point');
+    if (creep.body.some((part) => part.type === WORK && part.hits > 0))
+      changeActivity(creep, 'harvest')
+    else
+      changeActivity(creep, 'move to rally point');
     return;
   }
 
