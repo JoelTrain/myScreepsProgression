@@ -39,8 +39,9 @@ const carrierOverrides = {
         target = creep.pos.findClosestByPath(targets);
       }
     }
-
-    moveIgnore(creep, target);
+    
+    if(target)
+      moveIgnore(creep, target);
   },
 };
 

@@ -1,6 +1,9 @@
 function moveIgnore(creep, target, opts) {
   if (creep.spawning)
     return;
+    
+  if(!target)
+    return;
 
   if (opts === undefined)
     opts = {};

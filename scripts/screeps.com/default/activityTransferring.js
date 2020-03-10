@@ -13,7 +13,7 @@ function activityTransferring(creep) {
   targets = findTransferTargets(creep);
 
   if (!targets.length) {
-    changeActivity(creep, 'building site');
+    changeActivity(creep, 'move to rally point');
     return;
   }
 
@@ -33,8 +33,9 @@ function activityTransferring(creep) {
       target = creep.pos.findClosestByPath(targets, { ignoreCreeps: true });
     }
   }
-
-  moveIgnore(creep, target);
+  
+  if(target)
+    moveIgnore(creep, target);
 }
 
 module.exports = { activityTransferring };
