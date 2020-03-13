@@ -55,7 +55,6 @@ function activityAttack(creep) {
         creep.claimController(controller);
       }
   }
-  console.log('hasa');
   const attackMoveTarget = Game.flags[creep.memory.rallyPoint];
   if (attackMoveTarget) {
     moveIgnore(creep, attackMoveTarget, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });

@@ -47,7 +47,7 @@ function activityHarvestInPlace(creep) {
 
   source = creep.pos.findClosestByPath(FIND_SOURCES, {
     filter: function (object) {
-      return countHeavyHarvestersAlreadyBy(object) < 2;
+      return countHeavyHarvestersAlreadyBy(object) < 1;
     }
   });
   if (!source)

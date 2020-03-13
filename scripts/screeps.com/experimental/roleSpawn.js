@@ -23,6 +23,10 @@ function runSpawn(spawner) {
   if (spawner.spawning)
     return;
   const currentEnergy = spawner.room.energyAvailable;
+
+  const numSources = spawner.room.find(FIND_SOURCES).length;
+  creepTypes.heavyHarvester.maxCount = numSources;
+
   //console.log(`Spawner energy ${currentEnergy}`);
   if (currentEnergy < 200)
     return;
