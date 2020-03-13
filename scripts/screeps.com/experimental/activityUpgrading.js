@@ -21,6 +21,14 @@ function activityUpgrading(creep) {
   if (creep.pos.inRangeTo(controller, 3)) {
     const result = creep.upgradeController(controller);
 
+    const storages = creep.pos.findInRange(FIND_STRUCTURES, 1, {
+      filter: function (object) {
+        return (object.structureType === STRUCTURE_STORAGE || object.structureType == STRUCTURE_CONTAINER) && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity();
+      }
+    });
+    if (storages.length)
+      creep.withdraw(storages[0], RESOURCE_ENERGY);
+
     if (result !== OK) {
       changeActivity(creep, creep.memory.whenEmpty);
     }

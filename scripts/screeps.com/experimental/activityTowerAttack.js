@@ -3,6 +3,7 @@ function activityTowerAttack(tower) {
   const target = tower.pos.findClosestByRange(targets);
   if (target) {
     tower.attack(target);
+    console.log(`${tower.name} is attacking ${target.name}`);
   }
 }
 

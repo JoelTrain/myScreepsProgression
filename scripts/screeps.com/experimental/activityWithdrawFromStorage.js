@@ -25,7 +25,10 @@ function activityWithdrawFromStorage(creep) {
   }
 
   moveIgnore(creep, target);
-  creep.withdraw(target, RESOURCE_ENERGY);
+  const withdrawResult = creep.withdraw(target, RESOURCE_ENERGY);
+  if (withdrawResult === OK) {
+    creep.memory.ready = true;
+  }
 }
 
 module.exports = { activityWithdrawFromStorage };

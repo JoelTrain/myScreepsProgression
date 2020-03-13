@@ -47,8 +47,13 @@ function towers() {
   }
 }
 
+function prepareForDispatch() {
+  for (const creep of Object.values(Game.creeps))
+    creep.memory.ready = true;
+}
+
 const dispatch = {
-  undefined: (creep) => {},
+  undefined: (creep) => { },
   heavyHarvester: runCommon,
   harvester: runCommon,
   builder: runBuilder,
@@ -64,8 +69,10 @@ const dispatch = {
 function dispatchCreeps() {
   for (const creep of Object.values(Game.creeps)) {
     try {
-      if (!creep.spawning)
+      if (!creep.spawning && creep.memory.ready) {
+        creep.memory.ready = false;
         dispatch[creep.memory.role](creep);
+      }
     }
     catch (error) {
       //errorMessage += error.message;
@@ -99,14 +106,20 @@ function main() {
     errorMessage += error.stack + '\n';
   }
   try {
+    prepareForDispatch();
+    dispatchCreeps();
+    dispatchCreeps();
     dispatchCreeps();
   }
   catch (error) {
     //errorMessage += error.message;
     errorMessage += error.stack + '\n';
   }
-  if (errorMessage.length)
-    throw Error(`At time: ${currentTimeString()} ${errorMessage}`);
+  if (errorMessage.length) {
+    errorMessage = `At time: ${currentTimeString()} ${errorMessage}`;
+    Game.notify(errorMessage, 120);
+    throw Error(errorMessage);
+  }
 }
 
 module.exports.loop = main;

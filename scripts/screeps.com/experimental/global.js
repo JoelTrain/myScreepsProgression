@@ -10,28 +10,28 @@ global.roomCapacities = function () {
   return returnArr;
 };
 
-global.setRallyPointOnType= function(typeName, flagName) {
-  for(const creep of Object.values(Game.creeps)) {
-      if(creep.memory.role === typeName)
-        creep.memory.rallyPoint = flagName;
-  }  
+global.setRallyPointOnType = function (typeName, flagName) {
+  for (const creep of Object.values(Game.creeps)) {
+    if (creep.memory.role === typeName)
+      creep.memory.rallyPoint = flagName;
+  }
 };
 
-global.setTargetPosOnType= function(typeName, flagName) {
+global.setTargetPosOnType = function (typeName, flagName) {
   const flag = Game.flags[flagName];
-  if(!flag)
+  if (!flag)
     return;
-  for(const creep of Object.values(Game.creeps)) {
-      if(creep.memory.role === typeName)
-        creep.memory.targetPos = flag.pos;
-  }  
+  for (const creep of Object.values(Game.creeps)) {
+    if (creep.memory.role === typeName)
+      creep.memory.targetPos = flag.pos;
+  }
 };
 
-global.setActivityOnType= function(typeName, activityName) {
-  for(const creep of Object.values(Game.creeps)) {
-      if(creep.memory.role === typeName)
-        creep.memory.activity = activityName;
-  }  
+global.setActivityOnType = function (typeName, activityName) {
+  for (const creep of Object.values(Game.creeps)) {
+    if (creep.memory.role === typeName)
+      creep.memory.activity = activityName;
+  }
 };
 
 global.currentTimeString = function () {
@@ -63,7 +63,7 @@ global.updateCurrentCreepCounts = function () {
 
   for (const creepHash in Game.creeps) {
     const creep = Game.creeps[creepHash];
-    if(creepTypes[creep.memory.role])
+    if (creepTypes[creep.memory.role])
       creepTypes[creep.memory.role].currentCount++;
   }
   creepsCounted = true;
@@ -72,10 +72,10 @@ global.updateCurrentCreepCounts = function () {
 
 global.countCreepsOfTypeInRoom = function (type, room) {
   let count = 0;
-  for(const creep of room.find(FIND_MY_CREEPS)) {
+  for (const creep of room.find(FIND_MY_CREEPS)) {
     if (creep.memory.role === type.memory.role)
       count++;
-      
+
   }
   return count;
 };
@@ -99,6 +99,22 @@ global.logCreepCounts = function () {
     console.log(type.memory.role, `${type.currentCount}/${type.maxCount}`);
   }
 };
+
+global.logCreepCountsForRoom = function (room) {
+  const countsForThisRoom = { total: 0 };
+  for (const typeKey of Object.keys(creepTypes)) {
+    countsForThisRoom[typeKey] = 0;
+  }
+
+  for (const creep of room.find(FIND_MY_CREEPS)) {
+    countsForThisRoom[creep.memory.role]++;
+    countsForThisRoom.total++;
+  }
+  console.log(`Room: ${room.name} Num creeps: ${countsForThisRoom.total}`);
+  for (const type of Object.values(creepTypes)) {
+    console.log(type.memory.role, `${countsForThisRoom[type.memory.role]}/${type.maxCount}`);
+  }
+}
 
 global.printEachActivity = function () {
   for (const creepHash in Game.creeps) {
