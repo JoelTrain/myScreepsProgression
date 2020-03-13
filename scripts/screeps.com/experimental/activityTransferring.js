@@ -2,6 +2,7 @@ const { moveIgnore } = require('./moveIgnore');
 const { creepIsEmpty } = require('./creepIsEmpty');
 const { changeActivity } = require('./changeActivity');
 const { findTransferTargets } = require('./findTransferTargets');
+const { changeActivityToRandomPickFromList } = require('./changeActivityToRandomPickFromList');
 
 function activityTransferring(creep) {
   if (creepIsEmpty(creep)) {
@@ -14,7 +15,7 @@ function activityTransferring(creep) {
 
   if (!targets.length) {
     if (creep.body.some((part) => part.type === WORK && part.hits > 0)) {
-      changeActivity(creep, 'building site');
+      changeActivityToRandomPickFromList(creep, ['building site',]);
     }
     else {
       changeActivity(creep, 'move to rally point');
@@ -28,7 +29,6 @@ function activityTransferring(creep) {
     return;
   }
 
-  creep.memory.targetId = target.id;
   if (creep.pos.inRangeTo(target, 1)) {
     creep.transfer(target, RESOURCE_ENERGY);
 

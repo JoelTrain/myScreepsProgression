@@ -1,4 +1,4 @@
-const basicBody = [WORK, CARRY, MOVE];
+const basicBody = [WORK, CARRY, MOVE, MOVE];
 const workCarryMoveBody = [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
 
 const creepTypes = {
@@ -6,7 +6,7 @@ const creepTypes = {
     body: basicBody,
     memory: {
       role: 'basic',
-      activity: 'withdraw',
+      activity: 'harvest',
       whenFull: 'transferring',
       whenEmpty: 'withdraw',
     },

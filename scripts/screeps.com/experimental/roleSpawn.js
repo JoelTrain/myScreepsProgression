@@ -42,8 +42,6 @@ function runSpawn(spawner) {
   if (typeVals.length < 1)
     return;
 
-  updateCurrentCreepCounts();
-
   const countsForThisRoom = { total: 0 };
   for (const typeKey of Object.keys(creepTypes)) {
     countsForThisRoom[typeKey] = 0;
@@ -80,7 +78,12 @@ function runSpawn(spawner) {
   if (countsForThisRoom.total < 5) {
     Game.notify('Uh oh we are making basic creeps at ' + currentTimeString(), 120);
     console.log('Sending Email!');
-    spawnType(spawner, creepTypes.basic);
+    const basicType = creepTypes.basic;
+    const prob = Math.random();
+    console.log(prob);
+    if(prob < 0.2)
+        basicType.memory.whenFull = 'upgrading controller';
+    spawnType(spawner, basicType);
   }
 }
 
