@@ -9,7 +9,7 @@ function spawnType(spawner, type) {
   const string = (spawnResult === 0) ? 'success' : `fail with code ${spawnResult}`;
   const cost = bodyCost(type.body);
   console.log(`${spawner.name} is trying to spawn type:${type.memory.role}, cost:${cost}, name:${creepName}...${string}`);
-  logCreepCounts();
+  logCreepCountsForRoom(spawner.room);
   if (spawnResult === 0) {
     const newestCreep = Game.creeps[creepName];
     if (!newestCreep)
@@ -63,11 +63,17 @@ function runSpawn(spawner) {
   // const bManningFraction = b.currentCount / b.maxCount;
   // return aManningFraction - bManningFraction;
   //});
+
+  const roomMax = spawner.room.energyCapacityAvailable;
+
   for (const typeToBuild of typeVals) {
     //const typeToBuild = typeVals[0];
     if (countsForThisRoom[typeToBuild.memory.role] >= typeToBuild.maxCount)
       continue;
-    if (bodyCost(typeToBuild.body) > currentEnergy)
+    const costOfBody = bodyCost(typeToBuild.body);
+    if (costOfBody > roomMax && countsForThisRoom['basic'] < 5)
+      spawnType(spawner, creepTypes.basic);
+    if (costOfBody > currentEnergy)
       break;
     if (typeToBuild.memory.role === 'basic')
       continue;
@@ -75,14 +81,16 @@ function runSpawn(spawner) {
     return;
   }
 
-  if (countsForThisRoom.total < 5) {
+  if (countsForThisRoom.total < 5 && currentEnergy >= bodyCost(creepTypes.basic.body)) {
     Game.notify('Uh oh we are making basic creeps at ' + currentTimeString(), 120);
     console.log('Sending Email!');
     const basicType = creepTypes.basic;
     const prob = Math.random();
     console.log(prob);
-    if(prob < 0.2)
-        basicType.memory.whenFull = 'upgrading controller';
+    if (prob < 0.2)
+      basicType.memory.whenFull = 'upgrading controller';
+    else
+      basicType.memory.whenFull = 'transferring';
     spawnType(spawner, basicType);
   }
 }
