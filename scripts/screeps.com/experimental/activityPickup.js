@@ -27,7 +27,7 @@ function activityPickup(creep) {
   if (!target) {
     target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
       filter: function (object) {
-        return object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= 100;
+        return object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= creep.store.getFreeCapacity();
       },
       ignoreCreeps: true,
     });
