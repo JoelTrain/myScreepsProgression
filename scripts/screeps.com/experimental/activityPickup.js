@@ -11,15 +11,14 @@ function activityPickup(creep) {
 
   if (!target) {
     let targets = creep.room.find(FIND_DROPPED_RESOURCES);
-    target = creep.pos.findClosestByPath(targets, { 
+    target = creep.pos.findClosestByPath(targets, {
       filter: function (object) {
         const isEnergy = object.resourceType === RESOURCE_ENERGY;
-        
-        if(!isEnergy)
-            return true;
-            
-        const hasMoreThan200 = object.amount >= 200;
-        return hasMoreThan200;
+
+        if (!isEnergy)
+          return true;
+
+        return object.amount >= 500;
       },
       ignoreCreeps: true,
     });
@@ -61,8 +60,14 @@ function activityPickup(creep) {
   }
 
   moveIgnore(creep, target);
-  creep.pickup(target);
-  creep.withdraw(target, RESOURCE_ENERGY);
+  let result;
+  result = creep.pickup(target);
+  if (result === OK)
+    changeActivity(creep, creep.memory.whenFull);
+
+  result = creep.withdraw(target, RESOURCE_ENERGY);
+  if (result === OK)
+    changeActivity(creep, creep.memory.whenFull);
 }
 
 module.exports = { activityPickup };
