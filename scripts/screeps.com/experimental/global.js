@@ -1,6 +1,7 @@
 const { creepTypes } = require('./creepTypes');
 const { bodyCost } = require('./common');
 
+global.creepTypes = creepTypes;
 global.bodyCost = bodyCost;
 global.roomCapacities = function () {
   const returnArr = [];
