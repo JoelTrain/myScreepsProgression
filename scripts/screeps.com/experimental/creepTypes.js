@@ -6,9 +6,9 @@ const creepTypes = {
     body: basicBody,
     memory: {
       role: 'basic',
-      activity: 'harvest',
+      activity: 'pickup',
       whenFull: 'transferring',
-      whenEmpty: 'withdraw',
+      whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM],
     maxCount: 0,
@@ -55,7 +55,7 @@ const creepTypes = {
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 2,
+    maxCount: 3,
   },
   attacker: {
     body: [TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK],
@@ -64,6 +64,7 @@ const creepTypes = {
       activity: 'attack',
       whenFull: 'attack',
       whenEmpty: 'attack',
+      rallyPoint: 'AttackMove',
     },
     spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
     maxCount: 0,
