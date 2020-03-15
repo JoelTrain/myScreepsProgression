@@ -1,7 +1,22 @@
 const { moveIgnore } = require('./moveIgnore');
+const { isAlly } = require('./isAlly');
 
 function activityAttack(creep) {
   let targets = [];
+
+  const friendly = creep.pos.findClosestByRange(FIND_CREEPS, {
+    filter: function (object) {
+      return isAlly(creep) && object.hits < object.hitsMax;
+    }
+  });
+  if (friendly) {
+    if (creep.pos.isNearTo(friendly)) {
+      creep.heal(friendly);
+    }
+    else {
+      creep.rangedHeal(friendly);
+    }
+  }
 
   const controller = creep.room.controller;
   if (controller)
@@ -18,31 +33,36 @@ function activityAttack(creep) {
       return;
     }
     else {
-      targets.push(...creep.room.lookForAt(LOOK_STRUCTURES, attackMoveTarget));
-      targets.push(...creep.room.lookForAt(LOOK_CREEPS, attackMoveTarget));
+      const enemyStructure = creep.room.lookForAt(LOOK_STRUCTURES, attackMoveTarget)[0];
+      if (enemyStructure && !isAlly(enemyStructure))
+        targets.push(enemyStructure);
+
+      const enemy = creep.room.lookForAt(LOOK_CREEPS, attackMoveTarget)[0];
+      if (enemy && !isAlly(enemy))
+        targets.push(enemy);
     }
   }
 
   if (targets.length === 0) {
-    targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
+    targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3, { filter: !isAlly });
     if (targets.length > 1) {
       creep.rangedMassAttack();
     }
     targets = creep.room.find(FIND_HOSTILE_CREEPS, {
       filter: function (object) {
-        return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
+        return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0 && !isAlly(object);
       }
     });
   }
   if (targets.length === 0) {
     targets = creep.room.find(FIND_HOSTILE_STRUCTURES, {
       filter: function (object) {
-        return object.structureType !== STRUCTURE_CONTROLLER;
+        return object.structureType !== STRUCTURE_CONTROLLER && !isAlly(object);
       },
     });
   }
   if (targets.length === 0) {
-    targets = creep.room.find(FIND_HOSTILE_CREEPS);
+    targets = creep.room.find(FIND_HOSTILE_CREEPS, { filter: !isAlly });
     if (targets.length) {
       const target = creep.pos.findClosestByRange(targets);
       if (target) {
