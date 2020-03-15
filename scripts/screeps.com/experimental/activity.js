@@ -11,6 +11,7 @@ const { activityAttack } = require('./activityAttack');
 const { activityHarvest } = require('./activityHarvest');
 const { activityTransferring } = require('./activityTransferring');
 const { activityBuilding } = require('./activityBuilding');
+const { activityRepair } = require('./activityRepair');
 const { activityUpgrading } = require('./activityUpgrading');
 
 const activity = {
@@ -25,6 +26,7 @@ const activity = {
   'harvest': activityHarvest,
   'transferring': activityTransferring,
   'building site': activityBuilding,
+  'repairing': activityRepair,
   'upgrading controller': activityUpgrading,
 };
 
