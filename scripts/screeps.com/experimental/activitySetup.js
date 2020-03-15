@@ -4,7 +4,7 @@ function activitySetup(creep) {
   if (creep.memory.whenEmpty === undefined)
     creep.memory.whenEmpty = 'pickup';
   if (creep.memory.whenFull === undefined)
-    creep.memory.whenFull = 'upgrading controller';
+    creep.memory.whenFull = 'upgrade';
 }
 
 module.exports = { activitySetup };

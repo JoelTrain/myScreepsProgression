@@ -7,7 +7,7 @@ const creepTypes = {
     memory: {
       role: 'basic',
       activity: 'pickup',
-      whenFull: 'transferring',
+      whenFull: 'transfer',
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM],
@@ -29,7 +29,7 @@ const creepTypes = {
     memory: {
       role: 'harvester',
       activity: 'harvest',
-      whenFull: 'transferring',
+      whenFull: 'transfer',
       whenEmpty: 'harvest',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
@@ -51,7 +51,7 @@ const creepTypes = {
     memory: {
       role: 'carrier',
       activity: 'pickup',
-      whenFull: 'transferring',
+      whenFull: 'transfer',
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
@@ -74,7 +74,7 @@ const creepTypes = {
     memory: {
       role: 'builder',
       activity: 'withdraw',
-      whenFull: 'building site',
+      whenFull: 'build',
       whenEmpty: 'withdraw',
     },
     spawnDirections: [BOTTOM],
@@ -85,7 +85,7 @@ const creepTypes = {
     memory: {
       role: 'remoteBuilder',
       activity: 'move to rally point',
-      whenFull: 'building site',
+      whenFull: 'build',
       whenEmpty: 'harvest',
     },
     spawnDirections: [BOTTOM],
@@ -96,7 +96,7 @@ const creepTypes = {
     memory: {
       role: 'upgrader',
       activity: 'withdraw',
-      whenFull: 'upgrading controller',
+      whenFull: 'upgrade',
       whenEmpty: 'withdraw',
     },
     spawnDirections: [BOTTOM],

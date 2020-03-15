@@ -92,9 +92,9 @@ function runSpawn(spawner) {
     const prob = Math.random();
     console.log(prob);
     if (prob < 0.2)
-      basicType.memory.whenFull = 'upgrading controller';
+      basicType.memory.whenFull = 'upgrade';
     else
-      basicType.memory.whenFull = 'transferring';
+      basicType.memory.whenFull = 'transfer';
     spawnType(spawner, basicType);
   }
 }

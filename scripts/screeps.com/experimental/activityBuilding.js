@@ -28,7 +28,7 @@ function activityBuilding(creep) {
     target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
   }
   if (!target) {
-    changeActivity(creep, 'upgrading controller');
+    changeActivity(creep, 'upgrade');
     return;
   }
 
@@ -39,7 +39,7 @@ function activityBuilding(creep) {
     moveIgnore(creep, target);
     if (buildResult !== OK) {
       clearTarget(creep);
-      changeActivity(creep, 'upgrading controller');
+      changeActivity(creep, 'upgrade');
     }
     return;
   }

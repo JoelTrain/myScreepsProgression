@@ -7,7 +7,7 @@ const {
 const { creepHasResources } = require('./creepHasResources');
 
 const builderOverrides = {
-  'building site': function (creep) {
+  'build': function (creep) {
     if (creepIsEmpty(creep)) {
       changeActivity(creep, creep.memory.whenEmpty);
       return;
@@ -42,7 +42,7 @@ const builderOverrides = {
     });
 
     if (targets.length === 0) {
-      changeActivity(creep, 'upgrading controller');
+      changeActivity(creep, 'upgrade');
       return;
     }
 

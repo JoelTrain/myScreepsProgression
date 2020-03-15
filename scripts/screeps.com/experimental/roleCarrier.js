@@ -3,7 +3,7 @@ const { creepHasResources } = require('./creepHasResources');
 const { findTransferTargets, moveIgnore, creepIsEmpty, } = require('./common');
 
 const carrierOverrides = {
-  'transferring': function (creep) {
+  'transfer': function (creep) {
     if (creepIsEmpty(creep)) {
       changeActivity(creep, creep.memory.whenEmpty);
       return;

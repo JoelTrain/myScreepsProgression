@@ -15,7 +15,7 @@ function activityTransferring(creep) {
 
   if (!targets.length) {
     if (creep.body.some((part) => part.type === WORK && part.hits > 0)) {
-      changeActivityToRandomPickFromList(creep, ['building site',]);
+      changeActivityToRandomPickFromList(creep, ['build',]);
     }
     else {
       changeActivity(creep, 'move to rally point');
@@ -38,8 +38,8 @@ function activityTransferring(creep) {
       target = creep.pos.findClosestByPath(targets, { ignoreCreeps: true });
     }
   }
-  
-  if(target)
+
+  if (target)
     moveIgnore(creep, target);
 }
 
