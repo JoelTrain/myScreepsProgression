@@ -25,9 +25,13 @@ const activity = {
   'attack': activityAttack,
   'harvest': activityHarvest,
   'transferring': activityTransferring,
+  'transfer': activityTransferring,
   'building site': activityBuilding,
+  'build': activityBuilding,
   'repairing': activityRepair,
+  'repair': activityRepair,
   'upgrading controller': activityUpgrading,
+  'upgrade': activityUpgrading,
 };
 
 module.exports = {
