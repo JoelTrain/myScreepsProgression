@@ -75,7 +75,7 @@ function runSpawn(spawner) {
     if (countsForThisRoom[typeToBuild.memory.role] >= typeToBuild.maxCount)
       continue;
     const costOfBody = bodyCost(typeToBuild.body);
-    if (costOfBody > roomMax && countsForThisRoom['basic'] < 5)
+    if (costOfBody > roomMax && countsForThisRoom['basic'] < 10)
       spawnType(spawner, creepTypes.basic);
     if (costOfBody > currentEnergy)
       break;
@@ -86,7 +86,7 @@ function runSpawn(spawner) {
   }
 
   if (countsForThisRoom.total < 5 && currentEnergy >= bodyCost(creepTypes.basic.body)) {
-    Game.notify('Uh oh we are making basic creeps at ' + currentTimeString(), 120);
+    Game.notify(`Uh oh we are making basic creeps at ${currentTimeString()} in ${spawner.room.name}`, 120);
     console.log('Sending Email!');
     const basicType = creepTypes.basic;
     const prob = Math.random();
