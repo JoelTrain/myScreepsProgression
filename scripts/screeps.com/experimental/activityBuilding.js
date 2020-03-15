@@ -10,19 +10,19 @@ function activityBuilding(creep) {
   }
 
   let target = Game.getObjectById(creep.memory.targetId);
-  if(!(target instanceof Structure))
+  if (!(target instanceof Structure))
     target = undefined;
 
-  if(target)
-    if(target.hits === target.hitsMax)
+  if (target)
+    if (target.hits === target.hitsMax)
       target = undefined;
-  
+
   if (!target) {
     target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, {
-    filter: (structure) => {
-      return structure.structureType == STRUCTURE_EXTENSION;
-    }
-  });
+      filter: (structure) => {
+        return structure.structureType == STRUCTURE_EXTENSION;
+      }
+    });
   }
   if (!target) {
     target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
@@ -36,6 +36,7 @@ function activityBuilding(creep) {
 
   if (creep.pos.inRangeTo(target, 3)) {
     const buildResult = creep.build(target);
+    moveIgnore(creep, target);
     if (buildResult !== OK) {
       clearTarget(creep);
       changeActivity(creep, 'upgrading controller');
