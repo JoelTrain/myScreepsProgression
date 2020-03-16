@@ -44,22 +44,9 @@ function runSpawn(spawner) {
     countsForThisRoom.total++;
   }
 
-  //typeVals.sort((a,b) => {
-  // if(a.maxCount === b.maxCount)
-  //     return 0;
-  // if(a.maxCount === 0)
-  //     return 999999;
-  // if(b.maxCount === 0)
-  //     return -999999;
-  // const aManningFraction = a.currentCount / a.maxCount;
-  // const bManningFraction = b.currentCount / b.maxCount;
-  // return aManningFraction - bManningFraction;
-  //});
-
   const roomMax = spawner.room.energyCapacityAvailable;
 
   for (const typeToBuild of typeVals) {
-    //const typeToBuild = typeVals[0];
     if (countsForThisRoom[typeToBuild.memory.role] >= typeToBuild.maxCount)
       continue;
     const costOfBody = bodyCost(typeToBuild.body);

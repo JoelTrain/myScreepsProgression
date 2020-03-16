@@ -21,7 +21,6 @@ const carrierOverrides = {
     }
 
     if (!targets.length) {
-      changeActivity(creep, 'move to rally point');
       return;
     }
 
