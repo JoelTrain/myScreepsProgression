@@ -47,7 +47,7 @@ const creepTypes = {
     maxCount: 2,
   },
   carrier: {
-    body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+    body: [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
     memory: {
       role: 'carrier',
       activity: 'pickup',
@@ -55,10 +55,22 @@ const creepTypes = {
       whenEmpty: 'pickup',
     },
     spawnDirections: [BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT, BOTTOM_LEFT],
-    maxCount: 3,
+    maxCount: 2,
+  },
+  tank: {
+    body: [MOVE, MOVE, MOVE, MOVE, MOVE, HEAL, HEAL, HEAL, HEAL, HEAL],
+    memory: {
+      role: 'tank',
+      activity: 'move to rally point',
+      whenFull: 'move to rally point',
+      whenEmpty: 'move to rally point',
+      rallyPoint: 'TankMove1',
+    },
+    spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
+    maxCount: 1,
   },
   attacker: {
-    body: [TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK, HEAL],
+    body: [MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK, HEAL],
     memory: {
       role: 'attacker',
       activity: 'attack',
@@ -67,14 +79,14 @@ const creepTypes = {
       rallyPoint: 'AttackMove',
     },
     spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
-    maxCount: 0,
+    maxCount: 3,
   },
   builder: {
     body: workCarryMoveBody,
     memory: {
       role: 'builder',
       activity: 'withdraw',
-      whenFull: 'build',
+      whenFull: 'repair',
       whenEmpty: 'withdraw',
     },
     spawnDirections: [BOTTOM],
@@ -92,7 +104,7 @@ const creepTypes = {
     maxCount: 0,
   },
   upgrader: {
-    body: workCarryMoveBody,
+    body: [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
     memory: {
       role: 'upgrader',
       activity: 'withdraw',
