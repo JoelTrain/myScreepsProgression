@@ -48,23 +48,14 @@ function towers() {
 }
 
 function prepareForDispatch() {
-  for (const creep of Object.values(Game.creeps))
+  for (const creep of Object.values(Game.creeps)) {
     creep.memory.ready = true;
+    creep.memory.changedActivity = false;
+  }
 }
 
 const dispatch = {
-  undefined: runCommon,
-  heavyHarvester: runCommon,
-  harvester: runCommon,
-  builder: runBuilder,
-  upgrader: runCommon,
-  basic: runCommon,
-  defender: runCommon,
-  attacker: runCommon,
   carrier: runCarrier,
-  manual: runCommon,
-  remoteBuilder: runCommon,
-  tank: runCommon,
 };
 
 function dispatchCreeps() {
@@ -72,7 +63,10 @@ function dispatchCreeps() {
     try {
       if (!creep.spawning && creep.memory.ready) {
         creep.memory.ready = false;
-        dispatch[creep.memory.role](creep);
+        if (dispatch[creep.memory.role])
+          dispatch[creep.memory.role](creep);
+        else
+          runCommon(creep);
       }
     }
     catch (error) {
@@ -108,9 +102,8 @@ function main() {
   }
   try {
     prepareForDispatch();
-    dispatchCreeps();
-    dispatchCreeps();
-    dispatchCreeps();
+    for (let i = 0; i < 3; i++)
+      dispatchCreeps();
   }
   catch (error) {
     //errorMessage += error.message;

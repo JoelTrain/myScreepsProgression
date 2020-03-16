@@ -7,7 +7,9 @@ function changeActivity(creep, newActivity) {
     creep.say(newActivity);
 
   creep.memory.activity = newActivity;
+  creep.memory.changedActivity = true;
   creep.memory.ready = true;
+  delete creep.memory._move;
 }
 
 module.exports = { changeActivity };
