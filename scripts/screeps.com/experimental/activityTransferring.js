@@ -31,6 +31,11 @@ function activityTransferring(creep) {
 
   if (creep.pos.inRangeTo(target, 1)) {
     creep.transfer(target, RESOURCE_ENERGY);
+    console.log(creep.name, target.store.getFreeCapacity(RESOURCE_ENERGY));
+    if (target.store.getFreeCapacity(RESOURCE_ENERGY) >= creep.store.getUsedCapacity(RESOURCE_ENERGY)) {
+      changeActivity(creep, creep.memory.whenEmpty);
+      return;
+    }
 
     const pos = targets.indexOf(target);
     if (pos > -1) {

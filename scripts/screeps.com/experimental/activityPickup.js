@@ -5,6 +5,7 @@ const { moveIgnore } = require('./moveIgnore');
 function activityPickup(creep) {
   if (creepIsFull(creep)) {
     changeActivity(creep, creep.memory.whenFull);
+    return;
   }
 
   let target;
@@ -67,12 +68,28 @@ function activityPickup(creep) {
     });
   }
 
+  if (!target)
+    return;
+
+  if (creep.pos.inRangeTo(target, 1)) {
+    creep.pickup(target);
+    if (target instanceof Resource && target.amount > creep.store.getFreeCapacity()) {
+      changeActivity(creep, creep.memory.whenFull);
+      return;
+    }
+
+    if (target instanceof Structure || target instanceof Tombstone || target instanceof Ruin) {
+      const stored_resources = _.filter(Object.keys(target.store), resource => target.store[resource] > 0)
+      creep.withdraw(target, stored_resources[0]);
+
+      if (stored_resources[0] >= creep.store.getFreeCapacity()) {
+        changeActivity(creep, creep.memory.whenFull);
+        return;
+      }
+    }
+  }
+
   moveIgnore(creep, target);
-
-  creep.pickup(target);
-
-  const stored_resources = _.filter(Object.keys(target.store), resource => target.store[resource] > 0)
-  creep.withdraw(target, stored_resources[0]);
 }
 
 module.exports = { activityPickup };
