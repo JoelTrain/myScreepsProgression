@@ -10,13 +10,13 @@ function activityBuilding(creep) {
   }
 
   let target = Game.getObjectById(creep.memory.targetId);
-  if (!(target instanceof Structure))
-    target = undefined;
-
-  if (target)
-    if (target.hits === target.hitsMax)
+  if (target) {
+    if (!(target instanceof Structure))
       target = undefined;
 
+    if (target && target.hits === target.hitsMax)
+      target = undefined;
+  }
   if (!target) {
     target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, {
       filter: (structure) => {
