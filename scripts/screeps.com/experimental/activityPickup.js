@@ -68,14 +68,11 @@ function activityPickup(creep) {
   }
 
   moveIgnore(creep, target);
-  let result;
-  result = creep.pickup(target);
-  if (result === OK)
-    changeActivity(creep, creep.memory.whenFull);
 
-  result = creep.withdraw(target, RESOURCE_ENERGY);
-  if (result === OK)
-    changeActivity(creep, creep.memory.whenFull);
+  creep.pickup(target);
+
+  const stored_resources = _.filter(Object.keys(target.store), resource => target.store[resource] > 0)
+  creep.withdraw(target, stored_resources[0]);
 }
 
 module.exports = { activityPickup };
