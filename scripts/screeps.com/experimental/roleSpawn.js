@@ -1,4 +1,5 @@
 const { creepTypes } = require('./creepTypes');
+const { creepTypesPerRoom } = require('./creepTypesPerRoom');
 const { spawnType } = require('./spawnType');
 const { bodyCost } = require('./bodyCost');
 
@@ -25,12 +26,16 @@ function runSpawn(spawner) {
   else
     creepTypes.defender.maxCount = 0;
 
-  const typeVals = Object.values(creepTypes);
+  let creepTypesForThisRoom = creepTypesPerRoom[spawner.room.name];
+  if (!creepTypesForThisRoom)
+    creepTypesForThisRoom = creepTypes;
+
+  const typeVals = Object.values(creepTypesForThisRoom);
   if (typeVals.length < 1)
     return;
 
   const countsForThisRoom = { total: 0 };
-  for (const typeKey of Object.keys(creepTypes)) {
+  for (const typeKey of Object.keys(creepTypesForThisRoom)) {
     countsForThisRoom[typeKey] = 0;
   }
 
@@ -59,7 +64,7 @@ function runSpawn(spawner) {
       continue;
     const costOfBody = bodyCost(typeToBuild.body);
     if (costOfBody > roomMax && countsForThisRoom['basic'] < 10)
-      spawnType(spawner, creepTypes.basic);
+      spawnType(spawner, creepTypesForThisRoom.basic);
     if (costOfBody > currentEnergy)
       break;
     if (typeToBuild.memory.role === 'basic')
@@ -68,17 +73,10 @@ function runSpawn(spawner) {
     return;
   }
 
-  if (countsForThisRoom.total < 5 && currentEnergy >= bodyCost(creepTypes.basic.body)) {
+  if (countsForThisRoom.total < 5 && currentEnergy >= bodyCost(creepTypesForThisRoom.basic.body)) {
     Game.notify(`Uh oh we are making basic creeps at ${currentTimeString()} in ${spawner.room.name}`, 120);
     console.log('Sending Email!');
-    const basicType = creepTypes.basic;
-    const prob = Math.random();
-    console.log(prob);
-    if (prob < 0.2)
-      basicType.memory.whenFull = 'upgrade';
-    else
-      basicType.memory.whenFull = 'transfer';
-    spawnType(spawner, basicType);
+    spawnType(spawner, creepTypesForThisRoom.basic);
   }
 }
 
