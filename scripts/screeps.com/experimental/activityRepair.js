@@ -53,6 +53,7 @@ function activityRepair(creep) {
 
   if (creep.pos.inRangeTo(target, 3)) {
     creep.repair(target);
+    return;
   }
 
   moveIgnore(creep, target);

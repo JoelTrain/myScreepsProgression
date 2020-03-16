@@ -36,7 +36,6 @@ function activityBuilding(creep) {
 
   if (creep.pos.inRangeTo(target, 3)) {
     const buildResult = creep.build(target);
-    moveIgnore(creep, target);
     if (buildResult !== OK) {
       clearTarget(creep);
       changeActivity(creep, 'upgrade');
