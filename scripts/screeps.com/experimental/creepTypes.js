@@ -67,7 +67,7 @@ const creepTypes = {
       rallyPoint: 'TankMove1',
     },
     spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
-    maxCount: 1,
+    maxCount: 0,
   },
   attacker: {
     body: [MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, RANGED_ATTACK, HEAL],
@@ -79,18 +79,29 @@ const creepTypes = {
       rallyPoint: 'AttackMove',
     },
     spawnDirections: [BOTTOM, BOTTOM, BOTTOM_RIGHT],
-    maxCount: 3,
+    maxCount: 0,
   },
   builder: {
     body: workCarryMoveBody,
     memory: {
       role: 'builder',
       activity: 'withdraw',
-      whenFull: 'repair',
+      whenFull: 'build',
       whenEmpty: 'withdraw',
     },
     spawnDirections: [BOTTOM],
     maxCount: 3,
+  },
+  repairer: {
+    body: workCarryMoveBody,
+    memory: {
+      role: 'repairer',
+      activity: 'withdraw',
+      whenFull: 'repair',
+      whenEmpty: 'withdraw',
+    },
+    spawnDirections: [BOTTOM],
+    maxCount: 1,
   },
   remoteBuilder: {
     body: workCarryMoveBody,
