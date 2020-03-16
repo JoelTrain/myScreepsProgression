@@ -1,5 +1,6 @@
 const { bodyCost } = require('./bodyCost');
 const { activitySetup } = require('./activity');
+const { pickRandomFromList } = require('./pickRandomFromList');
 
 function spawnType(spawner, type) {
   const creepNumber = Math.floor(Math.random() * 10000);
@@ -13,6 +14,23 @@ function spawnType(spawner, type) {
     const newestCreep = Game.creeps[creepName];
     if (!newestCreep)
       throw Error(`Well that's weird. I really thought ${creepName} spawned.`);
+
+    if (newestCreep.memory.role === 'basic') {
+      const whenFullActivity = pickRandomFromList(['build', 'repair', 'upgrade', 'upgrade', 'upgrade',]);
+      newestCreep.memory.whenFull = whenFullActivity;
+    }
+
+    if (spawner.room.name === 'E5S31')
+      if (newestCreep.memory.role === 'attacker')
+        newestCreep.memory.rallyPoint = 'AttackMove';
+      else if (newestCreep.memory.role === 'tank')
+        newestCreep.memory.rallyPoint = 'TankMove1';
+
+    if (spawner.room.name === 'E9S32')
+      if (newestCreep.memory.role === 'attacker')
+        newestCreep.memory.rallyPoint = 'AttackMove2';
+      else if (newestCreep.memory.role === 'tank')
+        newestCreep.memory.rallyPoint = 'TankMove2';
 
     activitySetup(newestCreep);
   }

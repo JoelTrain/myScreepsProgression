@@ -53,7 +53,7 @@ function prepareForDispatch() {
 }
 
 const dispatch = {
-  undefined: (creep) => { },
+  undefined: runCommon,
   heavyHarvester: runCommon,
   harvester: runCommon,
   builder: runBuilder,
@@ -64,6 +64,7 @@ const dispatch = {
   carrier: runCarrier,
   manual: runCommon,
   remoteBuilder: runCommon,
+  tank: runCommon,
 };
 
 function dispatchCreeps() {
