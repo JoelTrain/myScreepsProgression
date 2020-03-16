@@ -16,7 +16,7 @@ function spawnType(spawner, type) {
       throw Error(`Well that's weird. I really thought ${creepName} spawned.`);
 
     if (newestCreep.memory.role === 'basic') {
-      const whenFullActivity = pickRandomFromList(['build', 'repair', 'upgrade', 'upgrade', 'upgrade',]);
+      const whenFullActivity = pickRandomFromList(['upgrade', 'repair', 'transfer', 'transfer', 'transfer',]);
       newestCreep.memory.whenFull = whenFullActivity;
     }
 

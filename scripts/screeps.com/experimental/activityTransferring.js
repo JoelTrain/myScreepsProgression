@@ -15,7 +15,7 @@ function activityTransferring(creep) {
 
   if (!targets.length) {
     if (creep.body.some((part) => part.type === WORK && part.hits > 0)) {
-      changeActivityToRandomPickFromList(creep, ['repair',]);
+      changeActivityToRandomPickFromList(creep, ['repair', 'build', 'build',]);
     }
     else {
       changeActivity(creep, 'move to rally point');
