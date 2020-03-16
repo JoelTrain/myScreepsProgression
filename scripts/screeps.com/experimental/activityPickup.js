@@ -52,11 +52,19 @@ function activityPickup(creep) {
   }
 
   if (!target) {
-    if (creep.body.some((part) => part.type === WORK && part.hits > 0))
+    if (creep.body.some((part) => part.type === WORK && part.hits > 0)) {
       changeActivity(creep, 'harvest')
-    else
-      changeActivity(creep, 'move to rally point');
-    return;
+      return;
+    }
+  }
+
+  if (!target) {
+    target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+      filter: function (object) {
+        return object.structureType === STRUCTURE_CONTAINER;
+      },
+      ignoreCreeps: true,
+    });
   }
 
   moveIgnore(creep, target);
