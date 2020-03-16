@@ -6,7 +6,7 @@ function countHeavyHarvestersAlreadyBy(source) {
     if (creep.memory.role !== 'heavyHarvester')
       continue;
     if (creep.pos.isNearTo(source))
-      nearby++
+      nearby++;
   }
   //console.log(source, nearby);
   return nearby;

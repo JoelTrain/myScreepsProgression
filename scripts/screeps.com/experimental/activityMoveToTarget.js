@@ -6,7 +6,6 @@ function activityMoveToTarget(creep) {
   if (creep.getActiveBodyparts(HEAL)) {
     creep.heal(creep);
 
-    let healingAnAlly = false;
     const friendly = creep.pos.findClosestByRange(FIND_CREEPS, {
       filter: function (object) {
         return isAlly(object) && object.hits < object.hitsMax;
@@ -15,11 +14,9 @@ function activityMoveToTarget(creep) {
     if (friendly) {
       if (creep.pos.isNearTo(friendly)) {
         creep.heal(friendly);
-        healingAnAlly = true;
       }
       else if (creep.pos.inRangeTo(friendly, 3)) {
         creep.rangedHeal(friendly);
-        healingAnAlly = true;
       }
     }
   }

@@ -54,7 +54,7 @@ function activityPickup(creep) {
 
   if (!target) {
     if (creep.body.some((part) => part.type === WORK && part.hits > 0))
-      changeActivity(creep, 'harvest')
+      changeActivity(creep, 'harvest');
     else
       changeActivity(creep, 'move to rally point');
     return;

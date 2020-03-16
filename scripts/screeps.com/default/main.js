@@ -48,7 +48,7 @@ function towers() {
 }
 
 const dispatch = {
-  undefined: (creep) => {},
+  undefined: () => { },
   heavyHarvester: runCommon,
   harvester: runCommon,
   builder: runBuilder,

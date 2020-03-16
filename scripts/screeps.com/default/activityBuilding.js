@@ -1,6 +1,5 @@
 const { moveIgnore } = require('./moveIgnore');
 const { creepIsEmpty } = require('./creepIsEmpty');
-const { clearTarget } = require('./clearTarget');
 const { changeActivity } = require('./changeActivity');
 
 function activityBuilding(creep) {

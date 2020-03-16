@@ -7,9 +7,9 @@ function activityMoveToRallyPoint(creep) {
     if (creep.pos.inRangeTo(rallyTarget, 5)) {
       if (creep.memory.rallyPoint2) {
         const nextStep = Game.flags[creep.memory.rallyPoint2];
-        if(nextStep) {
-            creep.memory.targetPos = nextStep.pos;
-            changeActivity(creep, 'move to position')
+        if (nextStep) {
+          creep.memory.targetPos = nextStep.pos;
+          changeActivity(creep, 'move to position');
         }
       }
       else {

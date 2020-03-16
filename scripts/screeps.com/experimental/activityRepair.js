@@ -20,7 +20,7 @@ function activityRepair(creep) {
       filter: object => object.structureType === STRUCTURE_EXTENSION
     });
     if (extensionsToBuild.length) {
-      changeActivity(creep, 'build')
+      changeActivity(creep, 'build');
       return;
     }
 
