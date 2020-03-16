@@ -1,15 +1,15 @@
 function moveIgnore(creep, target, opts) {
   if (creep.spawning)
     return;
-    
-  if(!target)
+
+  if (!target)
     return;
 
   if (opts === undefined)
     opts = {};
   if (opts.visualizePathStyle === undefined)
     opts.visualizePathStyle = {};
-  if(opts.maxOps === undefined)
+  if (opts.maxOps === undefined)
     opts.maxOps = 1000;
   opts.ignoreCreeps = true;
   const moveResult = creep.moveTo(target, opts);
@@ -20,7 +20,18 @@ function moveIgnore(creep, target, opts) {
 
   if (!failedToMove) {
     if (creep.memory._move) {
-      if (target.pos.x === creep.memory._move.dest.x && target.pos.y === creep.memory._move.dest.y) {
+      let targetX;
+      let targetY;
+      if (target instanceof RoomPosition) {
+        targetX = target.x;
+        targetY = target.y;
+      }
+      else {
+        targetX = target.pos.x;
+        targetY = target.pos.y;
+      }
+
+      if (targetX === creep.memory._move.dest.x && targetY === creep.memory._move.dest.y) {
         const lastPos = creep.memory.lastPos;
         const lastFatigue = creep.memory.lastFatigue;
         if (lastPos !== undefined && lastFatigue !== undefined) {
