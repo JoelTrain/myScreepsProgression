@@ -21,6 +21,11 @@ function activityUpgrading(creep) {
   if (creep.pos.inRangeTo(controller, 3)) {
     const result = creep.upgradeController(controller);
 
+    if (!controller.sign || controller.sign.username !== 'ComradeJoecool') {
+      moveIgnore(creep, controller);
+      creep.signController(controller, 'Write your own code or die.');
+    }
+
     const storages = creep.pos.findInRange(FIND_STRUCTURES, 1, {
       filter: function (object) {
         return (object.structureType === STRUCTURE_STORAGE || object.structureType == STRUCTURE_CONTAINER) && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity();
