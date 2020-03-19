@@ -3,6 +3,13 @@ const { creepCountsPerRoom } = require('./creepCountsPerRoom');
 const { spawnType } = require('./spawnType');
 const { bodyCost } = require('./bodyCost');
 
+const attackingCreepCount = _.reduce(Game.creeps, (accum, creep) => {
+  if (creep.memory.rallyPoint === 'AttackMove')
+    return accum + 1;
+  else
+    return accum;
+}, 0);
+
 function runSpawn(spawner) {
   const creepsInRoom = spawner.room.find(FIND_MY_CREEPS);
   for (const creep of creepsInRoom) {
@@ -24,9 +31,9 @@ function runSpawn(spawner) {
 
   let creepCountsForThisRoom;
   if (creepCountsPerRoom[spawner.room.name])
-    creepCountsForThisRoom = creepCountsPerRoom[spawner.room.name];
+    creepCountsForThisRoom = { ...creepCountsPerRoom[spawner.room.name] };
   else
-    creepCountsForThisRoom = creepCountsPerRoom.default;
+    creepCountsForThisRoom = { ...creepCountsPerRoom.default };
 
   const numSources = spawner.room.find(FIND_SOURCES).length;
   creepCountsForThisRoom.heavyHarvester = numSources;
@@ -39,8 +46,11 @@ function runSpawn(spawner) {
 
   if (enemiesInRoomCount)
     creepCountsForThisRoom.defender = enemiesInRoomCount;
-  else
-    creepCountsForThisRoom.defender = 0;
+
+  const attackMoveFlag = Game.flags['AttackMove'];
+  console.log(attackingCreepCount);
+  if (attackMoveFlag && attackingCreepCount < 10 && Game.map.getRoomLinearDistance(attackMoveFlag.pos.roomName, spawner.room.name, true) < 10)
+    creepCountsForThisRoom.attacker = 2;
 
   let creepTypesForThisRoom = creepTypesPerRoom[spawner.room.name];
   if (!creepTypesForThisRoom)
