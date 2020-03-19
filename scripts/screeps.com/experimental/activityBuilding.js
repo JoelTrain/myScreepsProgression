@@ -11,7 +11,7 @@ function activityBuilding(creep) {
 
   let target = Game.getObjectById(creep.memory.targetId);
   if (target) {
-    if (!(target instanceof Structure))
+    if (!(target instanceof ConstructionSite))
       target = undefined;
 
     if (target && target.hits === target.hitsMax)
@@ -27,8 +27,8 @@ function activityBuilding(creep) {
   if (!target) {
     target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
   }
+  console.log(creep.name, target);
   if (!target) {
-    clearTarget(creep);
     changeActivity(creep, 'repair');
     return;
   }

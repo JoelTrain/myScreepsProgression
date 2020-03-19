@@ -1,6 +1,5 @@
 require('./global');
 const { runCommon } = require('./roleCommon');
-const { runBuilder } = require('./roleBuilder');
 const { runCarrier } = require('./roleCarrier');
 const { runSpawn } = require('./roleSpawn');
 
@@ -23,7 +22,6 @@ function spawns() {
       runSpawn(spawn);
     }
     catch (error) {
-      //errorMessage += error.message;
       errorMessage += error.stack + '\n';
     }
   }
@@ -41,7 +39,6 @@ function towers() {
       runCommon(tower);
     }
     catch (error) {
-      //errorMessage += error.message;
       errorMessage += error.stack + '\n';
     }
   }
@@ -70,7 +67,6 @@ function dispatchCreeps() {
       }
     }
     catch (error) {
-      //errorMessage += error.message;
       errorMessage += error.stack + '\n';
     }
   }
@@ -83,21 +79,18 @@ function main() {
     freeOldMem();
   }
   catch (error) {
-    //errorMessage += error.message;
     errorMessage += error.stack + '\n';
   }
   try {
     spawns();
   }
   catch (error) {
-    //errorMessage += error.message;
     errorMessage += error.stack + '\n';
   }
   try {
     towers();
   }
   catch (error) {
-    //errorMessage += error.message;
     errorMessage += error.stack + '\n';
   }
   try {
@@ -106,7 +99,6 @@ function main() {
       dispatchCreeps();
   }
   catch (error) {
-    //errorMessage += error.message;
     errorMessage += error.stack + '\n';
   }
   if (errorMessage.length) {
