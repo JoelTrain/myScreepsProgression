@@ -27,7 +27,6 @@ function activityBuilding(creep) {
   if (!target) {
     target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
   }
-  console.log(creep.name, target);
   if (!target) {
     changeActivity(creep, 'repair');
     return;

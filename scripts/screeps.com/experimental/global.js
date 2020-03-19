@@ -111,10 +111,11 @@ global.logCreepCountsForRoom = function (room) {
     countsForThisRoom[creep.memory.role]++;
     countsForThisRoom.total++;
   }
-  console.log(`Room: ${room.name} Num creeps: ${countsForThisRoom.total}`);
+  let output = `Room: ${room.name} Num creeps: ${countsForThisRoom.total}\n`;
   for (const type of Object.values(creepTypes)) {
-    console.log(type.memory.role, `${countsForThisRoom[type.memory.role]}/${type.maxCount}`);
+    output += `${type.memory.role} ${countsForThisRoom[type.memory.role]}/${type.maxCount}\n`;
   }
+  console.log(output.substring(0, output.length - 2));
 };
 
 global.printEachActivity = function () {
