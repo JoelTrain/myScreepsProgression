@@ -1,4 +1,5 @@
 const { creepTypes } = require('./creepTypes');
+const { creepCountsPerRoom } = require('./creepCountsPerRoom');
 const { bodyCost } = require('./common');
 
 global.creepTypes = creepTypes;
@@ -103,19 +104,30 @@ global.logCreepCounts = function () {
 
 global.logCreepCountsForRoom = function (room) {
   const countsForThisRoom = { total: 0 };
-  for (const typeKey of Object.keys(creepTypes)) {
-    countsForThisRoom[typeKey] = 0;
-  }
 
   for (const creep of room.find(FIND_MY_CREEPS)) {
-    countsForThisRoom[creep.memory.role]++;
+    if (countsForThisRoom[creep.memory.role])
+      countsForThisRoom[creep.memory.role]++;
+    else
+      countsForThisRoom[creep.memory.role] = 1;
     countsForThisRoom.total++;
   }
+
+  const creepMaxCountsForRoom = creepCountsPerRoom[room.name];
+
   let output = `Room: ${room.name} Num creeps: ${countsForThisRoom.total}\n`;
-  for (const type of Object.values(creepTypes)) {
-    output += `${type.memory.role} ${countsForThisRoom[type.memory.role]}/${type.maxCount}\n`;
+  for (const role of Object.keys(countsForThisRoom)) {
+    if (role === 'total')
+      continue;
+
+    const currentCount = countsForThisRoom[role];
+    let maxCount = 0;
+    if (creepMaxCountsForRoom[role])
+      maxCount = creepMaxCountsForRoom[role];
+    if (currentCount > 0)
+      output += `${role} ${currentCount}/${maxCount}\n`;
   }
-  console.log(output.substring(0, output.length - 2));
+  console.log(output);
 };
 
 global.printEachActivity = function () {
