@@ -83,7 +83,8 @@ function main() {
     errorMessage += error.stack + '\n';
   }
   try {
-    assignRemoteHarvesters();
+    if (Game.time % 10 === 0)
+      assignRemoteHarvesters();
   }
   catch (error) {
     errorMessage += error.stack + '\n';
