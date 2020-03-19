@@ -4,6 +4,16 @@ const { spawnType } = require('./spawnType');
 const { bodyCost } = require('./bodyCost');
 
 function runSpawn(spawner) {
+  const creepsInRoom = spawner.room.find(FIND_MY_CREEPS);
+  for(const creep of creepsInRoom){
+      if(creep.pos.inRangeTo(spawner, 1)) {
+          if(creep.ticksToLive === 1495 && (creep.memory.role === 'defender' || creep.memory.role === 'attacker'))
+            spawner.recycleCreep(creep);
+          else if(creep.ticksToLive < 1400)
+            spawner.renewCreep(creep);
+      }
+  }
+    
   if (spawner.spawning)
     return;
   const currentEnergy = spawner.room.energyAvailable;

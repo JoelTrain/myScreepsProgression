@@ -4,7 +4,7 @@ const { clearTarget } = require('./clearTarget');
 const { changeActivity } = require('./changeActivity');
 
 function readyForRepair(object) {
-  return object.hits / object.hitsMax < 0.8;
+  return object.hits / object.hitsMax < 0.8 && object.hits < 1000000;
 }
 
 function activityRepair(creep) {
@@ -20,11 +20,17 @@ function activityRepair(creep) {
       filter: object => object.structureType === STRUCTURE_EXTENSION
     });
     if (extensionsToBuild.length) {
+      clearTarget(creep);
       changeActivity(creep, 'build');
       return;
     }
 
-    let targets = creep.room.find(FIND_STRUCTURES, {
+    let targets;
+    targets = creep.room.find(FIND_STRUCTURES, {
+      filter: object => object.hits === 1 && object.structureType === STRUCTURE_RAMPART
+    });
+
+    targets = creep.room.find(FIND_STRUCTURES, {
       filter: object => readyForRepair(object) && object.structureType !== STRUCTURE_WALL && object.structureType !== STRUCTURE_RAMPART
     });
 
@@ -47,7 +53,8 @@ function activityRepair(creep) {
       clearTarget(creep);
   }
   if (!target) {
-    changeActivity(creep, 'build');
+    clearTarget(creep);
+    changeActivity(creep, 'upgrade');
     return;
   }
 

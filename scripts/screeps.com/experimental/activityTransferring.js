@@ -18,7 +18,13 @@ function activityTransferring(creep) {
       changeActivityToRandomPickFromList(creep, ['repair', 'build', 'build',]);
     }
     else {
-      changeActivity(creep, 'move to rally point');
+      const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
+      if (structuresAtMyPos.length) {
+        const randomDirection = pickRandomFromList([TOP, TOP_LEFT, TOP_RIGHT, LEFT, RIGHT, BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT]);
+        creep.move(randomDirection);
+      }
+
+      return;
     }
     return;
   }
@@ -31,7 +37,6 @@ function activityTransferring(creep) {
 
   if (creep.pos.inRangeTo(target, 1)) {
     creep.transfer(target, RESOURCE_ENERGY);
-    console.log(creep.name, target.store.getFreeCapacity(RESOURCE_ENERGY));
     if (target.store.getFreeCapacity(RESOURCE_ENERGY) >= creep.store.getUsedCapacity(RESOURCE_ENERGY)) {
       changeActivity(creep, creep.memory.whenEmpty);
       return;

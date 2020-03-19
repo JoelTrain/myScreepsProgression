@@ -5,7 +5,7 @@ const { pickRandomFromList } = require('./pickRandomFromList');
 function spawnType(spawner, type) {
   const creepNumber = Math.floor(Math.random() * 10000);
   const creepName = `${type.memory.role}${creepNumber}`;
-  const spawnResult = spawner.spawnCreep(type.body, creepName, { memory: type.memory, directions: type.spawnDirections });
+  const spawnResult = spawner.spawnCreep(type.body, creepName, { memory: type.memory });
   const string = (spawnResult === 0) ? 'success' : `fail with code ${spawnResult}`;
   const cost = bodyCost(type.body);
   console.log(`${spawner.name} is trying to spawn type:${type.memory.role}, cost:${cost}, name:${creepName}...${string}`);

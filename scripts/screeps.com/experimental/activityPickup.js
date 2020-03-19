@@ -11,13 +11,19 @@ function activityPickup(creep) {
   let target;
 
   if (!target) {
+    const roomHasStorage = creep.room.find(FIND_STRUCTURES, {
+        filter: (structur) => structur instanceof StructureStorage && structur.store.getFreeCapacity()
+    }).length > 0;
     let targets = creep.room.find(FIND_DROPPED_RESOURCES);
     target = creep.pos.findClosestByPath(targets, {
       filter: function (object) {
         const isEnergy = object.resourceType === RESOURCE_ENERGY;
 
         if (!isEnergy)
+        if(roomHasStorage)
           return true;
+        else
+          return false;
 
         return object.amount >= 500;
       },
@@ -73,7 +79,7 @@ function activityPickup(creep) {
 
   if (creep.pos.inRangeTo(target, 1)) {
     creep.pickup(target);
-    if (target instanceof Resource && target.amount > creep.store.getFreeCapacity()) {
+    if (target instanceof Resource && target.amount >= creep.store.getFreeCapacity()) {
       changeActivity(creep, creep.memory.whenFull);
       return;
     }

@@ -19,7 +19,11 @@ function activityDepositIntoStorage(creep) {
   }
 
   if (!target) {
-    changeActivity(creep, 'move to rally point');
+  // drop all resources
+  for (const resourceType in creep.carry) {
+    creep.drop(resourceType);
+    break;
+  }
     return;
   }
 
@@ -28,6 +32,7 @@ function activityDepositIntoStorage(creep) {
   // transfer all resources
   for (const resourceType in creep.carry) {
     creep.transfer(target, resourceType);
+    break;
   }
 }
 

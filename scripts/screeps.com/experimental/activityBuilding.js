@@ -28,7 +28,8 @@ function activityBuilding(creep) {
     target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
   }
   if (!target) {
-    changeActivity(creep, 'upgrade');
+    clearTarget(creep);
+    changeActivity(creep, 'repair');
     return;
   }
 
@@ -38,7 +39,7 @@ function activityBuilding(creep) {
     const buildResult = creep.build(target);
     if (buildResult !== OK) {
       clearTarget(creep);
-      changeActivity(creep, 'upgrade');
+      changeActivity(creep, 'repair');
     }
     return;
   }
