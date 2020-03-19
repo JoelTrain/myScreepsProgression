@@ -2,6 +2,7 @@ require('./global');
 const { runCommon } = require('./roleCommon');
 const { runCarrier } = require('./roleCarrier');
 const { runSpawn } = require('./roleSpawn');
+const { assignRemoteHarvesters } = require('./assignRemoteHarvesters');
 
 
 function freeOldMem() {
@@ -77,6 +78,12 @@ function main() {
   try {
     creepsCounted = false;
     freeOldMem();
+  }
+  catch (error) {
+    errorMessage += error.stack + '\n';
+  }
+  try {
+    assignRemoteHarvesters();
   }
   catch (error) {
     errorMessage += error.stack + '\n';

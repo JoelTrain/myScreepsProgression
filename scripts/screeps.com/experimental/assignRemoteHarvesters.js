@@ -76,7 +76,6 @@ function spawnRemoteHarvesterInRoomForPos(room, pos) {
     }
   }
 }
-global.test = spawnRemoteHarvesterInRoomForPos;
 
 function assignRemoteHarvesterToLocation() {
   // harvester should start moving to location and the location should be reserved
@@ -99,7 +98,7 @@ function assignRemoteHarvesters() {
     for (const roomPos of roomPositions) {
       const creepWorkingAtPos = workingHarvesters.find((creep) => arePositionsEqual(creep.memory.targetPos, roomPos));
       if (creepWorkingAtPos)
-        reservePosByCreep(roomPos, creepWorkingAtPos[0]);
+        reservePosByCreep(roomPos, creepWorkingAtPos);
       else if (!spawning) {
         spawning = true;
         spawnRemoteHarvesterInRoomForPos(Game.rooms[roomName], roomPos);
