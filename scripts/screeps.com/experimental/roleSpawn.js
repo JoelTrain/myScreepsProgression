@@ -1,40 +1,46 @@
-const { creepTypes } = require('./creepTypes');
 const { creepTypesPerRoom } = require('./creepTypesPerRoom');
+const { creepCountsPerRoom } = require('./creepCountsPerRoom');
 const { spawnType } = require('./spawnType');
 const { bodyCost } = require('./bodyCost');
 
 function runSpawn(spawner) {
   const creepsInRoom = spawner.room.find(FIND_MY_CREEPS);
-  for(const creep of creepsInRoom){
-      if(creep.pos.inRangeTo(spawner, 1)) {
-          if(creep.ticksToLive === 1495 && (creep.memory.role === 'defender' || creep.memory.role === 'attacker'))
-            spawner.recycleCreep(creep);
-          else if(creep.ticksToLive < 1400)
-            spawner.renewCreep(creep);
-      }
+  for (const creep of creepsInRoom) {
+    if (creep.pos.inRangeTo(spawner, 1)) {
+      if (creep.ticksToLive === 1495 && (creep.memory.role === 'defender' || creep.memory.role === 'attacker'))
+        spawner.recycleCreep(creep);
+      else if (creep.ticksToLive < 1400)
+        spawner.renewCreep(creep);
+    }
   }
-    
+
   if (spawner.spawning)
     return;
+
   const currentEnergy = spawner.room.energyAvailable;
 
-  const numSources = spawner.room.find(FIND_SOURCES).length;
-  creepTypes.heavyHarvester.maxCount = numSources;
-
-  //console.log(`Spawner energy ${currentEnergy}`);
   if (currentEnergy < 200)
     return;
 
-  const enemiesExistInRoom = spawner.room.find(FIND_HOSTILE_CREEPS, {
+  let creepCountsForThisRoom;
+  if (creepCountsPerRoom[spawner.room.name])
+    creepCountsForThisRoom = creepCountsPerRoom[spawner.room.name];
+  else
+    creepCountsForThisRoom = creepCountsPerRoom.default;
+
+  const numSources = spawner.room.find(FIND_SOURCES).length;
+  creepCountsForThisRoom.heavyHarvester = numSources;
+
+  const enemiesInRoomCount = spawner.room.find(FIND_HOSTILE_CREEPS, {
     filter: function (object) {
-      return object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
+      return object.getActiveBodyparts(HEAL) + object.getActiveBodyparts(ATTACK) + object.getActiveBodyparts(RANGED_ATTACK) > 0;
     }
   }).length;
 
-  if (enemiesExistInRoom)
-    creepTypes.defender.maxCount = 9999999;
+  if (enemiesInRoomCount)
+    creepCountsForThisRoom.defender = enemiesInRoomCount;
   else
-    creepTypes.defender.maxCount = 0;
+    creepCountsForThisRoom.defender = 0;
 
   let creepTypesForThisRoom = creepTypesPerRoom[spawner.room.name];
   if (!creepTypesForThisRoom)
@@ -53,19 +59,17 @@ function runSpawn(spawner) {
     countsForThisRoom[creep.memory.role]++;
     countsForThisRoom.total++;
   }
-
   const roomMax = spawner.room.energyCapacityAvailable;
 
-  for (const typeToBuild of typeVals) {
-    if (countsForThisRoom[typeToBuild.memory.role] >= typeToBuild.maxCount)
+  for (const [role, count] of Object.entries(creepCountsForThisRoom)) {
+    if (countsForThisRoom[role] >= count)
       continue;
+    const typeToBuild = creepTypesForThisRoom[role];
     const costOfBody = bodyCost(typeToBuild.body);
     if (costOfBody > roomMax && countsForThisRoom['basic'] < 10)
       spawnType(spawner, creepTypesForThisRoom.basic);
     if (costOfBody > currentEnergy)
       break;
-    if (typeToBuild.memory.role === 'basic')
-      continue;
     spawnType(spawner, typeToBuild);
     return;
   }
