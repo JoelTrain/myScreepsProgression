@@ -1,5 +1,25 @@
 const { harvestLocations } = require('./harvestLocations');
 const { getHubRooms } = require('./getHubRooms');
+const { spawnType } = require('./spawnType');
+
+const remoteHarvesterType = {
+  body: [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK],
+  memory: {
+    role: 'remoteHarvester',
+    activity: 'move to position',
+    whenFull: 'harvest in place',
+    whenEmpty: 'harvest in place',
+    targetPos: {
+      roomName: undefined,
+      x: undefined,
+      y: undefined,
+    },
+  },
+};
+
+function arePositionsEqual(pos1, pos2) {
+  return pos1.x === pos2.x && pos1.y === pos2.y && pos1.roomName === pos2.roomName;
+}
 
 function reservePosByCreep(pos, creep) {
   // stamp the creep name on the position to reserve it
@@ -41,10 +61,22 @@ function findUnassignedRemoteHarvestersInRoom() {
   // maybe dont need this, just need a way to find out when a remote harvester is spawning
 }
 
-function spawnRemoteHarvesterForPos(pos) {
+function spawnRemoteHarvesterInRoomForPos(room, pos) {
   // should be spawning next tick and needs to be assigned
   console.log(`trying to spawn remote harvester for ${pos.roomName}, ${pos.x},${pos.y}`);
+
+  const type = { ...remoteHarvesterType };
+  type.memory.targetPos = pos;
+
+  const spawns = room.find(FIND_MY_SPAWNS);
+  for (const spawner of spawns) {
+    if (!spawner.spawning && room.energyAvailable >= bodyCost(type.body)) {
+      spawnType(spawner, type);
+      break;
+    }
+  }
 }
+global.test = spawnRemoteHarvesterInRoomForPos;
 
 function assignRemoteHarvesterToLocation() {
   // harvester should start moving to location and the location should be reserved
@@ -56,27 +88,21 @@ function assignRemoteHarvesters() {
     return;
 
   const remoteHarvesters = getAllRemoteHarvesters();
-  if (remoteHarvesters.length == 0)
-    return;
-
   const workingHarvesters = getWorkingRemoteHarvestersFromList(remoteHarvesters);
 
   for (const roomName of hubRooms) {
-    if (!harvestLocations.roomName)
-      continue;
-
     const roomPositions = harvestLocations[roomName];
-    if (roomPositions.length === 0)
+    if (roomPositions === undefined || roomPositions.length === 0)
       continue;
 
     let spawning = false;
     for (const roomPos of roomPositions) {
-      const creepWorkingAtPos = workingHarvesters.find((creep) => creep.memory.targetPos.isEqualTo(roomPos));
-      if (creepWorkingTheRoom)
-        reservePosByCreep(roomPos, creep);
-      else {
+      const creepWorkingAtPos = workingHarvesters.find((creep) => arePositionsEqual(creep.memory.targetPos, roomPos));
+      if (creepWorkingAtPos)
+        reservePosByCreep(roomPos, creepWorkingAtPos[0]);
+      else if (!spawning) {
         spawning = true;
-        spawnRemoteHarvesterForPos(roomPos);
+        spawnRemoteHarvesterInRoomForPos(Game.rooms[roomName], roomPos);
       }
     }
 
