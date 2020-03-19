@@ -1,7 +1,17 @@
 function activityTowerAttack(tower) {
-  const targets = tower.room.find(FIND_HOSTILE_CREEPS);
-  const target = tower.pos.findClosestByRange(targets);
-  if (target) {
+  let targets;
+  targets = tower.room.find(FIND_HOSTILE_CREEPS, {
+    filter: (creep) => creep.getActiveBodyparts(HEAL)
+  });
+
+  if (!targets.length)
+    targets = tower.room.find(FIND_HOSTILE_CREEPS);
+
+  let target = tower.pos.findClosestByRange(targets);
+  if (target && target.getActiveBodyparts(HEAL) > 12 && tower.pos.getRangeTo(target) >= 20)
+    target = undefined;
+
+  if (target && tower.store.getUsedCapacity() > 10) {
     tower.attack(target);
     console.log(`${tower.id} is attacking ${target.name}`);
   }
