@@ -4,23 +4,23 @@ const harvestLocations = {
   E5S31: [
     {
       roomPosition: {
+        roomName: 'E4S31',
         x: 25,
         y: 33,
-        roomName: 'E4S31',
       },
     },
     {
       roomPosition: {
+        roomName: 'E5S32',
         x: 37,
         y: 34,
-        roomName: 'E5S32',
       },
     },
     {
       roomPosition: {
+        roomName: 'E6S31',
         x: 13,
         y: 32,
-        roomName: 'E6S31',
       },
     },
   ],
