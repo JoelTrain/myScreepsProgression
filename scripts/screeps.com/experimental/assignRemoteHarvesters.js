@@ -9,7 +9,34 @@ const remoteHarvesterType = {
     activity: 'move to position',
     whenFull: 'harvest in place',
     whenEmpty: 'harvest in place',
+    whenArrive: 'harvest in place',
     targetPos: {
+      roomName: undefined,
+      x: undefined,
+      y: undefined,
+    },
+  },
+};
+
+const remoteCarrierType = {
+  body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,],
+  memory: {
+    role: 'remoteCarrier',
+    activity: 'return to pickup',
+    whenFull: 'return to dropoff',
+    whenEmpty: 'return to pickup',
+    whenArrive: 'pickup',
+    targetPos: {
+      roomName: undefined,
+      x: undefined,
+      y: undefined,
+    },
+    dropoffPos: {
+      roomName: undefined,
+      x: undefined,
+      y: undefined,
+    },
+    pickupPos: {
       roomName: undefined,
       x: undefined,
       y: undefined,
@@ -21,17 +48,27 @@ function arePositionsEqual(pos1, pos2) {
   return pos1.x === pos2.x && pos1.y === pos2.y && pos1.roomName === pos2.roomName;
 }
 
+global.arePositionsEqual = arePositionsEqual;
+
 function reservePosByCreep(pos, creep) {
   // stamp the creep name on the position to reserve it
   pos.creepWorkingSite = creep.name;
 }
 
-function updatePositionReservations() {
-  // update each position and reserve it if it is being worked
+function reservePosByCarrierCreep(pos, creep) {
+  // stamp the creep name on the position to reserve it
+  pos.creepsCarryingSite.push(creep.name);
 }
 
-function findUnassignedHarvestLocations() {
-  // we need to spawn a remote harvester for each of these and assign them
+function getAllRemoteCarriers() {
+  const remoteCarriers = [];
+
+  for (const creep of Object.values(Game.creeps)) {
+    if (creep.memory.role === 'remoteCarrier')
+      remoteCarriers.push(creep);
+  }
+
+  return remoteCarriers;
 }
 
 function getAllRemoteHarvesters() {
@@ -49,36 +86,40 @@ function getWorkingRemoteHarvestersFromList(remoteHarvesters) {
   return remoteHarvesters.filter((creep) => creep.memory.targetPos !== undefined);
 }
 
-function getIdleRemoteHarvestersFromList(remoteHarvesters) {
-  return remoteHarvesters.filter((creep) => creep.memory.targetPos === undefined);
-}
-
-function findUnassignedRemoteHarvestersInUnownedRoom() {
-  // suicide or return to nearest owned room
-}
-
-function findUnassignedRemoteHarvestersInRoom() {
-  // maybe dont need this, just need a way to find out when a remote harvester is spawning
-}
-
 function spawnRemoteHarvesterInRoomForPos(room, pos) {
   // should be spawning next tick and needs to be assigned
-  console.log(`trying to spawn remote harvester for ${pos.roomName}, ${pos.x},${pos.y}`);
 
   const type = { ...remoteHarvesterType };
+  type.memory = { ...remoteHarvesterType.memory };
   type.memory.targetPos = pos;
 
   const spawns = room.find(FIND_MY_SPAWNS);
   for (const spawner of spawns) {
     if (!spawner.spawning && room.energyAvailable >= bodyCost(type.body)) {
+      console.log(`trying to spawn remote harvester for ${pos.roomName}, ${pos.x},${pos.y}`);
       spawnType(spawner, type);
       break;
     }
   }
 }
 
-function assignRemoteHarvesterToLocation() {
-  // harvester should start moving to location and the location should be reserved
+function spawnRemoteCarrierInRoomForPos(room, pos) {
+  // should be spawning next tick and needs to be assigned
+
+  const type = { ...remoteCarrierType };
+  type.memory = { ...remoteCarrierType.memory };
+  type.memory.targetPos = pos;
+  type.memory.pickupPos = pos;
+  type.memory.dropoffPos = room.controller.pos;
+
+  const spawns = room.find(FIND_MY_SPAWNS);
+  for (const spawner of spawns) {
+    if (!spawner.spawning && room.energyAvailable >= bodyCost(type.body)) {
+      console.log(`trying to spawn remote carrier for ${pos.roomName}, ${pos.x},${pos.y}`);
+      spawnType(spawner, type);
+      break;
+    }
+  }
 }
 
 function assignRemoteHarvesters() {
@@ -86,23 +127,48 @@ function assignRemoteHarvesters() {
   if (hubRooms.length === 0)
     return;
 
+  const remoteCarriers = getAllRemoteCarriers();
   const remoteHarvesters = getAllRemoteHarvesters();
   const workingHarvesters = getWorkingRemoteHarvestersFromList(remoteHarvesters);
 
-  for (const roomName of hubRooms) {
-    const roomPositions = harvestLocations[roomName];
+  for (const hubRoomName of hubRooms) {
+    const roomPositions = harvestLocations[hubRoomName];
     if (roomPositions === undefined || roomPositions.length === 0)
       continue;
 
     let spawning = false;
     for (const roomPos of roomPositions) {
-      const creepWorkingAtPos = workingHarvesters.find((creep) => arePositionsEqual(creep.memory.targetPos, roomPos));
+      if (!Game.map.isRoomAvailable(roomPos.roomName))
+        continue;
+
+      const creepWorkingAtPos = workingHarvesters.find((creep) => {
+        let travelTime = 0;
+
+        if (creep && creep.memory.arrivalTicksToLive)
+          travelTime = 1500 - creep.memory.arrivalTicksToLive;
+
+        return creep.ticksToLive > travelTime && arePositionsEqual(creep.memory.targetPos, roomPos);
+
+      });
+
       if (creepWorkingAtPos)
         reservePosByCreep(roomPos, creepWorkingAtPos);
       else if (!spawning) {
         spawning = true;
-        spawnRemoteHarvesterInRoomForPos(Game.rooms[roomName], roomPos);
+        spawnRemoteHarvesterInRoomForPos(Game.rooms[hubRoomName], roomPos);
       }
+
+      const creepsCarryingFromSite = remoteCarriers.reduce((acc, creep) => {
+        if (arePositionsEqual(creep.memory.pickupPos, roomPos))
+          return acc + 1;
+        else
+          return acc;
+      }, 0);
+      if (!spawning && creepsCarryingFromSite < Game.map.getRoomLinearDistance(hubRoomName, roomPos.roomName) * 3) {
+        spawning = true;
+        spawnRemoteCarrierInRoomForPos(Game.rooms[hubRoomName], roomPos);
+      }
+
     }
 
   }

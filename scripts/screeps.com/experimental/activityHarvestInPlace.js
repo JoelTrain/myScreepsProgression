@@ -19,8 +19,14 @@ function activityHarvestInPlace(creep) {
   }
   const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
   if (structuresAtMyPos[0] instanceof StructureContainer && structuresAtMyPos[0].store.getFreeCapacity() > 0) {
-    const harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
+    let harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
+    if (!harvestTarget)
+      harvestTarget = creep.pos.findInRange(FIND_DEPOSITS, 1)[0];
+    if (!harvestTarget)
+      harvestTarget = creep.pos.findInRange(FIND_MINERALS, 1)[0];
     if (harvestTarget) {
+      if (!creep.memory.arrivalTicksToLive)
+        creep.memory.arrivalTicksToLive = creep.ticksToLive;
       creep.harvest(harvestTarget);
       return;
     }
@@ -40,6 +46,8 @@ function activityHarvestInPlace(creep) {
   let source = creep.pos.findClosestByRange(FIND_SOURCES);
   if (source) {
     if (creep.pos.inRangeTo(source, 1)) {
+      if (!creep.memory.arrivalTicksToLive)
+        creep.memory.arrivalTicksToLive = creep.ticksToLive;
       creep.harvest(source);
       return;
     }
@@ -53,6 +61,8 @@ function activityHarvestInPlace(creep) {
   if (!source)
     return;
   if (creep.pos.inRangeTo(source, 1)) {
+    if (!creep.memory.arrivalTicksToLive)
+      creep.memory.arrivalTicksToLive = creep.ticksToLive;
     creep.harvest(source);
     return;
   }

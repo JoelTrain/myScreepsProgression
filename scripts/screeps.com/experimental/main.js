@@ -75,6 +75,7 @@ function dispatchCreeps() {
 
 function main() {
   errorMessage = '';
+  //console.log(Game.time);
   try {
     creepsCounted = false;
     freeOldMem();
@@ -83,14 +84,14 @@ function main() {
     errorMessage += error.stack + '\n';
   }
   try {
-    if (Game.time % 10 === 0)
-      assignRemoteHarvesters();
+    spawns();
   }
   catch (error) {
     errorMessage += error.stack + '\n';
   }
   try {
-    spawns();
+    if (Game.time % 10 === 0)
+      assignRemoteHarvesters();
   }
   catch (error) {
     errorMessage += error.stack + '\n';

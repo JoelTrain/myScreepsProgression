@@ -5,6 +5,15 @@ function moveIgnore(creep, target, opts) {
   if (!target)
     return;
 
+  let targetPos;
+  if (target instanceof RoomPosition)
+    targetPos = target;
+  else if (target.pos)
+    targetPos = target.pos;
+  else if (target.x !== undefined && target.y !== undefined && target.roomName !== undefined) {
+    targetPos = new RoomPosition(target.x, target.y, target.roomName);
+  }
+
   if (opts === undefined)
     opts = {};
   if (opts.visualizePathStyle === undefined)
@@ -12,7 +21,21 @@ function moveIgnore(creep, target, opts) {
   if (opts.maxOps === undefined)
     opts.maxOps = 1000;
   opts.ignoreCreeps = true;
-  const moveResult = creep.moveTo(target, opts);
+
+  if (creep.room.name !== targetPos.roomName) {
+    const exit = Game.map.findExit(creep.room.name, targetPos.roomName);
+    if (exit >= 0) {
+      const exitPos = creep.pos.findClosestByRange(exit);
+      if (exitPos)
+        targetPos = exitPos;
+    }
+    else
+      console.log('ERROR: pathfind', creep.name, creep.pos.roomName, targetPos.roomName, exit);
+  }
+
+  let moveResult = creep.moveTo(targetPos, { noPathFinding: true, reusePath: 15, visualizePathStyle: { stroke: 'orange' } });
+  if (moveResult === ERR_NOT_FOUND)
+    moveResult = creep.moveTo(targetPos, opts);
 
   let failedToMove = false;
   if (!failedToMove)
@@ -20,18 +43,7 @@ function moveIgnore(creep, target, opts) {
 
   if (!failedToMove) {
     if (creep.memory._move) {
-      let targetX;
-      let targetY;
-      if (target instanceof RoomPosition) {
-        targetX = target.x;
-        targetY = target.y;
-      }
-      else {
-        targetX = target.pos.x;
-        targetY = target.pos.y;
-      }
-
-      if (targetX === creep.memory._move.dest.x && targetY === creep.memory._move.dest.y) {
+      if (targetPos.x === creep.memory._move.dest.x && targetPos.y === creep.memory._move.dest.y) {
         const lastPos = creep.memory.lastPos;
         const lastFatigue = creep.memory.lastFatigue;
         if (lastPos !== undefined && lastFatigue !== undefined) {
@@ -50,8 +62,7 @@ function moveIgnore(creep, target, opts) {
     //console.log(`${creep.name} is not moving since ${creep.pos}`);
     //creep.say('stuck!');
     delete creep.memory._move;
-    opts.ignoreCreeps = false;
-    return creep.moveTo(target, { maxOps: 1000, ignoreCreeps: false, reusePath: 15, visualizePathStyle: { stroke: 'orange' } });
+    return creep.moveTo(targetPos, { maxOps: 1000, ignoreCreeps: false, reusePath: 15, visualizePathStyle: { stroke: 'orange' } });
   }
   return moveResult;
 }

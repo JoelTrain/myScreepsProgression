@@ -13,6 +13,12 @@ function activityRepair(creep) {
     return;
   }
 
+  if (creep.room.find(FIND_MY_CREEPS, { filter: foundCreep => foundCreep.memory.role === 'carrier' }).length === 0) {
+    console.log(creep.name);
+    changeActivity(creep, 'transfer');
+    return;
+  }
+
   let target;
   target = Game.getObjectById(creep.memory.targetId);
   if (!target || !(target instanceof Structure) || target.hits === target.hitsMax) {

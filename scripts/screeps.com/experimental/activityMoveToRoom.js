@@ -2,7 +2,7 @@ const { moveIgnore } = require('./moveIgnore');
 const { changeActivity } = require('./changeActivity');
 const { isAlly } = require('./isAlly');
 
-function activityMoveToTarget(creep) {
+function activityMoveToRoom(creep) {
   if (creep.getActiveBodyparts(HEAL)) {
     creep.heal(creep);
 
@@ -24,7 +24,7 @@ function activityMoveToTarget(creep) {
   if (rallyTarget) {
     const { roomName, x, y } = rallyTarget;
     const roomPosition = new RoomPosition(x, y, roomName);
-    if (creep.pos.inRangeTo(roomPosition, 1)) {
+    if (creep.pos.roomName === roomName) {
       if (creep.memory.whenArrive)
         changeActivity(creep, creep.memory.whenArrive);
       else
@@ -39,4 +39,4 @@ function activityMoveToTarget(creep) {
   }
 }
 
-module.exports = { activityMoveToTarget };
+module.exports = { activityMoveToRoom };

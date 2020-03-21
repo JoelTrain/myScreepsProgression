@@ -23,7 +23,6 @@ function activityTransferring(creep) {
         const randomDirection = pickRandomFromList([TOP, TOP_LEFT, TOP_RIGHT, LEFT, RIGHT, BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT]);
         creep.move(randomDirection);
       }
-
       return;
     }
     return;

@@ -9,6 +9,7 @@ const { creepTypeBuilder } = require('./creepTypeBuilder');
 const { creepTypeRepairer } = require('./creepTypeRepairer');
 const { creepTypeRemoteBuilder } = require('./creepTypeRemoteBuilder');
 const { creepTypeUpgrader } = require('./creepTypeUpgrader');
+const { creepTypeClaimer } = require('./creepTypeClaimer');
 const { creepTypeManual } = require('./creepTypeManual');
 
 const creepTypes = {
@@ -23,6 +24,7 @@ const creepTypes = {
   repairer: creepTypeRepairer,
   remoteBuilder: creepTypeRemoteBuilder,
   upgrader: creepTypeUpgrader,
+  claimer: creepTypeClaimer,
   manual: creepTypeManual,
 };
 

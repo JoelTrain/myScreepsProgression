@@ -1,9 +1,11 @@
 const defaultCounts = {
+  defender: 0,
   heavyHarvester: 2,
-  builder: 3,
-  repairer: 1,
   carrier: 2,
-  upgrader: 4,
+  attacker: 0,
+  builder: 1,
+  repairer: 1,
+  upgrader: 2,
 };
 
 const creepCountsPerRoom = {

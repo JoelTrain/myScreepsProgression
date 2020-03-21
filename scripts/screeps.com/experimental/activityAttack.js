@@ -22,29 +22,44 @@ function activityAttack(creep) {
   }
 
   const controller = creep.room.controller;
-  if (controller)
+  if (controller && !controller.my)
     if (creep.pos.inRangeTo(controller, 1)) {
-      creep.attackController(controller);
+      if (controller.reservation && controller.reservation.username !== 'ComradeJoecool') {
+        creep.attackController(controller);
+        creep.claimController(controller);
+      }
       creep.reserveController(controller);
-      creep.claimController(controller);
       creep.signController(controller, 'Write your own code or die.');
       healingAnAlly = true;
     }
 
-  const attackMoveTarget = Game.flags[creep.memory.rallyPoint];
-  if (attackMoveTarget) {
-    if (attackMoveTarget.pos.roomName !== creep.room.name) {
-      moveIgnore(creep, attackMoveTarget, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
+  const attackMoveFlag = Game.flags[creep.memory.rallyPoint];
+  let attackMovePos;
+  if (attackMoveFlag)
+    attackMovePos = attackMoveFlag.pos;
+  else if (creep.memory.targetPos) {
+    const { roomName, x, y } = creep.memory.targetPos;
+    const roomPosition = new RoomPosition(x, y, roomName);
+    attackMovePos = roomPosition;
+  }
+
+
+  if (attackMovePos) {
+    const moveCommand = Game.flags['move'];
+    if (moveCommand && attackMovePos.roomName !== creep.room.name) {
+      moveIgnore(creep, attackMovePos, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
       return;
     }
     else {
-      const enemyStructure = creep.room.lookForAt(LOOK_STRUCTURES, attackMoveTarget)[0];
-      if (enemyStructure && !isAlly(enemyStructure))
-        targets.push(enemyStructure);
+      if (Game.rooms[attackMovePos.roomName]) {
+        const enemyStructure = attackMovePos.lookFor(LOOK_STRUCTURES)[0];
+        if (enemyStructure && !isAlly(enemyStructure))
+          targets.push(enemyStructure);
 
-      const enemy = creep.room.lookForAt(LOOK_CREEPS, attackMoveTarget)[0];
-      if (enemy && !isAlly(enemy))
-        targets.push(enemy);
+        const enemy = creep.room.lookForAt(LOOK_CREEPS, attackMovePos)[0];
+        if (enemy && !isAlly(enemy))
+          targets.push(enemy);
+      }
     }
   }
 
@@ -86,18 +101,20 @@ function activityAttack(creep) {
           return;
         }
       }
-      if (creep.attack(target) == ERR_NOT_IN_RANGE) {
+      else if (!creep.pos.inRangeTo(target, 1)) {
         moveIgnore(creep, target, { visualizePathStyle: { stroke: 'red' } });
         if (!healingAnAlly)
           creep.heal(creep);
       }
+      else
+        creep.attack(target);
       creep.rangedAttack(target);
       return;
     }
   }
 
-  if (attackMoveTarget) {
-    moveIgnore(creep, attackMoveTarget, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
+  if (attackMovePos) {
+    moveIgnore(creep, attackMovePos, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
     if (!healingAnAlly)
       creep.heal(creep);
   }

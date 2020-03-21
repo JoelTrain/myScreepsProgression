@@ -12,18 +12,30 @@ function activityDepositIntoStorage(creep) {
   if (!target) {
     target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
       filter: function (object) {
-        return object.structureType === STRUCTURE_STORAGE && object.store.getFreeCapacity() > creep.store.getUsedCapacity();
+        return (object.structureType === STRUCTURE_STORAGE || object.structureType === STRUCTURE_TERMINAL) && object.store.getFreeCapacity() > creep.store.getUsedCapacity();
       },
       ignoreCreeps: true,
     });
   }
 
   if (!target) {
-  // drop all resources
-  for (const resourceType in creep.carry) {
-    creep.drop(resourceType);
-    break;
+    if (!creep.room.controller || !creep.room.controller.my) {
+      if (creep.memory.dropoffPos) {
+        changeActivity(creep, 'return to dropoff');
+        return;
+      }
+    }
+    // drop all resources
+    for (const resourceType in creep.carry) {
+      creep.drop(resourceType);
+      break;
+    }
+    return;
   }
+
+  if (creep.room.find(FIND_MY_CREEPS, { filter: foundCreep => foundCreep.memory.role === 'carrier' }).length === 0) {
+    console.log(creep.name);
+    changeActivity(creep, 'transfer');
     return;
   }
 

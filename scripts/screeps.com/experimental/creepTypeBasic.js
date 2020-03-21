@@ -4,9 +4,9 @@ const creepTypeBasic = {
   body: basicBody,
   memory: {
     role: 'basic',
-    activity: 'pickup',
-    whenFull: 'transfer',
-    whenEmpty: 'pickup',
+    activity: 'withdraw', // single withdraw to kick start
+    whenFull: '',
+    whenEmpty: 'pickup', // after we get going pickups will be faster without withdraw
   },
   maxCount: 0,
 };

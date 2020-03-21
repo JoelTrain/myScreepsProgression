@@ -3,6 +3,11 @@ const { activitySetup } = require('./activity');
 const { pickRandomFromList } = require('./pickRandomFromList');
 
 function spawnType(spawner, type) {
+  if (spawner.spawning || spawner.memory.saving) {
+    console.log(`${spawner.name} cannot spawn ${type.memory.role} because ${spawner.spawning ? 'spawning' : 'saving'} in progress`);
+    return;
+  }
+
   const creepNumber = Math.floor(Math.random() * 10000);
   const creepName = `${type.memory.role}${creepNumber}`;
   const spawnResult = spawner.spawnCreep(type.body, creepName, { memory: type.memory });
