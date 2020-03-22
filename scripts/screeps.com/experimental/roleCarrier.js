@@ -37,11 +37,11 @@ const carrierOverrides = {
 
     creep.memory.targetId = target.id;
     if (creep.pos.inRangeTo(target, 1)) {
-    creep.transfer(target, RESOURCE_ENERGY);
-    if (target.store.getFreeCapacity(RESOURCE_ENERGY) >= creep.store.getUsedCapacity(RESOURCE_ENERGY)) {
-      changeActivity(creep, creep.memory.whenEmpty);
-      return;
-    }
+      creep.transfer(target, RESOURCE_ENERGY);
+      if (target.store.getFreeCapacity(RESOURCE_ENERGY) >= creep.store.getUsedCapacity(RESOURCE_ENERGY)) {
+        changeActivity(creep, creep.memory.whenEmpty);
+        return;
+      }
 
       const pos = targets.indexOf(target);
       if (pos > -1) {
@@ -56,19 +56,20 @@ const carrierOverrides = {
 };
 
 function runCarrier(creep) {
+  const start = Game.cpu.getUsed();
   if (creepHasResources(creep))
     changeActivity(creep, 'deposit');
 
-  if (carrierOverrides[creep.memory.activity]) {
+  if (carrierOverrides[creep.memory.activity])
     carrierOverrides[creep.memory.activity](creep);
-    return;
-  }
-  else if (activity[creep.memory.activity]) {
+  else if (activity[creep.memory.activity])
     activity[creep.memory.activity](creep);
-    return;
-  }
+  else
+    changeActivity(creep, creep.memory.whenEmpty);
 
-  changeActivity(creep, creep.memory.whenEmpty);
+  const end = Game.cpu.getUsed();
+
+  //console.log(creep.name, end - start);
 }
 
 module.exports = { runCarrier };

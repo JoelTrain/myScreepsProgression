@@ -10,47 +10,38 @@ function activityBuilding(creep) {
   }
 
   if (creep.room.find(FIND_MY_CREEPS, { filter: foundCreep => foundCreep.memory.role === 'carrier' }).length === 0) {
-    console.log(creep.name);
     changeActivity(creep, 'transfer');
     return;
   }
 
   let target = Game.getObjectById(creep.memory.targetId);
-  if (target) {
-    if (!(target instanceof ConstructionSite))
-      target = undefined;
+  let targets = [];
+  if (target && target instanceof ConstructionSite && target.hits !== target.hitsMax)
+    targets.push(target);
 
-    if (target && target.hits === target.hitsMax)
-      target = undefined;
+  if (!targets.length) {
+    targets.push(...creep.room.find(FIND_CONSTRUCTION_SITES, {
+      filter: structure => structure.structureType == STRUCTURE_EXTENSION
+    }));
   }
-  if (!target) {
-    target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, {
-      filter: (structure) => {
-        return structure.structureType == STRUCTURE_EXTENSION;
-      }
-    });
+  if (!targets.length) {
+    targets.push(...creep.room.find(FIND_CONSTRUCTION_SITES));
   }
-  if (!target) {
-    target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-  }
-  if (!target) {
+  if (!targets.length) {
     changeActivity(creep, 'repair');
     return;
   }
 
+  target = targets[0];
   creep.memory.targetId = target.id;
 
-  if (creep.pos.inRangeTo(target, 3)) {
-    const buildResult = creep.build(target);
-    if (buildResult !== OK) {
-      clearTarget(creep);
-      changeActivity(creep, 'repair');
-    }
-    return;
+  const buildResult = creep.build(target);
+  if (buildResult === ERR_NOT_IN_RANGE)
+    moveIgnore(creep, target);
+  else if (buildResult !== OK) {
+    clearTarget(creep);
+    changeActivity(creep, 'repair');
   }
-
-  moveIgnore(creep, target);
-  return;
 }
 
 module.exports = { activityBuilding };

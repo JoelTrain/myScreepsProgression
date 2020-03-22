@@ -1,3 +1,11 @@
+const profiler = require('screeps-profiler');
+
+function creepOnEdge(creep) {
+  const { x, y } = creep.pos;
+
+  return x === 0 || x === 49 || y === 0 || y === 49;
+}
+
 function moveIgnore(creep, target, opts) {
   if (creep.spawning)
     return;
@@ -8,11 +16,10 @@ function moveIgnore(creep, target, opts) {
   let targetPos;
   if (target instanceof RoomPosition)
     targetPos = target;
-  else if (target.pos)
+  else if (target.pos && target.pos instanceof RoomPosition)
     targetPos = target.pos;
-  else if (target.x !== undefined && target.y !== undefined && target.roomName !== undefined) {
-    targetPos = new RoomPosition(target.x, target.y, target.roomName);
-  }
+  else
+    throw Error('passed bad position');
 
   if (opts === undefined)
     opts = {};
@@ -22,20 +29,18 @@ function moveIgnore(creep, target, opts) {
     opts.maxOps = 1000;
   opts.ignoreCreeps = true;
 
-  if (creep.room.name !== targetPos.roomName) {
-    const exit = Game.map.findExit(creep.room.name, targetPos.roomName);
-    if (exit >= 0) {
-      const exitPos = creep.pos.findClosestByRange(exit);
-      if (exitPos)
-        targetPos = exitPos;
-    }
-    else
-      console.log('ERROR: pathfind', creep.name, creep.pos.roomName, targetPos.roomName, exit);
-  }
+  // if (creep.room.name !== targetPos.roomName && !creepOnEdge(creep)) {
+  //   const exit = creep.room.findExitTo(targetPos.roomName);
+  //   if (exit > 0) {
+  //     const exitPos = creep.pos.findClosestByRange(exit);
+  //     if (exitPos)
+  //       targetPos = exitPos;
+  //   }
+  //   else
+  //     console.log('ERROR: pathfind', creep.name, creep.pos.roomName, targetPos.roomName, exit);
+  // }
 
-  let moveResult = creep.moveTo(targetPos, { noPathFinding: true, reusePath: 15, visualizePathStyle: { stroke: 'orange' } });
-  if (moveResult === ERR_NOT_FOUND)
-    moveResult = creep.moveTo(targetPos, opts);
+  moveResult = creep.moveTo(targetPos, opts);
 
   let failedToMove = false;
   if (!failedToMove)
@@ -47,7 +52,7 @@ function moveIgnore(creep, target, opts) {
         const lastPos = creep.memory.lastPos;
         const lastFatigue = creep.memory.lastFatigue;
         if (lastPos !== undefined && lastFatigue !== undefined) {
-          const { x, y } = creep.memory.lastPos;
+          const { x, y } = lastPos;
           if (x === creep.pos.x && y === creep.pos.y && creep.memory.lastFatigue === creep.fatigue && creep.fatigue === 0) {
             failedToMove = true;
           }
@@ -55,7 +60,7 @@ function moveIgnore(creep, target, opts) {
       }
     }
   }
-  creep.memory.lastPos = creep.pos;
+  creep.memory.lastPos = { x, y, roomName } = creep.pos;
   creep.memory.lastFatigue = creep.fatigue;
 
   if (failedToMove) {
@@ -66,5 +71,8 @@ function moveIgnore(creep, target, opts) {
   }
   return moveResult;
 }
+
+// Be sure to reassign the function, we can't alter functions that are passed.
+moveIgnore = profiler.registerFN(moveIgnore);
 
 module.exports = { moveIgnore };

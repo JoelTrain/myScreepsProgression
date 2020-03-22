@@ -98,9 +98,11 @@ function spawnRemoteHarvesterInRoomForPos(room, pos) {
     if (!spawner.spawning && room.energyAvailable >= bodyCost(type.body)) {
       console.log(`trying to spawn remote harvester for ${pos.roomName}, ${pos.x},${pos.y}`);
       spawnType(spawner, type);
-      break;
+      return true;
     }
   }
+
+  return false;
 }
 
 function spawnRemoteCarrierInRoomForPos(room, pos) {
@@ -117,9 +119,11 @@ function spawnRemoteCarrierInRoomForPos(room, pos) {
     if (!spawner.spawning && room.energyAvailable >= bodyCost(type.body)) {
       console.log(`trying to spawn remote carrier for ${pos.roomName}, ${pos.x},${pos.y}`);
       spawnType(spawner, type);
-      break;
+      return true;
     }
   }
+
+  return false;
 }
 
 function assignRemoteHarvesters() {
@@ -138,6 +142,9 @@ function assignRemoteHarvesters() {
 
     let spawning = false;
     for (const roomPos of roomPositions) {
+      if (spawning)
+        break;
+
       if (!Game.map.isRoomAvailable(roomPos.roomName))
         continue;
 
@@ -153,10 +160,11 @@ function assignRemoteHarvesters() {
 
       if (creepWorkingAtPos)
         reservePosByCreep(roomPos, creepWorkingAtPos);
-      else if (!spawning) {
-        spawning = true;
-        spawnRemoteHarvesterInRoomForPos(Game.rooms[hubRoomName], roomPos);
-      }
+      else
+        spawning = spawnRemoteHarvesterInRoomForPos(Game.rooms[hubRoomName], roomPos);
+
+      if (spawning)
+        break;
 
       const creepsCarryingFromSite = remoteCarriers.reduce((acc, creep) => {
         if (arePositionsEqual(creep.memory.pickupPos, roomPos))
@@ -164,13 +172,17 @@ function assignRemoteHarvesters() {
         else
           return acc;
       }, 0);
-      if (!spawning && creepsCarryingFromSite < Game.map.getRoomLinearDistance(hubRoomName, roomPos.roomName) * 3) {
-        spawning = true;
-        spawnRemoteCarrierInRoomForPos(Game.rooms[hubRoomName], roomPos);
+
+      let numCarriers = Game.map.getRoomLinearDistance(hubRoomName, roomPos.roomName) * 2;
+      if (creepWorkingAtPos && creepWorkingAtPos.pos.isNearTo(new RoomPosition(roomPos.x, roomPos.y, roomPos.roomName))) {
+        if (creepWorkingAtPos.pos.findInRange(FIND_DEPOSITS, 1))
+          numCarriers = 1;
       }
 
+      if (creepsCarryingFromSite < numCarriers) {
+        spawning = spawnRemoteCarrierInRoomForPos(Game.rooms[hubRoomName], roomPos);
+      }
     }
-
   }
 }
 

@@ -23,6 +23,8 @@ function activityMoveToRallyPoint(creep) {
   const rallyTarget = Game.flags[creep.memory.rallyPoint];
   if (rallyTarget) {
     if (creep.pos.inRangeTo(rallyTarget, 0)) {
+      if (creep.room.name !== rallyTarget.room.name)
+        throw Error('in range to lies');
       if (creep.memory.rallyPoint2) {
         creep.memory.rallyPoint = creep.memory.rallyPoint2;
       }

@@ -1,34 +1,42 @@
 const { creepIsFull } = require('./creepIsFull');
 const { changeActivity } = require('./changeActivity');
 const { moveIgnore } = require('./moveIgnore');
+const { pickRandomFromList } = require('./pickRandomFromList');
 
 function activityWithdrawFromStorage(creep) {
   if (creepIsFull(creep)) {
     changeActivity(creep, creep.memory.whenFull);
   }
 
-  let target;
+  let targets = [];
+  targets = creep.room.find(FIND_STRUCTURES, {
+    filter: object => object.structureType === STRUCTURE_STORAGE && object.room === creep.room && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity(),
+    ignoreCreeps: true,
+  });
 
-  if (!target) {
-    target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-      filter: function (object) {
-        return object.structureType === STRUCTURE_STORAGE && object.room === creep.room && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity();
-      },
-      ignoreCreeps: true,
-    });
-  }
 
-  if (!target) {
-    if (creep.body.some((part) => part.type === CARRY && part.hits > 0))
+  if (!targets.length) {
+    if (creep.getActiveBodyParts(CARRY))
       changeActivity(creep, 'pickup');
     return;
   }
 
-  moveIgnore(creep, target);
+  const target = creep.pos.findClosestByPath(targets);
+  if (!target) {
+    const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
+    if (structuresAtMyPos.length) {
+      const randomDirection = pickRandomFromList([TOP, TOP_LEFT, TOP_RIGHT, LEFT, RIGHT, BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT]);
+      creep.move(randomDirection);
+    }
+    return;
+  }
+
   const withdrawResult = creep.withdraw(target, RESOURCE_ENERGY);
   if (withdrawResult === OK) {
     creep.memory.ready = true;
   }
+
+  moveIgnore(creep, target);
 }
 
 module.exports = { activityWithdrawFromStorage };

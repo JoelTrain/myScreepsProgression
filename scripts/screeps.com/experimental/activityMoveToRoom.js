@@ -20,10 +20,10 @@ function activityMoveToRoom(creep) {
       }
     }
   }
-  const rallyTarget = creep.memory.targetPos;
+  let rallyTarget = creep.memory.targetPos;
   if (rallyTarget) {
-    const { roomName, x, y } = rallyTarget;
-    const roomPosition = new RoomPosition(x, y, roomName);
+    const { x, y, roomName } = rallyTarget;
+    rallyTarget = new RoomPosition(x, y, roomName);
     if (creep.pos.roomName === roomName) {
       if (creep.memory.whenArrive)
         changeActivity(creep, creep.memory.whenArrive);
@@ -31,7 +31,7 @@ function activityMoveToRoom(creep) {
         changeActivity(creep, creep.memory.whenEmpty);
       return;
     }
-    moveIgnore(creep, { pos: roomPosition }, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
+    moveIgnore(creep, rallyTarget, { reusePath: 20, visualizePathStyle: { stroke: 'yellow' } });
   }
   else {
     changeActivity(creep, creep.memory.whenEmpty);

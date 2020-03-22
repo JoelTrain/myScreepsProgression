@@ -6,6 +6,8 @@ const defaultCounts = {
   builder: 1,
   repairer: 1,
   upgrader: 2,
+  remoteHarvester: 0,
+  remoteCarrier: 0,
 };
 
 const creepCountsPerRoom = {

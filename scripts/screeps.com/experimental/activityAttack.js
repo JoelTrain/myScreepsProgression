@@ -50,16 +50,14 @@ function activityAttack(creep) {
       moveIgnore(creep, attackMovePos, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
       return;
     }
-    else {
-      if (Game.rooms[attackMovePos.roomName]) {
-        const enemyStructure = attackMovePos.lookFor(LOOK_STRUCTURES)[0];
-        if (enemyStructure && !isAlly(enemyStructure))
-          targets.push(enemyStructure);
+    else if (attackMovePos.roomName === creep.room.name) {
+      const enemyStructure = creep.room.lookForAt(LOOK_STRUCTURES, attackMovePos)[0];
+      if (enemyStructure && !isAlly(enemyStructure))
+        targets.push(enemyStructure);
 
-        const enemy = creep.room.lookForAt(LOOK_CREEPS, attackMovePos)[0];
-        if (enemy && !isAlly(enemy))
-          targets.push(enemy);
-      }
+      const enemy = creep.room.lookForAt(LOOK_CREEPS, attackMovePos)[0];
+      if (enemy && !isAlly(enemy))
+        targets.push(enemy);
     }
   }
 
@@ -89,7 +87,7 @@ function activityAttack(creep) {
     const target = creep.pos.findClosestByRange(targets);
     if (target) {
       if (target instanceof Creep) {
-        if (creep.pos.inRangeTo(target.pos, 3) && target.getActiveBodyparts(RANGED_ATTACK) === 0 && target.getActiveBodyparts(ATTACK) > 0) {
+        if (creep.pos.inRangeTo(target, 3) && target.getActiveBodyparts(RANGED_ATTACK) === 0 && target.getActiveBodyparts(ATTACK) > 0) {
           const pathResult = PathFinder.search(creep.pos, { pos: target.pos, range: 2 }, { flee: true });
           console.log(pathResult);
           if (pathResult && pathResult.path.length)
@@ -102,7 +100,7 @@ function activityAttack(creep) {
         }
       }
       else if (!creep.pos.inRangeTo(target, 1)) {
-        moveIgnore(creep, target, { visualizePathStyle: { stroke: 'red' } });
+        moveIgnore(creep, target.pos, { visualizePathStyle: { stroke: 'red' } });
         if (!healingAnAlly)
           creep.heal(creep);
       }

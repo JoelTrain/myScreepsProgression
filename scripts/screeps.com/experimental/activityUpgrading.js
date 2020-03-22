@@ -9,15 +9,14 @@ function activityUpgrading(creep) {
   }
 
   if (creep.room.find(FIND_MY_CREEPS, { filter: foundCreep => foundCreep.memory.role === 'carrier' }).length === 0) {
-    console.log(creep.name);
     changeActivity(creep, 'transfer');
     return;
   }
 
   let controller = creep.room.controller;
-  if (!controller.my) {
+  if (!controller || !controller.my) {
     for (const room of Object.values(Game.rooms)) {
-      if (room.controller.my) {
+      if (room.controller && room.controller.my) {
         controller = room.controller;
         break;
       }

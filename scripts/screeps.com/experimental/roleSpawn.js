@@ -21,6 +21,8 @@ function roomControllerNeedsClaim(room) {
 }
 
 function runSpawn(spawner) {
+  spawner.memory.saving = false;
+
   const creepsInRoom = spawner.room.find(FIND_MY_CREEPS);
   for (const creep of creepsInRoom) {
     if (creep.pos.inRangeTo(spawner, 1)) {
@@ -123,12 +125,12 @@ function runSpawn(spawner) {
   }
   const roomMax = spawner.room.energyCapacityAvailable;
 
-  spawner.memory.saving = false;
-
   for (const [role, count] of Object.entries(creepCountsForThisRoom)) {
     if (countsForThisRoom[role] >= count)
       continue;
     const typeToBuild = creepTypesForThisRoom[role];
+    if (!typeToBuild)
+      continue;
     const costOfBody = bodyCost(typeToBuild.body);
     if (costOfBody > roomMax && countsForThisRoom['basic'] < 10)
       spawnType(spawner, creepTypesForThisRoom.basic);

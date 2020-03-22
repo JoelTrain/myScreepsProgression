@@ -14,7 +14,6 @@ function activityRepair(creep) {
   }
 
   if (creep.room.find(FIND_MY_CREEPS, { filter: foundCreep => foundCreep.memory.role === 'carrier' }).length === 0) {
-    console.log(creep.name);
     changeActivity(creep, 'transfer');
     return;
   }
@@ -31,14 +30,15 @@ function activityRepair(creep) {
       return;
     }
 
-    let targets;
+    let targets = [];
     targets = creep.room.find(FIND_STRUCTURES, {
       filter: object => object.hits === 1 && object.structureType === STRUCTURE_RAMPART
     });
 
-    targets = creep.room.find(FIND_STRUCTURES, {
-      filter: object => readyForRepair(object) && object.structureType !== STRUCTURE_WALL && object.structureType !== STRUCTURE_RAMPART
-    });
+    if (targets.length === 0)
+      targets = creep.room.find(FIND_STRUCTURES, {
+        filter: object => readyForRepair(object) && object.structureType !== STRUCTURE_WALL && object.structureType !== STRUCTURE_RAMPART
+      });
 
     if (targets.length == 0)
       targets = creep.room.find(FIND_STRUCTURES, {
