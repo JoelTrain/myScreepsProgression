@@ -13,13 +13,6 @@ function activityPickup(creep) {
     return;
   }
 
-
-  let end = Game.cpu.getUsed();
-  if (end - start > 0.2)
-    console.log(creep.name, Game.time, 'pickup slow in -2', creep.room.name, end - start);
-  //console.log(creep.name, Game.time, 'pickup in -2', creep.room.name, end - start);
-
-
   let targets = [];
 
   let roomHasStorage = creep.room.find(FIND_MY_STRUCTURES, {
@@ -29,12 +22,6 @@ function activityPickup(creep) {
   roomHasStorage |= creep.room.find(FIND_HOSTILE_STRUCTURES, {
     filter: structur => structur.structureType === STRUCTURE_STORAGE && structur.store.getFreeCapacity()
   }).length > 0;
-
-
-  end = Game.cpu.getUsed();
-  if (end - start > 0.2)
-    console.log(creep.name, Game.time, 'pickup slow in -1', creep.room.name, end - start);
-  //console.log(creep.name, Game.time, 'pickup in -1', creep.room.name, end - start);
 
 
   targets.push(...creep.room.find(FIND_DROPPED_RESOURCES, {
@@ -51,20 +38,9 @@ function activityPickup(creep) {
     },
   }));
 
-  end = Game.cpu.getUsed();
-  if (end - start > 0.2)
-    console.log(creep.name, Game.time, 'pickup slow in 0', creep.room.name, end - start);
-  //console.log(creep.name, Game.time, 'pickup in 0', creep.room.name, end - start);
-
-
   targets.push(...creep.room.find(FIND_STRUCTURES, {
     filter: object => object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= creep.store.getFreeCapacity()
   }));
-
-  end = Game.cpu.getUsed();
-  if (end - start > 0.2)
-    console.log(creep.name, Game.time, 'pickup slow in 1', creep.room.name, end - start);
-  //console.log(creep.name, Game.time, 'pickup in 1', creep.room.name, end - start);
 
   targets.push(...creep.room.find(FIND_TOMBSTONES, { filter: object => object.store.getUsedCapacity() > 0 }));
 
@@ -85,7 +61,14 @@ function activityPickup(creep) {
     }));
 
   if (!targets.length)
-    targets.push(...creep.room.find(FIND_STRUCTURES, { filter: object => object.structureType === STRUCTURE_CONTAINER }));
+    targets.push(...creep.room.find(FIND_STRUCTURES, {
+      filter: object => object.structureType === STRUCTURE_TERMINAL && object.store.getUsedCapacity(RESOURCE_ENERGY)
+    }));
+
+  if (!targets.length)
+    targets.push(...creep.room.find(FIND_MY_CREEPS, {
+      filter: object => object.memory.role === 'heavyHarvester'
+    }));
 
   const target = creep.pos.findClosestByRange(targets, { ignoreCreeps: true, });
   if (!target) {
@@ -94,18 +77,18 @@ function activityPickup(creep) {
       const randomDirection = pickRandomFromList([TOP, TOP_LEFT, TOP_RIGHT, LEFT, RIGHT, BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT]);
       creep.move(randomDirection);
     }
+    else if (creep.memory.dropoffPos) {
+      console.log(creep.name, 'has nothing to do, returning to dropoff');
+      changeActivity(creep, 'return to dropoff');
+      return;
+    }
     return;
   }
 
   if (creep.pos.inRangeTo(target, 1)) {
-    creep.pickup(target);
     if (target.amount !== undefined && target.amount >= creep.store.getFreeCapacity(target.resourceType)) {
+      creep.pickup(target);
       changeActivity(creep, creep.memory.whenFull);
-
-      const end = Game.cpu.getUsed();
-      if (end - start > 0.2)
-        console.log(creep.name, Game.time, 'pickup slow in 2', targets.length, creep.room.name, end - start);
-      //console.log(creep.name, 'pickup', end - start);
       return;
     }
 
@@ -115,20 +98,12 @@ function activityPickup(creep) {
 
       if (target.store[stored_resources[0]] >= creep.store.getFreeCapacity(RESOURCE_ENERGY)) {
         changeActivity(creep, creep.memory.whenFull);
-
-        const end = Game.cpu.getUsed();
-        if (end - start > 0.2)
-          console.log(creep.name, Game.time, 'pickup slow in 3', targets.length, creep.room.name, end - start);
-        //console.log(creep.name, 'pickup', end - start);
         return;
       }
     }
   }
 
   moveIgnore(creep, target);
-
-  // const end = Game.cpu.getUsed();
-  // console.log(creep.name, 'pickup', end - start);
 }
 
 // Be sure to reassign the function, we can't alter functions that are passed.

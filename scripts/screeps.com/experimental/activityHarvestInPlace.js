@@ -32,12 +32,15 @@ function activityHarvestInPlace(creep) {
     }
   }
 
-  const spot = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-    filter: function (object) {
-      return object.structureType === STRUCTURE_CONTAINER && object.pos.lookFor(LOOK_CREEPS).length === 0 && object.store.getFreeCapacity() > 200;
-    }
+  const containers = creep.room.find(FIND_STRUCTURES, {
+    filter: object => object.structureType === STRUCTURE_CONTAINER
+      && object.pos.lookFor(LOOK_CREEPS).length === 0
+      && object.store.getFreeCapacity() > 200
   });
 
+  let spot = containers.find(cont => cont.room.find(FIND_SOURCES_ACTIVE).some(source => source.pos.isNearTo(cont)));
+  if (!spot && containers.length)
+    spot = containers[0];
   if (spot) {
     moveIgnore(creep, spot);
     return;

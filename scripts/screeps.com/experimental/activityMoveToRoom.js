@@ -4,7 +4,8 @@ const { isAlly } = require('./isAlly');
 
 function activityMoveToRoom(creep) {
   if (creep.getActiveBodyparts(HEAL)) {
-    creep.heal(creep);
+    if (creep.hits < creep.hitsMax)
+      creep.heal(creep);
 
     const friendly = creep.pos.findClosestByRange(FIND_CREEPS, {
       filter: function (object) {
@@ -25,6 +26,8 @@ function activityMoveToRoom(creep) {
     const { x, y, roomName } = rallyTarget;
     rallyTarget = new RoomPosition(x, y, roomName);
     if (creep.pos.roomName === roomName) {
+      //creep.move(25, 25);
+      //console.log(creep.name, 'has arrived at destination room', creep.room.name);
       if (creep.memory.whenArrive)
         changeActivity(creep, creep.memory.whenArrive);
       else

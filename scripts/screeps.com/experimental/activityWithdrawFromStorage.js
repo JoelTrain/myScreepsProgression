@@ -10,13 +10,12 @@ function activityWithdrawFromStorage(creep) {
 
   let targets = [];
   targets = creep.room.find(FIND_STRUCTURES, {
-    filter: object => object.structureType === STRUCTURE_STORAGE && object.room === creep.room && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity(),
+    filter: object => (object.structureType === STRUCTURE_STORAGE || object.structureType === STRUCTURE_TERMINAL) && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity(),
     ignoreCreeps: true,
   });
 
-
   if (!targets.length) {
-    if (creep.getActiveBodyParts(CARRY))
+    if (creep.getActiveBodyparts(CARRY))
       changeActivity(creep, 'pickup');
     return;
   }

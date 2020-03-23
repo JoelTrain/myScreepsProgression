@@ -1,5 +1,5 @@
 const creepTypeUpgrader = {
-  body: [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
+  body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE,],
   memory: {
     role: 'upgrader',
     activity: 'withdraw',

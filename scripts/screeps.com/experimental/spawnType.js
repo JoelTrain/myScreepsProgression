@@ -8,6 +8,8 @@ function spawnType(spawner, type) {
     return;
   }
 
+  spawner.memory.saving = true;
+
   const creepNumber = Math.floor(Math.random() * 10000);
   const creepName = `${type.memory.role}${creepNumber}`;
   const spawnResult = spawner.spawnCreep(type.body, creepName, { memory: type.memory });
@@ -15,8 +17,7 @@ function spawnType(spawner, type) {
   const cost = bodyCost(type.body);
   console.log(`${spawner.name} is trying to spawn type:${type.memory.role}, cost:${cost}, name:${creepName}...${string}`);
   logCreepCountsForRoom(spawner.room);
-  if (spawnResult === 0) {
-    spawner.memory.saving = true;
+  if (spawnResult === OK) {
     const newestCreep = Game.creeps[creepName];
     if (!newestCreep)
       throw Error(`Well that's weird. I really thought ${creepName} spawned.`);
@@ -37,6 +38,9 @@ function spawnType(spawner, type) {
         newestCreep.memory.rallyPoint = 'AttackMove2';
       else if (newestCreep.memory.role === 'tank')
         newestCreep.memory.rallyPoint = 'TankMove2';
+
+    if (newestCreep.memory.dropoffPos === undefined)
+      newestCreep.memory.dropoffPos = spawner.pos;
 
     activitySetup(newestCreep);
   }

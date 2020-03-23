@@ -5,13 +5,11 @@ const { findTowersWithFreeSpace } = require('./findTowersWithFreeSpace');
 
 function findTransferTargets(creep) {
   let targets = [];
-  if (!targets.length)
-    targets = findTowersWithFreeSpace(creep);
-  if (!targets.length)
-    targets = findExtensionsWithFreeSpace(creep);
+  targets.push(...findTowersWithFreeSpace(creep));
+  targets.push(...findExtensionsWithFreeSpace(creep));
   targets.push(...findMySpawnsWithFreeSpace(creep));
-  if (!targets.length)
-    targets = findStorageWithFreeSpace(creep);
+  // causes problem with pickup and immediatly transfer back
+  //targets.push(...findStorageWithFreeSpace(creep));
 
   return targets;
 }

@@ -1,7 +1,7 @@
-const profiler = require('screeps-profiler');
+// const profiler = require('screeps-profiler');
 
-// This line monkey patches the global prototypes.
-profiler.enable();
+// // This line monkey patches the global prototypes.
+// profiler.enable();
 
 require('./global');
 
@@ -96,6 +96,7 @@ function dispatchCreeps() {
 }
 
 function main() {
+  //console.log(Game.time, `${Game.cpu.getUsed()}/${Game.cpu.bucket}/${Game.cpu.tickLimit}`);
   activityTimes = {};
   roleTimes = {};
   errorMessage = '';
@@ -143,8 +144,11 @@ function main() {
     Game.notify(errorMessage, 120);
     throw Error(errorMessage);
   }
+  if (Game.time % 10 === 0)
+    console.log(Game.time, `${Game.cpu.getUsed()}/${Game.cpu.bucket}/${Game.cpu.tickLimit}`);
+
 }
 
-//module.exports.loop = main;
+module.exports.loop = main;
 
-module.exports.loop = () => profiler.wrap(main);
+//module.exports.loop = () => profiler.wrap(main);

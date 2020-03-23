@@ -28,8 +28,8 @@ function runSpawn(spawner) {
     if (creep.pos.inRangeTo(spawner, 1)) {
       if (creep.ticksToLive === 1495 && (creep.memory.role === 'defender' || creep.memory.role === 'attacker'))
         spawner.recycleCreep(creep);
-      else if (creep.ticksToLive < 1400)
-        spawner.renewCreep(creep);
+      // else if (creep.ticksToLive < 1400)
+      //   spawner.renewCreep(creep);
     }
   }
 
@@ -41,17 +41,24 @@ function runSpawn(spawner) {
   if (currentEnergy < 200)
     return;
 
-  let creepCountsForThisRoom;
+  let creepQuotasForRoom;
   if (creepCountsPerRoom[spawner.room.name])
-    creepCountsForThisRoom = { ...creepCountsPerRoom[spawner.room.name] };
+    creepQuotasForRoom = { ...creepCountsPerRoom[spawner.room.name] };
   else
-    creepCountsForThisRoom = { ...creepCountsPerRoom.default };
+    creepQuotasForRoom = { ...creepCountsPerRoom.default };
 
   const numSources = spawner.room.find(FIND_SOURCES).length;
-  const numExtractors = spawner.room.find(FIND_STRUCTURES, {
+  const extractors = spawner.room.find(FIND_STRUCTURES, {
     filter: structure => structure.structureType === STRUCTURE_EXTRACTOR
-  }).length;
-  creepCountsForThisRoom.heavyHarvester = numSources + numExtractors;
+  });
+  let numExtractors = extractors.length;
+  for (const extractor of extractors) {
+    const minerals = extractor.pos.lookFor(LOOK_MINERALS);
+    if (!minerals || !minerals[0].mineralAmount)
+      numExtractors--;
+  }
+  creepQuotasForRoom.heavyHarvester = numSources + numExtractors;
+  creepQuotasForRoom.carrier = numSources + numExtractors;
 
   const enemiesInRoomCount = spawner.room.find(FIND_HOSTILE_CREEPS, {
     filter: function (object) {
@@ -60,12 +67,11 @@ function runSpawn(spawner) {
   }).length;
 
   if (enemiesInRoomCount)
-    creepCountsForThisRoom.defender = enemiesInRoomCount;
+    creepQuotasForRoom.defender = enemiesInRoomCount;
 
   let creepTypesForThisRoom = creepTypesPerRoom[spawner.room.name];
   if (!creepTypesForThisRoom)
     creepTypesForThisRoom = creepTypes;
-
 
 
   const typeVals = Object.values(creepTypesForThisRoom);
@@ -79,14 +85,14 @@ function runSpawn(spawner) {
 
   let targetPos;
 
-  if (Game.time % 7 === 0) {
+  if (Game.time % 17 === 0) {
     for (const room of Object.values(Game.rooms)) {
       let roomControllerNeedsClaimy = roomControllerNeedsClaim(room);
       if (roomControllerNeedsClaimy && Game.map.getRoomLinearDistance(room.controller.pos.roomName, spawner.room.name, true) < 4) {
         console.log('Claim is low on', room.name, room.controller.reservation ? room.controller.reservation.ticksToEnd : 'unreserved');
         targetPos = room.controller.pos;
         creepTypesForThisRoom.claimer.memory.targetPos = room.controller.pos;
-        creepCountsForThisRoom.claimer = 1;
+        creepQuotasForRoom.claimer = 1;
         break;
       }
     }
@@ -107,17 +113,31 @@ function runSpawn(spawner) {
 
     if (targets.length > 0 && room.controller && Game.map.getRoomLinearDistance(room.controller.pos.roomName, spawner.room.name, true) < 4) {
       console.log('Hostiles spotted in', room.name, targets, targets[0].name, targets[0].owner, targets[0].structureType);
-      targetPos = room.controller.pos;
+      targetPos = { x, y, roomPosition } = room.controller.pos;
       break;
     }
   }
 
   if (targetPos && creepTypesForThisRoom.attacker) {
-    creepCountsForThisRoom.attacker = 2;
+    creepQuotasForRoom.attacker = 2;
     creepTypesForThisRoom.attacker.memory.rallyPoint = undefined;
     creepTypesForThisRoom.attacker.memory.targetPos = targetPos;
     console.log('die');
+
+    for (const creep of Object.values(Game.creeps))
+      if (creep.memory.role === 'attacker' || creep.memory.role === 'defender')
+        creep.memory.targetPos = targetPos;
   }
+
+  const constructionCount = spawner.room.find(FIND_CONSTRUCTION_SITES).length;
+  if (constructionCount)
+    creepQuotasForRoom.builder = Math.max(Math.floor(constructionCount / 4), 2);
+
+  if (spawner.room.find(FIND_MY_STRUCTURES, {
+    filter: struc => struc.structureType === STRUCTURE_STORAGE
+      && struc.store.getUsedCapacity(RESOURCE_ENERGY) > 1000
+  }).length)
+    creepQuotasForRoom.upgrader = 2;
 
   for (const creep of spawner.room.find(FIND_MY_CREEPS)) {
     countsForThisRoom[creep.memory.role]++;
@@ -125,7 +145,7 @@ function runSpawn(spawner) {
   }
   const roomMax = spawner.room.energyCapacityAvailable;
 
-  for (const [role, count] of Object.entries(creepCountsForThisRoom)) {
+  for (const [role, count] of Object.entries(creepQuotasForRoom)) {
     if (countsForThisRoom[role] >= count)
       continue;
     const typeToBuild = creepTypesForThisRoom[role];

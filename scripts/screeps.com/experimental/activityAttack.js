@@ -43,22 +43,22 @@ function activityAttack(creep) {
     attackMovePos = roomPosition;
   }
 
-
+  let attackCreepsInThisRoom = attackMovePos.roomName === creep.room.name;
   if (attackMovePos) {
     const moveCommand = Game.flags['move'];
     if (moveCommand && attackMovePos.roomName !== creep.room.name) {
       moveIgnore(creep, attackMovePos, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
       return;
     }
-    else if (attackMovePos.roomName === creep.room.name) {
-      const enemyStructure = creep.room.lookForAt(LOOK_STRUCTURES, attackMovePos)[0];
-      if (enemyStructure && !isAlly(enemyStructure))
-        targets.push(enemyStructure);
+  }
+  if (attackCreepsInThisRoom) {
+    const enemyStructure = creep.room.lookForAt(LOOK_STRUCTURES, attackMovePos)[0];
+    if (enemyStructure && !isAlly(enemyStructure))
+      targets.push(enemyStructure);
 
-      const enemy = creep.room.lookForAt(LOOK_CREEPS, attackMovePos)[0];
-      if (enemy && !isAlly(enemy))
-        targets.push(enemy);
-    }
+    const enemy = creep.room.lookForAt(LOOK_CREEPS, attackMovePos)[0];
+    if (enemy && !isAlly(enemy))
+      targets.push(enemy);
   }
 
   if (targets.length === 0) {
@@ -83,21 +83,23 @@ function activityAttack(creep) {
     targets = creep.room.find(FIND_HOSTILE_CREEPS, { filter: !isAlly });
   }
 
+  if (creep.memory.role === 'defender') {
+    console.log(creep.name, attackMovePos, targets);
+  }
+
   if (targets.length) {
     const target = creep.pos.findClosestByRange(targets);
     if (target) {
-      if (target instanceof Creep) {
-        if (creep.pos.inRangeTo(target, 3) && target.getActiveBodyparts(RANGED_ATTACK) === 0 && target.getActiveBodyparts(ATTACK) > 0) {
-          const pathResult = PathFinder.search(creep.pos, { pos: target.pos, range: 2 }, { flee: true });
-          console.log(pathResult);
-          if (pathResult && pathResult.path.length)
-            moveIgnore(creep, pathResult.path[0]);
-          const attackResult = creep.attack(target);
-          if (attackResult === ERR_NOT_IN_RANGE && !healingAnAlly)
-            creep.heal(creep);
-          creep.rangedAttack(target);
-          return;
-        }
+      if (target instanceof Creep && creep.pos.inRangeTo(target, 3) && target.getActiveBodyparts(RANGED_ATTACK) === 0 && target.getActiveBodyparts(ATTACK) > 0) {
+        const pathResult = PathFinder.search(creep.pos, { pos: target.pos, range: 2 }, { flee: true });
+        console.log(pathResult);
+        if (pathResult && pathResult.path.length)
+          moveIgnore(creep, pathResult.path[0]);
+        const attackResult = creep.attack(target);
+        if (attackResult === ERR_NOT_IN_RANGE && !healingAnAlly)
+          creep.heal(creep);
+        creep.rangedAttack(target);
+        return;
       }
       else if (!creep.pos.inRangeTo(target, 1)) {
         moveIgnore(creep, target.pos, { visualizePathStyle: { stroke: 'red' } });

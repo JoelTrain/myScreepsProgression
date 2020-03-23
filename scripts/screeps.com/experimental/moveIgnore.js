@@ -28,23 +28,31 @@ function moveIgnore(creep, target, opts) {
   if (opts.maxOps === undefined)
     opts.maxOps = 1000;
   opts.ignoreCreeps = true;
+  opts.maxRooms = 1;
 
-  // if (creep.room.name !== targetPos.roomName && !creepOnEdge(creep)) {
-  //   const exit = creep.room.findExitTo(targetPos.roomName);
-  //   if (exit > 0) {
-  //     const exitPos = creep.pos.findClosestByRange(exit);
-  //     if (exitPos)
-  //       targetPos = exitPos;
-  //   }
-  //   else
-  //     console.log('ERROR: pathfind', creep.name, creep.pos.roomName, targetPos.roomName, exit);
-  // }
+  if (creepOnEdge(creep)) {
+    delete creep.memory._move;
+    //console.log(creep.name, 'on edge', creep.room.name);
+    creep.moveTo(25, 25);
+    return;
+  }
 
-  moveResult = creep.moveTo(targetPos, opts);
+  if (creep.room.name !== targetPos.roomName) {
+    delete opts.maxRoom;
+    const exit = creep.room.findExitTo(targetPos.roomName);
+    if (exit > 0) {
+      const exitPos = creep.pos.findClosestByRange(exit);
+      if (exitPos)
+        targetPos = exitPos;
+    }
+    else
+      console.log('ERROR: pathfind', creep.name, creep.pos.roomName, targetPos.roomName, exit);
+  }
 
   let failedToMove = false;
-  if (!failedToMove)
-    failedToMove = moveResult === ERR_NO_PATH;
+  let moveResult;
+  moveResult = creep.moveTo(targetPos, opts);
+  failedToMove = moveResult === ERR_NO_PATH;
 
   if (!failedToMove) {
     if (creep.memory._move) {

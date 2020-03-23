@@ -3,7 +3,7 @@ const { getHubRooms } = require('./getHubRooms');
 const { spawnType } = require('./spawnType');
 
 const remoteHarvesterType = {
-  body: [MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK, WORK],
+  body: [MOVE, MOVE, MOVE, WORK, WORK, WORK],
   memory: {
     role: 'remoteHarvester',
     activity: 'move to position',
@@ -19,7 +19,7 @@ const remoteHarvesterType = {
 };
 
 const remoteCarrierType = {
-  body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,],
+  body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,],
   memory: {
     role: 'remoteCarrier',
     activity: 'return to pickup',
@@ -173,14 +173,16 @@ function assignRemoteHarvesters() {
           return acc;
       }, 0);
 
-      let numCarriers = Game.map.getRoomLinearDistance(hubRoomName, roomPos.roomName) * 2;
+      let numCarriers = Game.map.getRoomLinearDistance(hubRoomName, roomPos.roomName) * 1;
       if (creepWorkingAtPos && creepWorkingAtPos.pos.isNearTo(new RoomPosition(roomPos.x, roomPos.y, roomPos.roomName))) {
         if (creepWorkingAtPos.pos.findInRange(FIND_DEPOSITS, 1))
           numCarriers = 1;
       }
 
+      console.log('remote carrier', hubRoomName, '->', roomPos.roomName, creepsCarryingFromSite, '/', numCarriers);
       if (creepsCarryingFromSite < numCarriers) {
         spawning = spawnRemoteCarrierInRoomForPos(Game.rooms[hubRoomName], roomPos);
+        break;
       }
     }
   }

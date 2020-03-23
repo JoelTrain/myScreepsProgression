@@ -10,10 +10,12 @@ function activityDepositIntoStorage(creep) {
   let target;
 
   if (!target) {
-    target = creep.room.find(FIND_STRUCTURES, {
-      filter: object => (object.structureType === STRUCTURE_STORAGE || object.structureType === STRUCTURE_TERMINAL) && object.store.getFreeCapacity() > creep.store.getUsedCapacity(),
+    let targets = creep.room.find(FIND_MY_STRUCTURES, {
+      filter: object => (object.structureType === STRUCTURE_STORAGE || object.structureType === STRUCTURE_TOWER)
+        && object.store.getFreeCapacity() > creep.store.getUsedCapacity(),
       ignoreCreeps: true,
-    })[0];
+    });
+    target = creep.pos.findClosestByRange(targets);
   }
 
   if (!target) {
@@ -36,13 +38,17 @@ function activityDepositIntoStorage(creep) {
     return;
   }
 
-  moveIgnore(creep, target);
+  if (creep.pos.isNearTo(target)) {
+    // transfer all resources
+    for (const resourceType in creep.carry) {
+      creep.transfer(target, resourceType);
+      break;
+    }
 
-  // transfer all resources
-  for (const resourceType in creep.carry) {
-    creep.transfer(target, resourceType);
-    break;
+    return;
   }
+
+  moveIgnore(creep, target);
 }
 
 module.exports = { activityDepositIntoStorage };

@@ -2,9 +2,10 @@ const creepTypeClaimer = {
   body: [MOVE, MOVE, CLAIM, CLAIM],
   memory: {
     role: 'claimer',
-    activity: 'attack',
+    activity: 'move to position',
     whenFull: 'attack',
     whenEmpty: 'attack',
+    whenArrive: 'attack',
   },
 };
 
