@@ -19,6 +19,8 @@ function activityAttack(creep) {
       creep.rangedHeal(friendly);
       healingAnAlly = true;
     }
+    else if(creep.hits === creep.hitsMax)
+      healingAnAlly = true;
   }
 
   const controller = creep.room.controller;
@@ -43,7 +45,7 @@ function activityAttack(creep) {
     attackMovePos = roomPosition;
   }
 
-  let attackCreepsInThisRoom = attackMovePos.roomName === creep.room.name;
+  let attackCreepsInThisRoom = attackMovePos && attackMovePos.roomName === creep.room.name;
   if (attackMovePos) {
     const moveCommand = Game.flags['move'];
     if (moveCommand && attackMovePos.roomName !== creep.room.name) {

@@ -12,9 +12,12 @@ function activityTransferring(creep) {
 
   let targets;
   targets = findTransferTargets(creep);
-  let target = targets.find(obj =>
-    obj.structureType && obj.structureType === STRUCTURE_TOWER
-    && obj.getUsedCapacity(RESOURCE_ENERGY) < 200);
+  let target;
+  if(targets.length) {
+    target = targets.find(obj =>
+      obj.structureType && obj.structureType === STRUCTURE_TOWER
+      && obj.store.getUsedCapacity(RESOURCE_ENERGY) < 200);
+  }
 
   if (target)
     targets = [target];
@@ -36,7 +39,7 @@ function activityTransferring(creep) {
     return;
   }
 
-  let target = creep.pos.findClosestByRange(targets, { ignoreCreeps: true });
+  target = creep.pos.findClosestByRange(targets, { ignoreCreeps: true });
   if (!target) {
     creep.say('stuck');
     return;

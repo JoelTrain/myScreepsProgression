@@ -16,7 +16,7 @@ function activityHarvest(creep) {
 
   const inRange = creep.pos.inRangeTo(mySource, 1);
   if (!inRange)
-    moveIgnore(creep, mySource);
+    moveIgnore(creep, mySource, { maxRooms: 1 });
 
   const willBeFull = creep.getActiveBodyparts(WORK) * 2 > creep.store.getFreeCapacity();
   creep.harvest(mySource);

@@ -1,4 +1,4 @@
-const profiler = require('screeps-profiler');
+//const profiler = require('screeps-profiler');
 
 function creepOnEdge(creep) {
   const { x, y } = creep.pos;
@@ -21,14 +21,19 @@ function moveIgnore(creep, target, opts) {
   else
     throw Error('passed bad position');
 
+
   if (opts === undefined)
     opts = {};
   if (opts.visualizePathStyle === undefined)
     opts.visualizePathStyle = {};
   if (opts.maxOps === undefined)
     opts.maxOps = 1000;
-  opts.ignoreCreeps = true;
-  opts.maxRooms = 1;
+  if (opts.ignoreCreeps === undefined)
+    opts.ignoreCreeps = true;
+
+  const originalMaxRooms = opts.maxRooms;
+  if (opts.maxRooms === undefined)
+    opts.maxRooms = 1;
 
   if (creepOnEdge(creep)) {
     delete creep.memory._move;
@@ -38,7 +43,6 @@ function moveIgnore(creep, target, opts) {
   }
 
   if (creep.room.name !== targetPos.roomName) {
-    delete opts.maxRoom;
     const exit = creep.room.findExitTo(targetPos.roomName);
     if (exit > 0) {
       const exitPos = creep.pos.findClosestByRange(exit);
@@ -74,13 +78,17 @@ function moveIgnore(creep, target, opts) {
   if (failedToMove) {
     //console.log(`${creep.name} is not moving since ${creep.pos}`);
     //creep.say('stuck!');
+    let maxRoomsy = 16;
+    if (originalMaxRooms !== undefined)
+      maxRoomsy = originalMaxRooms;
+
     delete creep.memory._move;
-    return creep.moveTo(targetPos, { maxOps: 1000, ignoreCreeps: false, reusePath: 15, visualizePathStyle: { stroke: 'orange' } });
+    return creep.moveTo(targetPos, { maxOps: 1000, maxRooms: maxRoomsy, ignoreCreeps: false, reusePath: 15, visualizePathStyle: { stroke: 'orange' } });
   }
   return moveResult;
 }
 
 // Be sure to reassign the function, we can't alter functions that are passed.
-moveIgnore = profiler.registerFN(moveIgnore);
+//moveIgnore = profiler.registerFN(moveIgnore);
 
 module.exports = { moveIgnore };

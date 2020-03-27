@@ -45,7 +45,7 @@ function activityUpgrading(creep) {
     return;
   }
 
-  moveIgnore(creep, controller);
+  moveIgnore(creep, controller, { maxRooms: 1 });
 }
 
 module.exports = { activityUpgrading };

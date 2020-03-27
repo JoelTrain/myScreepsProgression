@@ -1,15 +1,20 @@
 const { moveIgnore } = require('./moveIgnore');
 
-function countHeavyHarvestersAlreadyBy(source) {
+function countHeavyHarvestersAlreadyBy(me, source) {
   let nearby = 0;
   for (const creep of source.room.find(FIND_MY_CREEPS)) {
     if (creep.memory.role !== 'heavyHarvester')
+      continue;
+    if(me.name === creep.name)
       continue;
     if (creep.pos.isNearTo(source))
       nearby++;
   }
   //console.log(source, nearby);
   return nearby;
+}
+
+function byHarvestAble() {
 }
 
 function activityHarvestInPlace(creep) {
@@ -23,7 +28,7 @@ function activityHarvestInPlace(creep) {
     if (!harvestTarget)
       harvestTarget = creep.pos.findInRange(FIND_DEPOSITS, 1)[0];
     if (!harvestTarget)
-      harvestTarget = creep.pos.findInRange(FIND_MINERALS, 1)[0];
+      harvestTarget = creep.pos.findInRange(FIND_MINERALS, 1, { filter: min => min.pos.lookFor(LOOK_STRUCTURES).length })[0];
     if (harvestTarget) {
       if (!creep.memory.arrivalTicksToLive)
         creep.memory.arrivalTicksToLive = creep.ticksToLive;
@@ -36,18 +41,18 @@ function activityHarvestInPlace(creep) {
     filter: object => object.structureType === STRUCTURE_CONTAINER
       && object.pos.lookFor(LOOK_CREEPS).length === 0
       && object.store.getFreeCapacity() > 200
+      && (object.pos.findInRange(FIND_SOURCES_ACTIVE, 1).length
+      || object.pos.findInRange(FIND_DEPOSITS, 1).length
+      || object.pos.findInRange(FIND_MINERALS, 1, { filter: min => min.mineralAmount > 0 && min.pos.lookFor(LOOK_STRUCTURES).length }))
   });
 
-  let spot = containers.find(cont => cont.room.find(FIND_SOURCES_ACTIVE).some(source => source.pos.isNearTo(cont)));
-  if (!spot && containers.length)
-    spot = containers[0];
-  if (spot) {
-    moveIgnore(creep, spot);
+  if (containers.length) {
+    moveIgnore(creep, containers[0]);
     return;
   }
 
   let sourcesAndDeposits = creep.room.find(FIND_SOURCES, {
-    filter: object => countHeavyHarvestersAlreadyBy(object) < 1
+    filter: object => countHeavyHarvestersAlreadyBy(creep, object) < 1
   });
   sourcesAndDeposits.push(...creep.room.find(FIND_DEPOSITS));
 

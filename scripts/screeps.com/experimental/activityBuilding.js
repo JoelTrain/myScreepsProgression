@@ -37,7 +37,7 @@ function activityBuilding(creep) {
 
   const buildResult = creep.build(target);
   if (buildResult === ERR_NOT_IN_RANGE)
-    moveIgnore(creep, target);
+    moveIgnore(creep, target, { maxRooms: 1 });
   else if (buildResult !== OK) {
     clearTarget(creep);
     changeActivity(creep, 'repair');

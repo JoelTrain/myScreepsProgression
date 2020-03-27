@@ -3,7 +3,7 @@ const { getHubRooms } = require('./getHubRooms');
 const { spawnType } = require('./spawnType');
 
 const remoteHarvesterType = {
-  body: [MOVE, MOVE, MOVE, WORK, WORK, WORK],
+  body: [MOVE, MOVE, MOVE, MOVE, WORK, WORK, WORK, WORK],
   memory: {
     role: 'remoteHarvester',
     activity: 'move to position',
@@ -145,7 +145,7 @@ function assignRemoteHarvesters() {
       if (spawning)
         break;
 
-      if (!Game.map.isRoomAvailable(roomPos.roomName))
+      if (!Game.map.getRoomStatus(roomPos.roomName).status == 'normal')
         continue;
 
       const creepWorkingAtPos = workingHarvesters.find((creep) => {
@@ -175,7 +175,7 @@ function assignRemoteHarvesters() {
 
       let numCarriers = Game.map.getRoomLinearDistance(hubRoomName, roomPos.roomName) * 1;
       if (creepWorkingAtPos && creepWorkingAtPos.pos.isNearTo(new RoomPosition(roomPos.x, roomPos.y, roomPos.roomName))) {
-        if (creepWorkingAtPos.pos.findInRange(FIND_DEPOSITS, 1))
+        if (creepWorkingAtPos.pos.findInRange(FIND_DEPOSITS, 1).length)
           numCarriers = 1;
       }
 

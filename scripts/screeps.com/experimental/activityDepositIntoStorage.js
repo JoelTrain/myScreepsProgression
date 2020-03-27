@@ -48,7 +48,7 @@ function activityDepositIntoStorage(creep) {
     return;
   }
 
-  moveIgnore(creep, target);
+  moveIgnore(creep, target, { maxRooms: 1 });
 }
 
 module.exports = { activityDepositIntoStorage };

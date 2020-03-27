@@ -35,7 +35,7 @@ function activityWithdrawFromStorage(creep) {
     creep.memory.ready = true;
   }
 
-  moveIgnore(creep, target);
+  moveIgnore(creep, target, { maxRooms: 1 });
 }
 
 module.exports = { activityWithdrawFromStorage };

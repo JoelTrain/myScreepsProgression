@@ -141,7 +141,7 @@ function main() {
   //   console.log(role, ob.count, ob.time);
   if (errorMessage.length) {
     errorMessage = `At time: ${currentTimeString()} ${errorMessage}`;
-    Game.notify(errorMessage, 120);
+    Game.notify(errorMessage);
     throw Error(errorMessage);
   }
   if (Game.time % 10 === 0)
