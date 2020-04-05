@@ -129,14 +129,28 @@ function runSpawn(spawner) {
         creep.memory.targetPos = targetPos;
   }
 
-  const constructionCount = spawner.room.find(FIND_CONSTRUCTION_SITES).length;
-  if (constructionCount)
-    creepQuotasForRoom.builder = Math.max(Math.floor(constructionCount / 4), 2);
-
-  if (spawner.room.find(FIND_MY_STRUCTURES, {
+  let storedEnergy = 0;
+  
+  
+  const storages = spawner.room.find(FIND_MY_STRUCTURES, {
     filter: struc => struc.structureType === STRUCTURE_STORAGE
-      && struc.store.getUsedCapacity(RESOURCE_ENERGY) > 1000
-  }).length)
+  });
+  
+  for(const storageStructure of storages) {
+      storedEnergy += storageStructure.store[RESOURCE_ENERGY];
+  }
+  
+  
+  let constructionSitesCount = spawner.room.find(FIND_CONSTRUCTION_SITES).length;
+  
+  if (constructionSitesCount > 0) {
+      if(storedEnergy > 2000)
+        creepQuotasForRoom.builder = Math.min(Math.max(Math.floor(constructionSitesCount / 4), 2), 4);
+      else
+        creepQuotasForRoom.builder = 1;
+  }
+  
+  if(storedEnergy > 4000)
     creepQuotasForRoom.upgrader = 2;
 
   for (const creep of spawner.room.find(FIND_MY_CREEPS)) {

@@ -154,7 +154,7 @@ function assignRemoteHarvesters() {
         if (creep && creep.memory.arrivalTicksToLive)
           travelTime = 1500 - creep.memory.arrivalTicksToLive;
 
-        return creep.ticksToLive > travelTime && arePositionsEqual(creep.memory.targetPos, roomPos);
+        return (creep.spawning || creep.ticksToLive > travelTime) && arePositionsEqual(creep.memory.targetPos, roomPos);
 
       });
 

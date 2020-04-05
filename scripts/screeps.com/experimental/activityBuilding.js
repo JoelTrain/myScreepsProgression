@@ -16,12 +16,12 @@ function activityBuilding(creep) {
 
   let target = Game.getObjectById(creep.memory.targetId);
   let targets = [];
-  if (target && target instanceof ConstructionSite && target.hits !== target.hitsMax)
+  if (target && target instanceof ConstructionSite && target.progress < target.progressTotal)
     targets.push(target);
 
   if (!targets.length) {
     targets.push(...creep.room.find(FIND_CONSTRUCTION_SITES, {
-      filter: structure => structure.structureType == STRUCTURE_EXTENSION
+      filter: structure => structure.structureType === STRUCTURE_EXTENSION
     }));
   }
   if (!targets.length) {

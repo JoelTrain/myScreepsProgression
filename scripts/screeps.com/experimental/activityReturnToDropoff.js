@@ -3,7 +3,9 @@ const { changeActivity } = require('./changeActivity');
 function activityReturnToDropoff(creep) {
   creep.memory.whenArrive = 'deposit';
   creep.memory.targetPos = creep.memory.dropoffPos;
-  creep.memory.whenEmpty = 'return to pickup';
+  
+  if(creep.memory.pickupPos)
+    creep.memory.whenEmpty = 'return to pickup';
 
   changeActivity(creep, 'move to room');
 }

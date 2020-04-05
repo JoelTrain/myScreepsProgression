@@ -2,7 +2,7 @@ const { activity, changeActivity } = require('./activity');
 const { creepHasResources } = require('./creepHasResources');
 
 function runCommon(creep) {
-  if (creepHasResources(creep) && !creep.memory.role === 'carrier' && !creep.memory.role === 'remoteCarrier')
+  if (creepHasResources(creep) && creep.memory.role !== 'carrier' && creep.memory.role !== 'remoteCarrier')
     changeActivity(creep, 'deposit');
 
   if (activity[creep.memory.activity]) {

@@ -2,6 +2,7 @@ const { moveIgnore } = require('./moveIgnore');
 const { creepIsEmpty } = require('./creepIsEmpty');
 const { changeActivity } = require('./changeActivity');
 const { findTransferTargets } = require('./findTransferTargets');
+const { pickRandomFromList } = require('./pickRandomFromList');
 const { changeActivityToRandomPickFromList } = require('./changeActivityToRandomPickFromList');
 
 function activityTransferring(creep) {
@@ -31,9 +32,10 @@ function activityTransferring(creep) {
         const randomDirection = pickRandomFromList([TOP, TOP_LEFT, TOP_RIGHT, LEFT, RIGHT, BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT]);
         creep.move(randomDirection);
       }
-      else if (creep.memory.dropoffPos)
+      else if (creep.memory.dropoffPos) {
         creep.memory.targetPos = creep.memory.dropoffPos;
-      changeActivity(creep, 'move to room');
+        changeActivity(creep, 'move to room');
+      }
       return;
     }
     return;

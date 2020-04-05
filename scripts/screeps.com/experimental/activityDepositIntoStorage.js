@@ -6,14 +6,15 @@ function activityDepositIntoStorage(creep) {
   if (creepIsEmpty(creep)) {
     changeActivity(creep, creep.memory.whenEmpty);
   }
+  
+  console.log(creep.name);
 
   let target;
 
   if (!target) {
     let targets = creep.room.find(FIND_MY_STRUCTURES, {
-      filter: object => (object.structureType === STRUCTURE_STORAGE || object.structureType === STRUCTURE_TOWER)
+      filter: object => (object.structureType === STRUCTURE_STORAGE || (object.structureType === STRUCTURE_TOWER && creep.store.getUsedCapacity(RESOURCE_ENERGY)))
         && object.store.getFreeCapacity() > creep.store.getUsedCapacity(),
-      ignoreCreeps: true,
     });
     target = creep.pos.findClosestByRange(targets);
   }
