@@ -5,7 +5,7 @@ function countHeavyHarvestersAlreadyBy(me, source) {
   for (const creep of source.room.find(FIND_MY_CREEPS)) {
     if (creep.memory.role !== 'heavyHarvester')
       continue;
-    if(me.name === creep.name)
+    if (me.name === creep.name)
       continue;
     if (creep.pos.isNearTo(source))
       nearby++;
@@ -23,7 +23,7 @@ function activityHarvestInPlace(creep) {
     return;
   }
   const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
-  if (structuresAtMyPos[0] && structuresAtMyPos[0].structureType === STRUCTURE_CONTAINER && structuresAtMyPos[0].store.getFreeCapacity() > 0) {
+  if (structuresAtMyPos[0] && structuresAtMyPos[0].structureType === STRUCTURE_CONTAINER && structuresAtMyPos[0].store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
     let harvestTarget = creep.pos.findInRange(FIND_SOURCES, 1)[0];
     if (!harvestTarget)
       harvestTarget = creep.pos.findInRange(FIND_DEPOSITS, 1)[0];
@@ -42,8 +42,8 @@ function activityHarvestInPlace(creep) {
       && object.pos.lookFor(LOOK_CREEPS).length === 0
       && object.store.getFreeCapacity() > 200
       && (object.pos.findInRange(FIND_SOURCES_ACTIVE, 1).length
-      || object.pos.findInRange(FIND_DEPOSITS, 1).length
-      || object.pos.findInRange(FIND_MINERALS, 1, { filter: min => min.mineralAmount > 0 && min.pos.lookFor(LOOK_STRUCTURES).length }))
+        || object.pos.findInRange(FIND_DEPOSITS, 1).length
+        || object.pos.findInRange(FIND_MINERALS, 1, { filter: min => min.mineralAmount > 0 && min.pos.lookFor(LOOK_STRUCTURES).length }))
   });
 
   if (containers.length) {

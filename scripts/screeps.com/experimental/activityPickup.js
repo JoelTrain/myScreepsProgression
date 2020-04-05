@@ -1,4 +1,4 @@
-const profiler = require('screeps-profiler');
+//const profiler = require('screeps-profiler');
 
 const { creepIsFull } = require('./creepIsFull');
 const { changeActivity } = require('./changeActivity');
@@ -16,10 +16,6 @@ function activityPickup(creep) {
   let targets = [];
 
   let roomHasStorage = creep.room.find(FIND_MY_STRUCTURES, {
-    filter: structur => structur.structureType === STRUCTURE_STORAGE && structur.store.getFreeCapacity()
-  }).length > 0;
-
-  roomHasStorage |= creep.room.find(FIND_HOSTILE_STRUCTURES, {
     filter: structur => structur.structureType === STRUCTURE_STORAGE && structur.store.getFreeCapacity()
   }).length > 0;
 
@@ -86,27 +82,28 @@ function activityPickup(creep) {
   }
 
   if (creep.pos.inRangeTo(target, 1)) {
-    if (target.amount !== undefined && target.amount >= creep.store.getFreeCapacity(target.resourceType)) {
+    if (target.amount) {
+      if (target.amount >= creep.store.getFreeCapacity(target.resourceType))
+        changeActivity(creep, creep.memory.whenFull);
       creep.pickup(target);
-      changeActivity(creep, creep.memory.whenFull);
       return;
     }
 
-    if (target.structureType || target.deathTime || target.destroyTime) {
+    if (target instanceof Structure || target instanceof Tombstone || target instanceof Ruin) {
       const stored_resources = _.filter(Object.keys(target.store), resource => target.store[resource] > 0);
-      creep.withdraw(target, stored_resources[0]);
 
-      if (target.store[stored_resources[0]] >= creep.store.getFreeCapacity(RESOURCE_ENERGY)) {
+      if (target.store[stored_resources[0]] >= creep.store.getFreeCapacity(RESOURCE_ENERGY))
         changeActivity(creep, creep.memory.whenFull);
-        return;
-      }
+
+      creep.withdraw(target, stored_resources[0]);
+      return;
     }
   }
 
-  moveIgnore(creep, target);
+  moveIgnore(creep, target, { maxRooms: 1 });
 }
 
 // Be sure to reassign the function, we can't alter functions that are passed.
-activityPickup = profiler.registerFN(activityPickup);
+//activityPickup = profiler.registerFN(activityPickup);
 
 module.exports = { activityPickup };
