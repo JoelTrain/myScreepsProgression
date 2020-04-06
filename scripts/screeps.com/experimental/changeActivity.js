@@ -5,13 +5,12 @@ function changeActivity(creep, newActivity) {
 
   if (callOuts)
     creep.say(newActivity);
-    
+
   //console.log(creep.name, newActivity);
 
   creep.memory.activity = newActivity;
   creep.memory.changedActivity = true;
   creep.memory.ready = true;
-  delete creep.memory._move;
 }
 
 module.exports = { changeActivity };

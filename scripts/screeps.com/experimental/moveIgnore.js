@@ -27,7 +27,7 @@ function moveIgnore(creep, target, opts) {
   if (opts.visualizePathStyle === undefined)
     opts.visualizePathStyle = {};
   if (opts.maxOps === undefined)
-    opts.maxOps = 200;
+    opts.maxOps = 800;
   if (opts.ignoreCreeps === undefined)
     opts.ignoreCreeps = true;
   if (opts.reusePath === undefined)
@@ -79,7 +79,7 @@ function moveIgnore(creep, target, opts) {
 
   if (failedToMove) {
     //console.log(`${creep.name} is not moving since ${creep.pos}`);
-    //creep.say('stuck!');
+    // creep.say('stuck!');
     let maxRoomsy = 16;
     if (originalMaxRooms !== undefined)
       maxRoomsy = originalMaxRooms;

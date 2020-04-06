@@ -69,7 +69,7 @@ function runSpawn(spawner) {
   if (enemiesInRoomCount)
     creepQuotasForRoom.defender = enemiesInRoomCount;
 
-  let creepTypesForThisRoom = creepTypesPerRoom[spawner.room.name];
+  let creepTypesForThisRoom = creepTypesPerRoom(spawner.room.name);
   if (!creepTypesForThisRoom)
     creepTypesForThisRoom = creepTypes;
 
@@ -112,7 +112,7 @@ function runSpawn(spawner) {
 
 
     if (targets.length > 0 && room.controller && Game.map.getRoomLinearDistance(room.controller.pos.roomName, spawner.room.name, true) < 4) {
-      console.log('Hostiles spotted in', room.name, targets, targets[0].name, targets[0].owner, targets[0].structureType);
+      console.log('Hostiles spotted in', room.name, targets, targets[0].name, targets[0].owner.username, targets[0].structureType);
       targetPos = { x, y, roomPosition } = room.controller.pos;
       break;
     }
@@ -181,7 +181,8 @@ function runSpawn(spawner) {
     }
     const roomSpawners = spawner.room.find(FIND_STRUCTURES, { filter: struc => struc.structureType === STRUCTURE_SPAWN && struc.id !== spawner.id });
 
-    if (roomSpawners.some(spawn => spawn.spawning && (console.log(spawn.spawning.name.includes(role)) || spawn.spawning.name.includes(role)))) {
+    if (roomSpawners.some(spawn => spawn.spawning && spawn.spawning.name.includes(role))) {
+      console.log(`${spawner.name} will not spawn a ${role} because one is already in progress from the other spawn.`);
       continue;
     }
     spawnType(spawner, typeToBuild);

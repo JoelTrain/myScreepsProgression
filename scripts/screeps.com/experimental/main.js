@@ -169,7 +169,7 @@ function main() {
   if (errorMessage.length) {
     errorMessage = `At time: ${currentTimeString()} ${errorMessage}`;
     Game.notify(errorMessage);
-    throw Error(errorMessage);
+    throw new Error(errorMessage);
   }
   if (Game.time % 10 === 0)
     console.log(Game.time, `${Game.cpu.getUsed()}/${Game.cpu.bucket}/${Game.cpu.tickLimit}`);

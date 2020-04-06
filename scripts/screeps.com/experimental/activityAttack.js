@@ -94,14 +94,14 @@ function activityAttack(creep) {
         if (pathResult && pathResult.path.length)
           moveIgnore(creep, pathResult.path[0]);
         const attackResult = creep.attack(target);
-        if (attackResult === ERR_NOT_IN_RANGE && !healingAnAlly)
+        if (attackResult === ERR_NOT_IN_RANGE && !healingAnAlly && creep.hits < creep.hitsMax)
           creep.heal(creep);
         creep.rangedAttack(target);
         return;
       }
       else if (!creep.pos.inRangeTo(target, 1)) {
         moveIgnore(creep, target.pos, { visualizePathStyle: { stroke: 'red' } });
-        if (!healingAnAlly)
+        if (!healingAnAlly && creep.hits < creep.hitsMax)
           creep.heal(creep);
       }
       else
@@ -113,7 +113,7 @@ function activityAttack(creep) {
 
   if (attackMovePos) {
     moveIgnore(creep, attackMovePos, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
-    if (!healingAnAlly)
+    if (!healingAnAlly && creep.hits < creep.hitsMax)
       creep.heal(creep);
   }
   if (attackMovePos === undefined || attackMovePos.roomName === creep.room.name) {
