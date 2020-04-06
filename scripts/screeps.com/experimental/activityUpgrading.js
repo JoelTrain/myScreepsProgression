@@ -8,7 +8,7 @@ function activityUpgrading(creep) {
     return;
   }
 
-  if (creep.room.find(FIND_MY_CREEPS, { filter: foundCreep => foundCreep.memory.role === 'carrier' }).length === 0) {
+  if (creep.memory.role !== 'basic' && creep.room.find(FIND_MY_CREEPS, { filter: foundCreep => foundCreep.memory.role === 'carrier' }).length === 0) {
     changeActivity(creep, 'transfer');
     return;
   }

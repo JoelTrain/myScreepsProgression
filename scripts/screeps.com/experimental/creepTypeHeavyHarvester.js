@@ -1,5 +1,5 @@
 const creepTypeHeavyHarvester = {
-  body: [WORK, WORK, WORK, WORK, WORK, MOVE],
+  body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, MOVE, MOVE, MOVE,],
   memory: {
     role: 'heavyHarvester',
     activity: 'harvest in place',

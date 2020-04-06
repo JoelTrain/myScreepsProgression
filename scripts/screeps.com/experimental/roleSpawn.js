@@ -118,39 +118,46 @@ function runSpawn(spawner) {
     }
   }
 
-  if (targetPos && creepTypesForThisRoom.attacker) {
-    creepQuotasForRoom.attacker = 2;
-    creepTypesForThisRoom.attacker.memory.rallyPoint = undefined;
-    creepTypesForThisRoom.attacker.memory.targetPos = targetPos;
-    console.log('die');
+  Memory.hostilesAt = targetPos;
 
+  if (targetPos) {
+    let attackerCount = 0;
     for (const creep of Object.values(Game.creeps))
-      if (creep.memory.role === 'attacker' || creep.memory.role === 'defender')
+      if (creep.memory.role === 'attacker' || creep.memory.role === 'defender') {
         creep.memory.targetPos = targetPos;
+        attackerCount++;
+      }
+
+    if (creepTypesForThisRoom.attacker && attackerCount < 8) {
+      creepQuotasForRoom.attacker = 2;
+      creepTypesForThisRoom.attacker.memory.rallyPoint = undefined;
+      creepTypesForThisRoom.attacker.memory.targetPos = targetPos;
+      console.log('die');
+    }
   }
 
   let storedEnergy = 0;
-  
-  
+
+
   const storages = spawner.room.find(FIND_MY_STRUCTURES, {
     filter: struc => struc.structureType === STRUCTURE_STORAGE
   });
-  
-  for(const storageStructure of storages) {
-      storedEnergy += storageStructure.store[RESOURCE_ENERGY];
+
+  for (const storageStructure of storages) {
+    storedEnergy += storageStructure.store[RESOURCE_ENERGY];
   }
-  
-  
+
+
   let constructionSitesCount = spawner.room.find(FIND_CONSTRUCTION_SITES).length;
-  
+
   if (constructionSitesCount > 0) {
-      if(storedEnergy > 2000)
-        creepQuotasForRoom.builder = Math.min(Math.max(Math.floor(constructionSitesCount / 4), 2), 4);
-      else
-        creepQuotasForRoom.builder = 1;
+    if (storedEnergy > 2000)
+      creepQuotasForRoom.builder = Math.min(Math.max(Math.floor(constructionSitesCount / 4), 2), 4);
+    else
+      creepQuotasForRoom.builder = 1;
   }
-  
-  if(storedEnergy > 4000)
+
+  if (storedEnergy > 4000)
     creepQuotasForRoom.upgrader = 2;
 
   for (const creep of spawner.room.find(FIND_MY_CREEPS)) {
@@ -171,6 +178,11 @@ function runSpawn(spawner) {
     if (costOfBody > currentEnergy) {
       spawner.memory.saving = true;
       break;
+    }
+    const roomSpawners = spawner.room.find(FIND_STRUCTURES, { filter: struc => struc.structureType === STRUCTURE_SPAWN && struc.id !== spawner.id });
+
+    if (roomSpawners.some(spawn => spawn.spawning && (console.log(spawn.spawning.name.includes(role)) || spawn.spawning.name.includes(role)))) {
+      continue;
     }
     spawnType(spawner, typeToBuild);
     return;

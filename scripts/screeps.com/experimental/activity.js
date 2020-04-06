@@ -1,6 +1,7 @@
 const { activitySetup } = require('./activitySetup');
 const { changeActivity } = require('./changeActivity');
 const { activityTowerAttack } = require('./activityTowerAttack');
+const { activityLinkTransfer } = require('./activityLinkTransfer');
 const { activityPickup } = require('./activityPickup');
 const { activityDepositIntoStorage } = require('./activityDepositIntoStorage');
 const { activityWithdrawFromStorage } = require('./activityWithdrawFromStorage');
@@ -19,6 +20,7 @@ const { activityUpgrading } = require('./activityUpgrading');
 
 const activity = {
   'tower attack': activityTowerAttack,
+  'link transfer': activityLinkTransfer,
   'pickup': activityPickup,
   'deposit': activityDepositIntoStorage,
   'withdraw': activityWithdrawFromStorage,

@@ -19,7 +19,7 @@ const remoteHarvesterType = {
 };
 
 const remoteCarrierType = {
-  body: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,],
+  body: new Array(50).fill(MOVE, 0, 25).fill(CARRY, 25),
   memory: {
     role: 'remoteCarrier',
     activity: 'return to pickup',

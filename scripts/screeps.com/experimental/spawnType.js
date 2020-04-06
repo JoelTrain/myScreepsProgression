@@ -18,6 +18,7 @@ function spawnType(spawner, type) {
   console.log(`${spawner.name} is trying to spawn type:${type.memory.role}, cost:${cost}, name:${creepName}...${string}`);
   logCreepCountsForRoom(spawner.room);
   if (spawnResult === OK) {
+    spawner.room.memory.spawnScheduled = true;
     const newestCreep = Game.creeps[creepName];
     if (!newestCreep)
       throw Error(`Well that's weird. I really thought ${creepName} spawned.`);

@@ -2,7 +2,7 @@ const { moveIgnore } = require('./moveIgnore');
 const { creepIsEmpty } = require('./creepIsEmpty');
 const { changeActivity } = require('./changeActivity');
 const { findTransferTargets } = require('./findTransferTargets');
-const { pickRandomFromList } = require('./pickRandomFromList');
+const { moveOffOfStructure } = require('./moveOffOfStructure');
 const { changeActivityToRandomPickFromList } = require('./changeActivityToRandomPickFromList');
 
 function activityTransferring(creep) {
@@ -14,7 +14,7 @@ function activityTransferring(creep) {
   let targets;
   targets = findTransferTargets(creep);
   let target;
-  if(targets.length) {
+  if (targets.length) {
     target = targets.find(obj =>
       obj.structureType && obj.structureType === STRUCTURE_TOWER
       && obj.store.getUsedCapacity(RESOURCE_ENERGY) < 200);
@@ -23,16 +23,11 @@ function activityTransferring(creep) {
   if (target)
     targets = [target];
 
-  if (!targets.length) {
+  if (targets.length === 0) {
     if (creep.getActiveBodyparts(WORK) > 0)
-      changeActivityToRandomPickFromList(creep, ['repair', 'build', 'build',]);
+      changeActivityToRandomPickFromList(creep, ['repair', 'build', 'build', 'upgrade']);
     else {
-      const structuresAtMyPos = creep.pos.lookFor(LOOK_STRUCTURES);
-      if (structuresAtMyPos.length) {
-        const randomDirection = pickRandomFromList([TOP, TOP_LEFT, TOP_RIGHT, LEFT, RIGHT, BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT]);
-        creep.move(randomDirection);
-      }
-      else if (creep.memory.dropoffPos) {
+      if (!moveOffOfStructure(creep) && creep.memory.dropoffPos) {
         creep.memory.targetPos = creep.memory.dropoffPos;
         changeActivity(creep, 'move to room');
       }

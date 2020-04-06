@@ -6,15 +6,18 @@ function activityDepositIntoStorage(creep) {
   if (creepIsEmpty(creep)) {
     changeActivity(creep, creep.memory.whenEmpty);
   }
-  
-  console.log(creep.name);
+
+  let dropoffStructureTypes = [STRUCTURE_STORAGE];
+  if (creep.store[RESOURCE_OXYGEN] > 0)
+    dropoffStructureTypes = [STRUCTURE_TERMINAL];
+  if (creep.store[RESOURCE_ENERGY] > 0)
+    dropoffStructureTypes.push(STRUCTURE_TOWER, STRUCTURE_LINK);
 
   let target;
 
   if (!target) {
     let targets = creep.room.find(FIND_MY_STRUCTURES, {
-      filter: object => (object.structureType === STRUCTURE_STORAGE || (object.structureType === STRUCTURE_TOWER && creep.store.getUsedCapacity(RESOURCE_ENERGY)))
-        && object.store.getFreeCapacity() > creep.store.getUsedCapacity(),
+      filter: object => dropoffStructureTypes.includes(object.structureType) && object.store.getFreeCapacity(RESOURCE_ENERGY) > 0,
     });
     target = creep.pos.findClosestByRange(targets);
   }
@@ -34,7 +37,7 @@ function activityDepositIntoStorage(creep) {
     return;
   }
 
-  if (creep.room.find(FIND_MY_CREEPS, { filter: foundCreep => foundCreep.memory.role === 'carrier' }).length === 0) {
+  if (creep.memory.role !== 'basic' && creep.room.find(FIND_MY_CREEPS, { filter: foundCreep => foundCreep.memory.role === 'carrier' }).length === 0) {
     changeActivity(creep, 'transfer');
     return;
   }

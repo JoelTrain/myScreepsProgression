@@ -86,20 +86,20 @@ const harvestLocations = {
       creepWorkingSite: undefined,
       creepsCarryingSite: [],
     },
-    {
-      roomName: 'E11S33',
-      x: 3,
-      y: 30,
-      creepWorkingSite: undefined,
-      creepsCarryingSite: [],
-    },
-    {
-      roomName: 'E11S33',
-      x: 6,
-      y: 33,
-      creepWorkingSite: undefined,
-      creepsCarryingSite: [],
-    },
+    // {
+    //   roomName: 'E11S33',
+    //   x: 3,
+    //   y: 30,
+    //   creepWorkingSite: undefined,
+    //   creepsCarryingSite: [],
+    // },
+    // {
+    //   roomName: 'E11S33',
+    //   x: 6,
+    //   y: 33,
+    //   creepWorkingSite: undefined,
+    //   creepsCarryingSite: [],
+    // },
   ],
 };
 

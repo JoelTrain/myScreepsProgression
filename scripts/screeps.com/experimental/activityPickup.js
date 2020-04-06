@@ -30,7 +30,7 @@ function activityPickup(creep) {
         else
           return false;
 
-      return object.amount >= creep.store.getFreeCapacity();
+      return object.amount >= creep.store.getFreeCapacity() / 2;
     },
   }));
 
@@ -41,6 +41,8 @@ function activityPickup(creep) {
   targets.push(...creep.room.find(FIND_TOMBSTONES, { filter: object => object.store.getUsedCapacity() > 0 }));
 
   targets.push(...creep.room.find(FIND_RUINS, { filter: object => object.store.getUsedCapacity() > 0 }));
+
+  targets.push(...creep.room.find(FIND_STRUCTURES, { filter: object => object.structureType === STRUCTURE_LINK && object.store.getUsedCapacity(RESOURCE_ENERGY) > 0 }));
 
   if (!targets.length)
     if (creep.body.some((part) => part.type === WORK && part.hits > 0)) {

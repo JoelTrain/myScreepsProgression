@@ -19,7 +19,7 @@ function activityAttack(creep) {
       creep.rangedHeal(friendly);
       healingAnAlly = true;
     }
-    else if(creep.hits === creep.hitsMax)
+    else if (creep.hits === creep.hitsMax)
       healingAnAlly = true;
   }
 
@@ -85,10 +85,6 @@ function activityAttack(creep) {
     targets = creep.room.find(FIND_HOSTILE_CREEPS, { filter: !isAlly });
   }
 
-  if (creep.memory.role === 'defender') {
-    console.log(creep.name, attackMovePos, targets);
-  }
-
   if (targets.length) {
     const target = creep.pos.findClosestByRange(targets);
     if (target) {
@@ -119,6 +115,10 @@ function activityAttack(creep) {
     moveIgnore(creep, attackMovePos, { reusePath: 20, visualizePathStyle: { stroke: 'red' } });
     if (!healingAnAlly)
       creep.heal(creep);
+  }
+  if (attackMovePos === undefined || attackMovePos.roomName === creep.room.name) {
+    if (Memory.hostilesAt && Game.map.getRoomLinearDistance(creep.room.name, Memory.hostilesAt.roomName) < 10)
+      creep.memory.targetPos = Memory.hostilesAt;
   }
 }
 

@@ -27,9 +27,11 @@ function moveIgnore(creep, target, opts) {
   if (opts.visualizePathStyle === undefined)
     opts.visualizePathStyle = {};
   if (opts.maxOps === undefined)
-    opts.maxOps = 1000;
+    opts.maxOps = 200;
   if (opts.ignoreCreeps === undefined)
     opts.ignoreCreeps = true;
+  if (opts.reusePath === undefined)
+    opts.reusePath = 20;
 
   const originalMaxRooms = opts.maxRooms;
   if (opts.maxRooms === undefined)
@@ -83,7 +85,7 @@ function moveIgnore(creep, target, opts) {
       maxRoomsy = originalMaxRooms;
 
     delete creep.memory._move;
-    return creep.moveTo(targetPos, { maxOps: 1000, maxRooms: maxRoomsy, ignoreCreeps: false, reusePath: 15, visualizePathStyle: { stroke: 'orange' } });
+    return creep.moveTo(targetPos, { maxOps: 1000, maxRooms: maxRoomsy, ignoreCreeps: false, reusePath: 30, visualizePathStyle: { stroke: 'orange' } });
   }
   return moveResult;
 }

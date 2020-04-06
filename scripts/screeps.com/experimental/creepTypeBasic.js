@@ -5,7 +5,7 @@ const creepTypeBasic = {
   memory: {
     role: 'basic',
     activity: 'withdraw', // single withdraw to kick start
-    whenFull: '',
+    whenFull: 'transfer',
     whenEmpty: 'pickup', // after we get going pickups will be faster without withdraw
   },
   maxCount: 0,

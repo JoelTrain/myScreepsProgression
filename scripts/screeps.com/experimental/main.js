@@ -25,8 +25,29 @@ function freeOldMem() {
 
 function spawns() {
   for (const spawn of Object.values(Game.spawns)) {
+    spawn.room.memory.spawnScheduled = false;
+  }
+  for (const spawn of Object.values(Game.spawns)) {
     try {
-      runSpawn(spawn);
+      if (!spawn.room.memory.spawnScheduled)
+        runSpawn(spawn);
+    }
+    catch (error) {
+      errorMessage += error.stack + '\n';
+    }
+  }
+}
+
+function links() {
+  for (const link of Object.values(Game.structures)) {
+    try {
+      if (link.structureType !== STRUCTURE_LINK)
+        continue;
+      link.memory = {
+        role: 'link',
+        activity: 'link transfer',
+      };
+      runCommon(link);
     }
     catch (error) {
       errorMessage += error.stack + '\n';
@@ -123,6 +144,12 @@ function main() {
   }
   try {
     towers();
+  }
+  catch (error) {
+    errorMessage += error.stack + '\n';
+  }
+  try {
+    links();
   }
   catch (error) {
     errorMessage += error.stack + '\n';
