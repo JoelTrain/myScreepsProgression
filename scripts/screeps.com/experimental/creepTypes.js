@@ -23,7 +23,7 @@ const creepTypesSmall = {
   builder: creepTypeBuilder,
   repairer: creepTypeRepairer,
   remoteBuilder: creepTypeRemoteBuilder,
-  upgrader: creepTypeUpgrader,
+  upgrader: creepTypeUpgrader.small,
   claimer: creepTypeClaimer.small,
   manual: creepTypeManual,
 };
@@ -39,7 +39,7 @@ const creepTypes = {
   builder: creepTypeBuilder,
   repairer: creepTypeRepairer,
   remoteBuilder: creepTypeRemoteBuilder,
-  upgrader: creepTypeUpgrader,
+  upgrader: creepTypeUpgrader.medium,
   claimer: creepTypeClaimer.medium,
   manual: creepTypeManual,
 };
@@ -51,13 +51,29 @@ const creepTypesLarge = {
   heavyHarvester: creepTypeHeavyHarvester,
   carrier: creepTypeCarrier,
   tank: creepTypeTank,
-  attacker: creepTypeAttacker.medium,
+  attacker: creepTypeAttacker.large,
   builder: creepTypeBuilder,
   repairer: creepTypeRepairer,
   remoteBuilder: creepTypeRemoteBuilder,
-  upgrader: creepTypeUpgrader,
+  upgrader: creepTypeUpgrader.large,
   claimer: creepTypeClaimer.large,
   manual: creepTypeManual,
 };
 
-module.exports = { creepTypesSmall, creepTypes, creepTypesLarge };
+const creepTypesMax = {
+  basic: creepTypeBasic,
+  defender: creepTypeDefender,
+  harvester: creepTypeHarvester,
+  heavyHarvester: creepTypeHeavyHarvester,
+  carrier: creepTypeCarrier,
+  tank: creepTypeTank,
+  attacker: creepTypeAttacker.large,
+  builder: creepTypeBuilder,
+  repairer: creepTypeRepairer,
+  remoteBuilder: creepTypeRemoteBuilder,
+  upgrader: creepTypeUpgrader.small,
+  claimer: creepTypeClaimer.large,
+  manual: creepTypeManual,
+};
+
+module.exports = { creepTypesSmall, creepTypes, creepTypesLarge, creepTypesMax };

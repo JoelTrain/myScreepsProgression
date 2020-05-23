@@ -156,8 +156,11 @@ function runSpawn(spawner) {
       creepQuotasForRoom.builder = 1;
   }
 
-  if (storedEnergy > 4000)
+  if (storedEnergy > 4000) {
     creepQuotasForRoom.upgrader = 2;
+    if (spawner.room.controller.level === 8)
+      creepQuotasForRoom.upgrader = 1;
+  }
 
   for (const creep of spawner.room.find(FIND_MY_CREEPS)) {
     countsForThisRoom[creep.memory.role]++;
