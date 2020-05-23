@@ -9,7 +9,7 @@ function activityDepositIntoStorage(creep) {
 
   let dropoffStructureTypes = [STRUCTURE_STORAGE];
   if (creep.store[RESOURCE_OXYGEN] > 0)
-    dropoffStructureTypes = [STRUCTURE_TERMINAL];
+    dropoffStructureTypes = [STRUCTURE_STORAGE];
   if (creep.store[RESOURCE_ENERGY] > 0)
     dropoffStructureTypes.push(STRUCTURE_TOWER, STRUCTURE_LINK);
 
