@@ -4,7 +4,7 @@ const defaultCounts = {
   carrier: 0,
   attacker: 0,
   builder: 0,
-  repairer: 1,
+  repairer: 0,
   upgrader: 0,
   remoteHarvester: 0,
   remoteCarrier: 0,
