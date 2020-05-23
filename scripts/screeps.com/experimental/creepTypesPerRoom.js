@@ -1,9 +1,9 @@
-const { creepTypes } = require('./creepTypes');
+const { creepTypesSmall, creepTypes, creepTypesLarge } = require('./creepTypes');
 
 const creepTypeSizes = {
-  'small': undefined,
+  'small': creepTypesSmall,
   'medium': creepTypes,
-  'large': undefined,
+  'large': creepTypesLarge,
   undefined: creepTypes,
 };
 

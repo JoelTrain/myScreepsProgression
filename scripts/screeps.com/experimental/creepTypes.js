@@ -19,7 +19,7 @@ const creepTypesSmall = {
   heavyHarvester: creepTypeHeavyHarvester,
   carrier: creepTypeCarrier,
   tank: creepTypeTank,
-  attacker: creepTypeAttacker.medium,
+  attacker: creepTypeAttacker.small,
   builder: creepTypeBuilder,
   repairer: creepTypeRepairer,
   remoteBuilder: creepTypeRemoteBuilder,
