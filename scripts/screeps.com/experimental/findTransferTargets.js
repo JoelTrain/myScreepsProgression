@@ -1,7 +1,25 @@
 const { findTerminalWithLessThan15kEnergy } = require('./findTerminalWithLessThan15kEnergy');
 const { findStructuresWithFreeSpace } = require('./findStructuresWithFreeSpace');
 
+const structuresWithFreeSpace = 'structures_with_free_space';
+const terminalsWithLessThan15kEnergy = "terminals_with_less_than_15k_energy";
+const terminalWithFreeSpace = "terminal_with_free_space";
+const storageWithFreeSpace = 'storage_with_free_space';
+const allTransferTargets = "all_transfer_targets";
+
 function findTransferTargets(creep) {
+  const { cachedRoomFinds } = global;
+  if (cachedRoomFinds[creep.room] === undefined)
+    cachedRoomFinds[creep.room] = {};
+
+  const cachedFindsForThisRoom = cachedRoomFinds[creep.room];
+
+  const allTargets = cachedFindsForThisRoom[allTransferTargets];
+  if (allTargets === undefined)
+    cachedFindsForThisRoom[allTransferTargets] = {};
+  else
+    return allTargets;
+
   const transferTargetTypes = [
     STRUCTURE_TOWER,
     STRUCTURE_EXTENSION,
@@ -9,13 +27,22 @@ function findTransferTargets(creep) {
   ];
 
   let targets = [];
-  targets.push(...findStructuresWithFreeSpace(creep.room, transferTargetTypes));
-  targets.push(...findTerminalWithLessThan15kEnergy(creep.room));
+
+  if (cachedFindsForThisRoom[structuresWithFreeSpace] === undefined)
+    cachedFindsForThisRoom[structuresWithFreeSpace] = findStructuresWithFreeSpace(creep.room, transferTargetTypes);
+  targets.push(...cachedFindsForThisRoom[structuresWithFreeSpace]);
+
+  if (cachedFindsForThisRoom[terminalsWithLessThan15kEnergy] === undefined)
+    cachedFindsForThisRoom[terminalsWithLessThan15kEnergy] = findTerminalWithLessThan15kEnergy(creep.room);
+  targets.push(...cachedFindsForThisRoom[terminalsWithLessThan15kEnergy]);
   // causes problem with pickup and immediatly transfer back
-  //targets.push(...findStructuresWithFreeSpace(creep.room, STRUCTURE_STORAGE));
+  // targets.push(...findStructuresWithFreeSpace(creep.room, STRUCTURE_STORAGE));
 
   // for fast stock up on energy in terminal, uncomment next line
   // targets.push(...findStructuresWithFreeSpace(creep, STRUCTURE_TERMINAL));
+
+  cachedFindsForThisRoom[allTransferTargets] = targets;
+
   return targets;
 }
 

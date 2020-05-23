@@ -2,7 +2,7 @@ const { creepTypes } = require('./creepTypes');
 const { creepCountsPerRoom } = require('./creepCountsPerRoom');
 const { bodyCost } = require('./bodyCost');
 
-global.cachedRoomFinds = undefined;
+global.cachedRoomFinds = {};
 
 global.creepTypes = creepTypes;
 global.bodyCost = bodyCost;
