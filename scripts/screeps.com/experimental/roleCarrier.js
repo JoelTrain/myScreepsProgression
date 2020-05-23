@@ -1,7 +1,9 @@
 const { activity, changeActivity } = require('./activity');
 const { creepHasResources } = require('./creepHasResources');
 const { pickRandomFromList } = require('./pickRandomFromList');
-const { findTransferTargets, moveIgnore, creepIsEmpty, } = require('./common');
+const { findTransferTargets } = require('./findTransferTargets');
+const { moveIgnore } = require('./moveIgnore');
+const { creepIsEmpty } = require('./creepIsEmpty');
 
 const carrierOverrides = {
   'transfer': function (creep) {
