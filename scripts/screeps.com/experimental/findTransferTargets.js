@@ -2,10 +2,14 @@ const { findTerminalWithLessThan15kEnergy } = require('./findTerminalWithLessTha
 const { findStructuresWithFreeSpace } = require('./findStructuresWithFreeSpace');
 
 function findTransferTargets(creep) {
+  const transferTargetTypes = [
+    STRUCTURE_TOWER,
+    STRUCTURE_EXTENSION,
+    STRUCTURE_SPAWN,
+  ];
+
   let targets = [];
-  targets.push(...findStructuresWithFreeSpace(creep.room, STRUCTURE_TOWER));
-  targets.push(...findStructuresWithFreeSpace(creep.room, STRUCTURE_EXTENSION));
-  targets.push(...findStructuresWithFreeSpace(creep.room, STRUCTURE_SPAWN));
+  targets.push(...findStructuresWithFreeSpace(creep.room, transferTargetTypes));
   targets.push(...findTerminalWithLessThan15kEnergy(creep.room));
   // causes problem with pickup and immediatly transfer back
   //targets.push(...findStructuresWithFreeSpace(creep.room, STRUCTURE_STORAGE));
