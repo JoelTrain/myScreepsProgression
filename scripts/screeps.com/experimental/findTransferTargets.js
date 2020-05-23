@@ -5,9 +5,9 @@ const { findTowersWithFreeSpace } = require('./findTowersWithFreeSpace');
 
 function findTransferTargets(creep) {
   let targets = [];
-  targets.push(...findTowersWithFreeSpace(creep));
-  targets.push(...findExtensionsWithFreeSpace(creep));
-  targets.push(...findMySpawnsWithFreeSpace(creep));
+  targets.push(...findTowersWithFreeSpace(creep.room));
+  targets.push(...findExtensionsWithFreeSpace(creep.room));
+  targets.push(...findMySpawnsWithFreeSpace(creep.room));
   // causes problem with pickup and immediatly transfer back
   //targets.push(...findStorageWithFreeSpace(creep));
 
