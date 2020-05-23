@@ -22,13 +22,13 @@ const harvestLocations = {
       creepWorkingSite: undefined,
       creepsCarryingSite: [],
     },
-    {
-      roomName: 'E7S31',
-      x: 40,
-      y: 41,
-      creepWorkingSite: undefined,
-      creepsCarryingSite: [],
-    },
+    // {
+    //   roomName: 'E7S31',
+    //   x: 40,
+    //   y: 41,
+    //   creepWorkingSite: undefined,
+    //   creepsCarryingSite: [],
+    // },
   ],
   E9S32: [
     {
