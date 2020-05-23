@@ -60,7 +60,7 @@ function activityRepair(creep) {
   }
   if (!target) {
     clearTarget(creep);
-    changeActivity(creep, 'upgrade');
+    changeActivity(creep, 'transfer');
     return;
   }
 
