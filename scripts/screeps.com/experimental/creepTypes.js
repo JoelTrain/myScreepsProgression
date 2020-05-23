@@ -40,7 +40,7 @@ const creepTypes = {
   repairer: creepTypeRepairer,
   remoteBuilder: creepTypeRemoteBuilder,
   upgrader: creepTypeUpgrader.medium,
-  claimer: creepTypeClaimer.medium,
+  claimer: creepTypeClaimer.small,
   manual: creepTypeManual,
 };
 
@@ -56,7 +56,7 @@ const creepTypesLarge = {
   repairer: creepTypeRepairer,
   remoteBuilder: creepTypeRemoteBuilder,
   upgrader: creepTypeUpgrader.large,
-  claimer: creepTypeClaimer.large,
+  claimer: creepTypeClaimer.small,
   manual: creepTypeManual,
 };
 
@@ -72,7 +72,7 @@ const creepTypesMax = {
   repairer: creepTypeRepairer,
   remoteBuilder: creepTypeRemoteBuilder,
   upgrader: creepTypeUpgrader.small,
-  claimer: creepTypeClaimer.large,
+  claimer: creepTypeClaimer.small,
   manual: creepTypeManual,
 };
 
