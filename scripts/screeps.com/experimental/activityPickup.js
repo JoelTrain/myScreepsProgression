@@ -38,6 +38,12 @@ function activityPickup(creep) {
     filter: object => object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= creep.store.getFreeCapacity()
   }));
 
+  targets.push(...creep.room.find(FIND_STRUCTURES, {
+    filter: object => object.structureType === STRUCTURE_TERMINAL
+      && object.store.getUsedCapacity() >= creep.store.getFreeCapacity()
+      && (object.store.getUsedCapacity(RESOURCE_OXYGEN) / object.store.getCapacity()) > 0.9
+  }));
+
   targets.push(...creep.room.find(FIND_TOMBSTONES, { filter: object => object.store.getUsedCapacity() > 0 }));
 
   targets.push(...creep.room.find(FIND_RUINS, { filter: object => object.store.getUsedCapacity() > 0 }));
@@ -55,12 +61,12 @@ function activityPickup(creep) {
 
   if (!targets.length)
     targets.push(...creep.room.find(FIND_STRUCTURES, {
-      filter: object => object.structureType === STRUCTURE_STORAGE && object.store.getUsedCapacity(RESOURCE_ENERGY)
+      filter: object => object.structureType === STRUCTURE_STORAGE && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity()
     }));
 
   if (!targets.length)
     targets.push(...creep.room.find(FIND_STRUCTURES, {
-      filter: object => object.structureType === STRUCTURE_TERMINAL && object.store.getUsedCapacity(RESOURCE_ENERGY)
+      filter: object => object.structureType === STRUCTURE_TERMINAL && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity()
     }));
 
   if (!targets.length)
