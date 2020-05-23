@@ -83,21 +83,20 @@ function runSpawn(spawner) {
     countsForThisRoom[typeKey] = 0;
   }
 
-  let targetPos;
 
   if (Game.time % 17 === 0) {
     for (const room of Object.values(Game.rooms)) {
       let roomControllerNeedsClaimy = roomControllerNeedsClaim(room);
       if (roomControllerNeedsClaimy && Game.map.getRoomLinearDistance(room.controller.pos.roomName, spawner.room.name, true) < 4) {
         console.log('Claim is low on', room.name, room.controller.reservation ? room.controller.reservation.ticksToEnd : 'unreserved');
-        targetPos = room.controller.pos;
         creepTypesForThisRoom.claimer.memory.targetPos = room.controller.pos;
         creepQuotasForRoom.claimer = 1;
         break;
       }
     }
-  }
+  } //@TODO refactor how claims are determined and do it once rather than per spawn
 
+  let targetPos;
   targetPos = undefined;
   for (const room of Object.values(Game.rooms)) {
 
