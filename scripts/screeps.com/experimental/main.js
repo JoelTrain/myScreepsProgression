@@ -33,7 +33,8 @@ function spawns() {
         runSpawn(spawn);
     }
     catch (error) {
-      errorMessage += error.stack + '\n';
+      if (error && error.stack)
+        errorMessage += error.stack + '\n';
     }
   }
 }
@@ -50,7 +51,8 @@ function links() {
       runCommon(link);
     }
     catch (error) {
-      errorMessage += error.stack + '\n';
+      if (error && error.stack)
+        errorMessage += error.stack + '\n';
     }
   }
 }
@@ -67,7 +69,8 @@ function towers() {
       runCommon(tower);
     }
     catch (error) {
-      errorMessage += error.stack + '\n';
+      if (error && error.stack)
+        errorMessage += error.stack + '\n';
     }
   }
 }
@@ -127,32 +130,37 @@ function main() {
     freeOldMem();
   }
   catch (error) {
-    errorMessage += error.stack + '\n';
+    if (error && error.stack)
+      errorMessage += error.stack + '\n';
   }
   try {
     spawns();
   }
   catch (error) {
-    errorMessage += error.stack + '\n';
+    if (error && error.stack)
+      errorMessage += error.stack + '\n';
   }
   try {
     if (Game.time % 10 === 0)
       assignRemoteHarvesters();
   }
   catch (error) {
-    errorMessage += error.stack + '\n';
+    if (error && error.stack)
+      errorMessage += error.stack + '\n';
   }
   try {
     towers();
   }
   catch (error) {
-    errorMessage += error.stack + '\n';
+    if (error && error.stack)
+      errorMessage += error.stack + '\n';
   }
   try {
     links();
   }
   catch (error) {
-    errorMessage += error.stack + '\n';
+    if (error && error.stack)
+      errorMessage += error.stack + '\n';
   }
   try {
     prepareForDispatch();
@@ -160,7 +168,8 @@ function main() {
       dispatchCreeps();
   }
   catch (error) {
-    errorMessage += error.stack + '\n';
+    if (error && error.stack)
+      errorMessage += error.stack + '\n';
   }
   // for (const [role, ob] of Object.entries(roleTimes))
   //   console.log(role, ob.count, ob.time);
