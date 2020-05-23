@@ -7,11 +7,15 @@ function activityDepositIntoStorage(creep) {
     changeActivity(creep, creep.memory.whenEmpty);
   }
 
-  let dropoffStructureTypes = [STRUCTURE_STORAGE];
+  let dropoffStructureTypes = [STRUCTURE_TERMINAL];
   if (creep.store[RESOURCE_OXYGEN] > 0)
-    dropoffStructureTypes = [STRUCTURE_STORAGE];
+    dropoffStructureTypes = [STRUCTURE_TERMINAL];
   if (creep.store[RESOURCE_ENERGY] > 0)
     dropoffStructureTypes.push(STRUCTURE_TOWER, STRUCTURE_LINK);
+
+  const terminals = creep.room.find(FIND_MY_STRUCTURES, { filter: object => object.structureType === STRUCTURE_TERMINAL });
+  if (terminals.length === 0 || terminals[0].store.getFreeCapacity(RESOURCE_ENERGY) === 0)
+    dropoffStructureTypes.push(STRUCTURE_STORAGE);
 
   let target;
 
