@@ -121,6 +121,8 @@ function dispatchCreeps() {
 
 function main() {
   //console.log(Game.time, `${Game.cpu.getUsed()}/${Game.cpu.bucket}/${Game.cpu.tickLimit}`);
+
+  global.cachedRoomFinds = {};
   activityTimes = {};
   roleTimes = {};
   errorMessage = '';
