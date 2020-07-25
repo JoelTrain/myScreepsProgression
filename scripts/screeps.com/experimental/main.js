@@ -92,6 +92,8 @@ let activityTimes = {};
 function dispatchCreeps() {
   for (const creep of Object.values(Game.creeps)) {
     try {
+      if (creep.fatigue > 0 && creep.memory.role != 'attacker')
+        creep.memory.ready = false;
       if (!creep.spawning && creep.memory.ready) {
         creep.memory.ready = false;
 
