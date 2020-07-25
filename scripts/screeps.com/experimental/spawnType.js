@@ -16,8 +16,6 @@ function spawnType(spawner, type) {
   const string = (spawnResult === 0) ? 'success' : `fail with code ${spawnResult}`;
   const cost = bodyCost(type.body);
   console.log(`${spawner.name} is trying to spawn type:${type.memory.role}, cost:${cost}, name:${creepName}...${string}`);
-  if (spawnResult === 0 && cost > 3000)
-    Game.notify(`Was able to spawn a ${type.memory.role} for ${cost} in ${spawner.room.name}`);
   logCreepCountsForRoom(spawner.room);
   if (spawnResult === OK) {
     spawner.room.memory.spawnScheduled = true;
