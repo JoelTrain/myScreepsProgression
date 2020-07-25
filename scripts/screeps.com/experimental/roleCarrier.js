@@ -12,6 +12,12 @@ const carrierOverrides = {
       return;
     }
 
+    if (creep.memory.dropoffPos && creep.room.name != creep.memory.dropoffPos.roomName) {
+      creep.memory.pickupPos = creep.memory.dropoffPos;
+      changeActivity(creep, 'return to dropoff');
+      return;
+    }
+
     let targets;
     targets = findTransferTargets(creep);
 
