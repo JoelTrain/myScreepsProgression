@@ -15,6 +15,7 @@ function findTransferTargets(creep) {
   const cachedFindsForThisRoom = cachedRoomFinds[creep.room];
 
   const allTargets = cachedFindsForThisRoom[allTransferTargets];
+
   if (allTargets === undefined)
     cachedFindsForThisRoom[allTransferTargets] = {};
   else
