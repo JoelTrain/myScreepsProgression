@@ -116,7 +116,8 @@ function dispatchCreeps() {
       }
     }
     catch (error) {
-      errorMessage += error.stack + '\n';
+      if (error && error.stack)
+        errorMessage += error.stack + '\n';
     }
   }
 }
