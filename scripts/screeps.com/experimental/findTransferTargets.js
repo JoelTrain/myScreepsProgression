@@ -1,13 +1,13 @@
-const { findTerminalWithLessThan15kEnergy } = require('./findTerminalWithLessThan15kEnergy');
+// const { findTerminalWithLessThan15kEnergy } = require('./findTerminalWithLessThan15kEnergy');
 const { findStructuresWithFreeSpace } = require('./findStructuresWithFreeSpace');
 const { findInputLinks } = require('./findInputLinks');
 
 const structuresWithFreeSpace = 'structures_with_free_space';
-const terminalsWithLessThan15kEnergy = "terminals_with_less_than_15k_energy";
-const terminalWithFreeSpace = "terminal_with_free_space";
-const storageWithFreeSpace = 'storage_with_free_space';
+// const terminalsWithLessThan15kEnergy = 'terminals_with_less_than_15k_energy';
+// const terminalWithFreeSpace = 'terminal_with_free_space';
+// const storageWithFreeSpace = 'storage_with_free_space';
 const linksForDepositting = 'links_for_depositting';
-const allTransferTargets = "all_transfer_targets";
+const allTransferTargets = 'all_transfer_targets';
 
 function findTransferTargets(creep) {
   const { cachedRoomFinds } = global;

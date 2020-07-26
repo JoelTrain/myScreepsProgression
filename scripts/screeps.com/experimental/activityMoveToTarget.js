@@ -4,7 +4,7 @@ const { moveIgnore } = require('./moveIgnore');
 const { changeActivity } = require('./changeActivity');
 const { isAlly } = require('./isAlly');
 
-function activityMoveToTarget(creep) {
+let activityMoveToTarget = function (creep) {
   if (creep.getActiveBodyparts(HEAL)) {
     creep.heal(creep);
 
@@ -20,7 +20,7 @@ function activityMoveToTarget(creep) {
       }
     }
   }
-  const start = Game.cpu.getUsed();
+  // const start = Game.cpu.getUsed();
   let rallyTarget = creep.memory.targetPos;
   if (rallyTarget) {
     const { x, y, roomName } = rallyTarget;
@@ -44,7 +44,7 @@ function activityMoveToTarget(creep) {
     changeActivity(creep, creep.memory.whenEmpty);
     return;
   }
-}
+};
 
 // Be sure to reassign the function, we can't alter functions that are passed.
 activityMoveToTarget = profiler.registerFN(activityMoveToTarget);

@@ -11,7 +11,7 @@ function activityLinkTransfer(link) {
   if (targetLink === undefined)
     return;
 
-  if (!targetLink instanceof StructureLink)
+  if (!(targetLink instanceof StructureLink))
     return;
 
   if (targetLink.store.getFreeCapacity(RESOURCE_ENERGY) < link.store[RESOURCE_ENERGY])

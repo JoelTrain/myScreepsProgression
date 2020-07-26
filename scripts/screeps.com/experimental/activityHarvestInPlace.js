@@ -14,9 +14,6 @@ function countHeavyHarvestersAlreadyBy(me, source) {
   return nearby;
 }
 
-function byHarvestAble() {
-}
-
 function activityHarvestInPlace(creep) {
   if (creep === null) {
     console.trace();

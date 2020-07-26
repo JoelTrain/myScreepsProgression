@@ -7,7 +7,6 @@ const { pickRandomFromList } = require('./pickRandomFromList');
 
 function activityPickup(creep) {
 
-  const start = Game.cpu.getUsed();
   if (creepIsFull(creep)) {
     changeActivity(creep, creep.memory.whenFull);
     return;

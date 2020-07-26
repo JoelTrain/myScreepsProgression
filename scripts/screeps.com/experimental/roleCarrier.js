@@ -64,7 +64,7 @@ const carrierOverrides = {
 };
 
 function runCarrier(creep) {
-  const start = Game.cpu.getUsed();
+  // const start = Game.cpu.getUsed();
   if (creepHasResources(creep))
     changeActivity(creep, 'deposit');
 
@@ -75,7 +75,7 @@ function runCarrier(creep) {
   else
     changeActivity(creep, creep.memory.whenEmpty);
 
-  const end = Game.cpu.getUsed();
+  // const end = Game.cpu.getUsed();
 
   //console.log(creep.name, end - start);
 }
