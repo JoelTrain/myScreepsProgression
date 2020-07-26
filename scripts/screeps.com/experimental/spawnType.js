@@ -18,6 +18,7 @@ function spawnType(spawner, type) {
   console.log(`${spawner.name} is trying to spawn type:${type.memory.role}, cost:${cost}, name:${creepName}...${string}`);
   logCreepCountsForRoom(spawner.room);
   if (spawnResult === OK) {
+    // @TODO need to re-evaluate this section, might not be safe
     spawner.room.memory.spawnScheduled = true;
     const newestCreep = Game.creeps[creepName];
     if (!newestCreep)
@@ -40,8 +41,18 @@ function spawnType(spawner, type) {
       else if (newestCreep.memory.role === 'tank')
         newestCreep.memory.rallyPoint = 'TankMove2';
 
-    if (newestCreep.memory.dropoffPos === undefined)
-      newestCreep.memory.dropoffPos = spawner.pos;
+    if (newestCreep.memory.dropoffPos === undefined
+      || newestCreep.memory.dropoffPos.roomName != spawner.room.name)
+      newestCreep.memory.dropoffPos = { x, y, roomName } = spawner.pos;
+
+    console.log(newestCreep.name, newestCreep.memory.dropoffPos.roomName, 'dropoff room because of', spawner.room.name);
+    if (newestCreep.memory.dropoffPos.roomName != spawner.room.name) {
+      const message = `Created creep ${creep.name} but dropoff pos ${
+        newestCreep.memory.dropoffPos.roomName
+        } does not match spawner, ${spawner.name}, pos ${spawner.room.name}`;
+      console.log('notifying', message);
+      Game.notify(message);
+    }
 
     activitySetup(newestCreep);
   }
