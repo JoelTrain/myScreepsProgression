@@ -21,7 +21,7 @@ function activityDepositIntoStorage(creep) {
 
   if (!target) {
     let targets = creep.room.find(FIND_MY_STRUCTURES, {
-      filter: object => dropoffStructureTypes.includes(object.structureType) && object.store.getFreeCapacity(RESOURCE_ENERGY) >= creep.store.getUsedCapacity(),
+      filter: object => dropoffStructureTypes.includes(object.structureType) && object.store.getFreeCapacity(RESOURCE_ENERGY) >= (creep.store.getUsedCapacity() / 2),
     });
     target = creep.pos.findClosestByRange(targets);
   }
