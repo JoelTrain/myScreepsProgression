@@ -1,10 +1,12 @@
 const { findTerminalWithLessThan15kEnergy } = require('./findTerminalWithLessThan15kEnergy');
 const { findStructuresWithFreeSpace } = require('./findStructuresWithFreeSpace');
+const { findInputLinks } = require('./findInputLinks');
 
 const structuresWithFreeSpace = 'structures_with_free_space';
 const terminalsWithLessThan15kEnergy = "terminals_with_less_than_15k_energy";
 const terminalWithFreeSpace = "terminal_with_free_space";
 const storageWithFreeSpace = 'storage_with_free_space';
+const linksForDepositting = 'links_for_depositting';
 const allTransferTargets = "all_transfer_targets";
 
 function findTransferTargets(creep) {
@@ -33,9 +35,13 @@ function findTransferTargets(creep) {
     cachedFindsForThisRoom[structuresWithFreeSpace] = findStructuresWithFreeSpace(creep.room, transferTargetTypes);
   targets.push(...cachedFindsForThisRoom[structuresWithFreeSpace]);
 
-  if (cachedFindsForThisRoom[terminalsWithLessThan15kEnergy] === undefined)
-    cachedFindsForThisRoom[terminalsWithLessThan15kEnergy] = findTerminalWithLessThan15kEnergy(creep.room);
-  targets.push(...cachedFindsForThisRoom[terminalsWithLessThan15kEnergy]);
+  if (cachedFindsForThisRoom[linksForDepositting] === undefined)
+    cachedFindsForThisRoom[linksForDepositting] = findInputLinks(creep.room);
+  targets.push(...cachedFindsForThisRoom[linksForDepositting]);
+
+  // if (cachedFindsForThisRoom[terminalsWithLessThan15kEnergy] === undefined)
+  //   cachedFindsForThisRoom[terminalsWithLessThan15kEnergy] = findTerminalWithLessThan15kEnergy(creep.room);
+  // targets.push(...cachedFindsForThisRoom[terminalsWithLessThan15kEnergy]);
   // causes problem with pickup and immediatly transfer back
   // targets.push(...findStructuresWithFreeSpace(creep.room, STRUCTURE_STORAGE));
 
