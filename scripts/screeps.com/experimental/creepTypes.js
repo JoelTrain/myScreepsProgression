@@ -3,6 +3,7 @@ const { creepTypeDefender } = require('./creepTypeDefender');
 const { creepTypeHarvester } = require('./creepTypeHarvester');
 const { creepTypeHeavyHarvester } = require('./creepTypeHeavyHarvester');
 const { creepTypeCarrier } = require('./creepTypeCarrier');
+const { creepTypeHeavyCarrier } = require('./creepTypeHeavyCarrier');
 const { creepTypeTank } = require('./creepTypeTank');
 const { creepTypeAttacker } = require('./creepTypeAttacker');
 const { creepTypeBuilder } = require('./creepTypeBuilder');
@@ -49,7 +50,7 @@ const creepTypesLarge = {
   defender: creepTypeDefender,
   harvester: creepTypeHarvester,
   heavyHarvester: creepTypeHeavyHarvester,
-  carrier: creepTypeCarrier,
+  carrier: creepTypeHeavyCarrier,
   tank: creepTypeTank,
   attacker: creepTypeAttacker.large,
   builder: creepTypeBuilder,
@@ -65,7 +66,7 @@ const creepTypesMax = {
   defender: creepTypeDefender,
   harvester: creepTypeHarvester,
   heavyHarvester: creepTypeHeavyHarvester,
-  carrier: creepTypeCarrier,
+  carrier: creepTypeHeavyCarrier,
   tank: creepTypeTank,
   attacker: creepTypeAttacker.large,
   builder: creepTypeBuilder,
