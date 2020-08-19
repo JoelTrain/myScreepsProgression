@@ -101,7 +101,7 @@ function runSpawn(spawner) {
   for (const room of Object.values(Game.rooms)) {
 
     if (room.controller && (!room.controller.my || (room.controller.reservation && room.controller.reservation.username !== 'ComradeJoecool'))) {
-      if (room.find(FIND_MY_CREEPS, { filter: creep => creep.memory.role === 'remoteHarvester' }).length === 0)
+      if (room.find(FIND_MY_CREEPS, { filter: creep => creep.memory.role === 'remoteHarvester' || creep.memory.role === 'claimer' }).length === 0)
         continue;
     }
 
