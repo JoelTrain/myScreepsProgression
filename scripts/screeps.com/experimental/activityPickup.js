@@ -47,7 +47,11 @@ function activityPickup(creep) {
 
   targets.push(...creep.room.find(FIND_RUINS, { filter: object => object.store.getUsedCapacity() > 0 }));
 
-  targets.push(...creep.room.find(FIND_STRUCTURES, { filter: object => object.structureType === STRUCTURE_LINK && object.store.getUsedCapacity(RESOURCE_ENERGY) > 0 }));
+  targets.push(...creep.room.find(FIND_STRUCTURES, {
+    filter: object => object.structureType === STRUCTURE_LINK
+      && object.room.memory.accumulatorId == object.id
+      && object.store.getUsedCapacity(RESOURCE_ENERGY) > 0
+  }));
 
   if (!targets.length)
     if (creep.body.some((part) => part.type === WORK && part.hits > 0)) {
