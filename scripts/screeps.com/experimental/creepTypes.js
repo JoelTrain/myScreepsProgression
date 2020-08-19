@@ -72,7 +72,7 @@ const creepTypesMax = {
   builder: creepTypeBuilder,
   repairer: creepTypeRepairer,
   remoteBuilder: creepTypeRemoteBuilder,
-  upgrader: creepTypeUpgrader.small,
+  upgrader: creepTypeUpgrader.large,
   claimer: creepTypeClaimer.small,
   manual: creepTypeManual,
 };
