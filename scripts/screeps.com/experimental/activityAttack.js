@@ -95,10 +95,15 @@ function activityAttack(creep) {
           return;
         }
       }
-      if (!creep.pos.inRangeTo(target, 1) && attackPartCount > 0) {
-        moveIgnore(creep, target.pos, { visualizePathStyle: { stroke: 'red' } });
-        if (!healingAnAlly && creep.hits < creep.hitsMax)
+      if (attackPartCount > 0) {
+        if (creep.pos.inRangeTo(target, 1)) {
+          isRangedAttacking = creep.rangedAttack(target) === OK;
+          isMeleeAttacking = creep.attack(target) === OK;
+        }
+        else if (!healingAnAlly && creep.hits < creep.hitsMax) {
           creep.heal(creep);
+        }
+        moveIgnore(creep, target.pos, { visualizePathStyle: { stroke: 'red' } });
       }
       return;
     }

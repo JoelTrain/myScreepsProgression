@@ -62,6 +62,8 @@ function activityPickup(creep) {
   if (!targets.length)
     targets = creep.room.find(FIND_DROPPED_RESOURCES);
 
+
+  // picking up from storage might cause endless cycle of pickup and transfer
   if (!targets.length)
     targets.push(...creep.room.find(FIND_STRUCTURES, {
       filter: object => object.structureType === STRUCTURE_STORAGE && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity()
