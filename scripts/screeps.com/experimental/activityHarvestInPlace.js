@@ -25,7 +25,7 @@ function activityHarvestInPlace(creep) {
     if (!harvestTarget)
       harvestTarget = creep.pos.findInRange(FIND_DEPOSITS, 1)[0];
     if (!harvestTarget)
-      harvestTarget = creep.pos.findInRange(FIND_MINERALS, 1, { filter: min => min.pos.lookFor(LOOK_STRUCTURES).length })[0];
+      harvestTarget = creep.pos.findInRange(FIND_MINERALS, 1, { filter: min => min.pos.lookFor(LOOK_STRUCTURES).length && min.mineralAmount > 0 })[0];
     if (harvestTarget) {
       if (!creep.memory.arrivalTicksToLive)
         creep.memory.arrivalTicksToLive = creep.ticksToLive;
