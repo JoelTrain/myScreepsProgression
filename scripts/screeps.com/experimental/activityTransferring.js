@@ -18,6 +18,9 @@ function activityTransferring(creep) {
     target = targets.find(obj =>
       obj.structureType && obj.structureType === STRUCTURE_TOWER
       && obj.store.getUsedCapacity(RESOURCE_ENERGY) < 200);
+
+    if (target)
+      targets = [target];
   }
 
   if (target)

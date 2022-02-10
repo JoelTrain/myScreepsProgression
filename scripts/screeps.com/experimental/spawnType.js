@@ -12,7 +12,14 @@ function spawnType(spawner, type) {
 
   const creepNumber = Math.floor(Math.random() * 10000);
   const creepName = `${type.memory.role}${creepNumber}`;
-  const spawnResult = spawner.spawnCreep(type.body, creepName, { memory: type.memory });
+  const spawnResult = spawner.spawnCreep(type.body, creepName, {
+    memory: type.memory,
+    energyStructures: [
+      ...spawner.room.find(FIND_MY_STRUCTURES, { filter: structure => structure.structureType === STRUCTURE_EXTENSION }),
+      spawner,
+      ...spawner.room.find(FIND_MY_SPAWNS)
+    ]
+  });
   const string = (spawnResult === 0) ? 'success' : `fail with code ${spawnResult}`;
   const cost = bodyCost(type.body);
   console.log(`${spawner.name} is trying to spawn type:${type.memory.role}, cost:${cost}, name:${creepName}...${string}`);
@@ -47,8 +54,7 @@ function spawnType(spawner, type) {
 
     console.log(newestCreep.name, newestCreep.memory.dropoffPos.roomName, 'dropoff room because of', spawner.room.name);
     if (newestCreep.memory.dropoffPos.roomName != spawner.room.name) {
-      const message = `Created creep ${creep.name} but dropoff pos ${
-        newestCreep.memory.dropoffPos.roomName
+      const message = `Created creep ${creep.name} but dropoff pos ${newestCreep.memory.dropoffPos.roomName
         } does not match spawner, ${spawner.name}, pos ${spawner.room.name}`;
       console.log('notifying', message);
       Game.notify(message);

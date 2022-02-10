@@ -11,6 +11,7 @@ const creepTypeSizes = {
 const roomToTypes = {
   E5S31: 'large',
   E9S32: 'max',
+  E12S42: 'small',
 };
 
 function creepTypesPerRoom(roomName) {

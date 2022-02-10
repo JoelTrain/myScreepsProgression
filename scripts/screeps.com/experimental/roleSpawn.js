@@ -192,8 +192,8 @@ function runSpawn(spawner) {
   }
 
   if (countsForThisRoom.total < 5 && currentEnergy >= bodyCost(creepTypesForThisRoom.basic.body)) {
-    Game.notify(`Uh oh we are making basic creeps at ${currentTimeString()} in ${spawner.room.name}`, 120);
-    console.log('Sending Email!');
+    // Game.notify(`Uh oh we are making basic creeps at ${currentTimeString()} in ${spawner.room.name}`, 120);
+    // console.log('Sending Email!');
     spawner.memory.saving = false;
     spawnType(spawner, creepTypesForThisRoom.basic);
   }
