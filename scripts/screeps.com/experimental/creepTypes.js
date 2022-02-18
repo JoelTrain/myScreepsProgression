@@ -13,6 +13,8 @@ const { creepTypeUpgrader } = require('./creepTypeUpgrader');
 const { creepTypeClaimer } = require('./creepTypeClaimer');
 const { creepTypeManual } = require('./creepTypeManual');
 
+// @TODO determine body size dynamically from energy capacity max based on limb proportions
+
 const creepTypesSmall = {
   basic: creepTypeBasic,
   defender: creepTypeDefender,
@@ -28,6 +30,8 @@ const creepTypesSmall = {
   claimer: creepTypeClaimer.small,
   manual: creepTypeManual,
 };
+
+// Are all of these bodies under a certain cost?
 
 const creepTypes = {
   basic: creepTypeBasic,

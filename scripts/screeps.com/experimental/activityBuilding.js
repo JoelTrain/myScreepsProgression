@@ -37,6 +37,7 @@ function activityBuilding(creep) {
     }
   }
   if (!targets.length) {
+    console.log(creep.name, "no build targets, going repair");
     changeActivity(creep, 'repair');
     return;
   }
@@ -49,7 +50,8 @@ function activityBuilding(creep) {
     moveIgnore(creep, target, { maxRooms: 1 });
   else if (buildResult !== OK) {
     clearTarget(creep);
-    changeActivity(creep, 'repair');
+    console.log(creep.name, `failed build for ${buildResult}, cleared target`);
+    //changeActivity(creep, 'repair');
   }
 }
 

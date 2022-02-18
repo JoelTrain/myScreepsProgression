@@ -175,7 +175,7 @@ function runSpawn(spawner) {
     if (!typeToBuild)
       continue;
     const costOfBody = bodyCost(typeToBuild.body);
-    if (costOfBody > roomMax && countsForThisRoom['basic'] < 10)
+    if (costOfBody > roomMax && countsForThisRoom['basic'] < 5)
       spawnType(spawner, creepTypesForThisRoom.basic);
     if (costOfBody > currentEnergy) {
       spawner.memory.saving = true;

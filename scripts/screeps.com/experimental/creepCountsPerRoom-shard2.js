@@ -1,6 +1,6 @@
 const defaultCounts = {
   defender: 0,
-  harvester: 2,
+  harvester: 0,
   heavyHarvester: 2,
   carrier: 3,
   attacker: 0,
@@ -16,6 +16,7 @@ const creepCountsPerRoom = {
   E5S31: defaultCounts,
   E9S32: defaultCounts,
   E12S42: defaultCounts,
+  undefined: defaultCounts,
 };
 
 module.exports = { creepCountsPerRoom };
