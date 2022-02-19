@@ -95,11 +95,13 @@ global.countCreepsOfType = function (type) {
 };
 
 global.logCreepCounts = function () {
-  updateCurrentCreepCounts();
+  // updateCurrentCreepCounts();
   console.log('Num creeps', Object.keys(Game.creeps).length);
-  for (const type of Object.values(creepTypes)) {
-    console.log(type.memory.role, `${type.currentCount}/${type.maxCount}`);
+  
+  for (const room of Object.values(Game.rooms)) {
+    logCreepCountsForRoom(room);
   }
+  return "Manual call complete.";
 };
 
 global.logCreepCountsForRoom = function (room) {
@@ -113,7 +115,7 @@ global.logCreepCountsForRoom = function (room) {
     countsForThisRoom.total++;
   }
 
-  const creepMaxCountsForRoom = creepCountsPerRoom[room.name];
+  const creepMaxCountsForRoom = creepCountsPerRoom(room.name);
 
   let output = `Room: ${room.name} Num creeps: ${countsForThisRoom.total}\n`;
   for (const role of Object.keys(countsForThisRoom)) {

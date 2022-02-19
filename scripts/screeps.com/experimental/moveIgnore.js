@@ -1,10 +1,46 @@
 //const profiler = require('screeps-profiler');
 
-function creepOnEdge(creep) {
-  const { x, y } = creep.pos;
+function posOnEdge(pos){
+  const { x, y } = pos;
 
   return x === 0 || x === 49 || y === 0 || y === 49;
 }
+
+function creepOnEdge(creep) {
+  return posOnEdge(creep.pos)
+}
+
+function getMoveDir(creep){
+  const { x, y } = creep.pos;
+
+  if(x == 0)
+    return RIGHT;
+  if(x == 49)
+    return LEFT;
+  if(y == 0)
+    return BOTTOM;
+  if(y == 49)
+    return TOP;
+
+  return TOP_LEFT;
+}
+
+function edgeCost(roomName, costMatrix) {
+  const costs = costMatrix.clone();
+  for(let i = 0; i < 50; i++){
+    costs.set(i, 0, 10);
+    costs.set(i, 1, 5);
+    costs.set(i, 48, 5);
+    costs.set(i, 49, 10);
+    costs.set(0, i, 10);
+    costs.set(1, i, 5);
+    costs.set(48, i, 5);
+    costs.set(49, i, 10);
+  }
+
+  return costs;
+}
+
 
 function moveIgnore(creep, target, opts) {
   if (creep.spawning)
@@ -32,6 +68,8 @@ function moveIgnore(creep, target, opts) {
     opts.ignoreCreeps = true;
   if (opts.reusePath === undefined)
     opts.reusePath = 20;
+  if (opts.costCallback === undefined)
+    opts.costCallback = edgeCost;
 
   const originalMaxRooms = opts.maxRooms;
   if (opts.maxRooms === undefined)
@@ -39,8 +77,9 @@ function moveIgnore(creep, target, opts) {
 
   if (creepOnEdge(creep)) {
     delete creep.memory._move;
-    //console.log(creep.name, 'on edge', creep.room.name);
-    creep.moveTo(25, 25);
+    console.log(creep.name, 'on edge', creep.room.name);
+    creep.move(getMoveDir(creep));
+    // creep.moveTo(25, 25, { costCallback: edgeCost });
     return;
   }
 

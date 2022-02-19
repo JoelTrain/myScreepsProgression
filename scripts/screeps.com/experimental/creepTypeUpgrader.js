@@ -10,7 +10,7 @@ const small = {
 };
 
 const medium = {
-  body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE,],
+  body: [WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, MOVE,],
   memory: {
     role: 'upgrader',
     activity: 'withdraw',

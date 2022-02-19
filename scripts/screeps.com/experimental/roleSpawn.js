@@ -41,11 +41,7 @@ function runSpawn(spawner) {
   if (currentEnergy < 200)
     return;
 
-  let creepQuotasForRoom;
-  if (creepCountsPerRoom[spawner.room.name])
-    creepQuotasForRoom = { ...creepCountsPerRoom[spawner.room.name] };
-  else
-    creepQuotasForRoom = { ...creepCountsPerRoom.default };
+  const creepQuotasForRoom = { ...creepCountsPerRoom(spawner.room.name) };
 
   const numSources = spawner.room.find(FIND_SOURCES).length;
   const extractors = spawner.room.find(FIND_STRUCTURES, {
@@ -107,7 +103,7 @@ function runSpawn(spawner) {
 
     let targets = [];
     targets.push(...room.find(FIND_HOSTILE_CREEPS));
-    targets.push(...room.find(FIND_HOSTILE_STRUCTURES));
+    targets.push(...room.find(FIND_HOSTILE_STRUCTURES, { filter: (object) => object.structureType !== STRUCTURE_CONTROLLER }));
 
 
     if (targets.length > 0 && room.controller && Game.map.getRoomLinearDistance(room.controller.pos.roomName, spawner.room.name, true) < 4) {
@@ -129,7 +125,7 @@ function runSpawn(spawner) {
 
     if (creepTypesForThisRoom.attacker && attackerCount < 8) {
       creepQuotasForRoom.attacker = 2;
-      creepTypesForThisRoom.attacker.memory.rallyPoint = undefined;
+      // creepTypesForThisRoom.attacker.memory.rallyPoint = undefined;
       creepTypesForThisRoom.attacker.memory.targetPos = targetPos;
       console.log('die');
     }
@@ -175,8 +171,14 @@ function runSpawn(spawner) {
     if (!typeToBuild)
       continue;
     const costOfBody = bodyCost(typeToBuild.body);
-    if (costOfBody > roomMax && countsForThisRoom['basic'] < 5)
-      spawnType(spawner, creepTypesForThisRoom.basic);
+    if (costOfBody > roomMax) {
+      console.log(`Trying to save for ${typeToBuild.memory.role}, but bodyCost: ${costOfBody} is more than roomMax: ${roomMax} in ${spawner.room.name}.`);
+      if(countsForThisRoom['basic'] < 5) {
+        spawnType(spawner, creepTypesForThisRoom.basic);
+        return;
+      }
+      continue;
+    }
     if (costOfBody > currentEnergy) {
       spawner.memory.saving = true;
       break;

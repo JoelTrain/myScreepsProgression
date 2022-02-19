@@ -34,6 +34,9 @@ function activityTransferring(creep) {
         creep.memory.targetPos = creep.memory.dropoffPos;
         changeActivity(creep, 'move to room');
       }
+      else {
+        changeActivity(creep, 'deposit');
+      }
       return;
     }
     return;

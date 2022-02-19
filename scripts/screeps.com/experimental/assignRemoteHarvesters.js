@@ -18,8 +18,13 @@ const remoteHarvesterType = {
   },
 };
 
+function generateRemoteCarrierBody(roomMax) {
+  const partsCount = roomMax / 50;
+  return new Array(partsCount).fill(MOVE, 0, partsCount / 2).fill(CARRY, partsCount / 2);
+}
+
 const remoteCarrierType = {
-  body: new Array(50).fill(MOVE, 0, 25).fill(CARRY, 25),
+  body: generateRemoteCarrierBody(2500),
   memory: {
     role: 'remoteCarrier',
     activity: 'return to pickup',
@@ -107,19 +112,29 @@ function spawnRemoteHarvesterInRoomForPos(room, pos) {
 
 function spawnRemoteCarrierInRoomForPos(room, pos) {
   // should be spawning next tick and needs to be assigned
-
+  
+  const roomMax = room.energyCapacityAvailable;
   const type = { ...remoteCarrierType };
   type.memory = { ...remoteCarrierType.memory };
   type.memory.targetPos = pos;
   type.memory.pickupPos = pos;
   type.memory.dropoffPos = room.controller.pos;
+  let cost = bodyCost(type.body);
+
+  if(cost > roomMax){
+    type.body = generateRemoteCarrierBody(roomMax);
+    cost = bodyCost(type.body);
+  }
 
   const spawns = room.find(FIND_MY_SPAWNS);
   for (const spawner of spawns) {
-    if (!spawner.spawning && room.energyAvailable >= bodyCost(type.body)) {
-      console.log(`trying to spawn remote carrier for ${pos.roomName}, ${pos.x},${pos.y}`);
-      spawnType(spawner, type);
-      return true;
+    if (!spawner.spawning){
+      
+      if(room.energyAvailable >= cost) {
+        console.log(`trying to spawn remote carrier for ${pos.roomName}, ${pos.x},${pos.y}`);
+        spawnType(spawner, type);
+        return true;
+      }
     }
   }
 

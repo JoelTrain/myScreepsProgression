@@ -34,17 +34,28 @@ function activityHarvestInPlace(creep) {
     }
   }
 
-  const containers = creep.room.find(FIND_STRUCTURES, {
-    filter: object => object.structureType === STRUCTURE_CONTAINER
-      && object.pos.lookFor(LOOK_CREEPS).length === 0
-      && object.store.getFreeCapacity() > 200
-      && (object.pos.findInRange(FIND_SOURCES_ACTIVE, 1).length
-        || object.pos.findInRange(FIND_DEPOSITS, 1).length
-        || object.pos.findInRange(FIND_MINERALS, 1, { filter: min => min.mineralAmount > 0 && min.pos.lookFor(LOOK_STRUCTURES).length }))
-  });
+  const containers = creep.room.find(FIND_STRUCTURES, { filter: object => object.structureType === STRUCTURE_CONTAINER });
+  console.log("total containers", containers.length);
 
-  if (containers.length) {
-    moveIgnore(creep, containers[0]);
+  const containersWithoutCreepsOnTop = [];
+  for(let container of containers ) {
+    if(container.pos.lookFor(LOOK_CREEPS).length === 0)
+      containersWithoutCreepsOnTop.push(container);
+  }
+  console.log("creepless containers", containersWithoutCreepsOnTop.length);
+
+  const freeContainersByActiveSources = [];
+  for(let container of containersWithoutCreepsOnTop ) {
+    if(container.pos.findInRange(FIND_SOURCES_ACTIVE, 2).length > 0)
+    freeContainersByActiveSources.push(container);
+  }
+  console.log("creepless source adjacent containers", freeContainersByActiveSources.length);
+      // && object.store.getFreeCapacity() > 0
+        // || object.pos.findInRange(FIND_DEPOSITS, 1).length
+        // || object.pos.findInRange(FIND_MINERALS, 1, { filter: min => min.mineralAmount > 0 && min.pos.lookFor(LOOK_STRUCTURES).length }))});
+
+  if (freeContainersByActiveSources.length) {
+    moveIgnore(creep, freeContainersByActiveSources[0]);
     return;
   }
 

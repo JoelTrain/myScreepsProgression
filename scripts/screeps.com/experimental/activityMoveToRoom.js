@@ -2,6 +2,16 @@ const { moveIgnore } = require('./moveIgnore');
 const { changeActivity } = require('./changeActivity');
 const { isAlly } = require('./isAlly');
 
+function posOnEdge(pos){
+  const { x, y } = pos;
+
+  return x === 0 || x === 49 || y === 0 || y === 49;
+}
+
+function creepOnEdge(creep) {
+  return posOnEdge(creep.pos)
+}
+
 function activityMoveToRoom(creep) {
   if (creep.getActiveBodyparts(HEAL)) {
     if (creep.hits < creep.hitsMax)
@@ -24,10 +34,20 @@ function activityMoveToRoom(creep) {
   let rallyTarget = creep.memory.targetPos;
   if (rallyTarget) {
     const { x, y, roomName } = rallyTarget;
-    rallyTarget = new RoomPosition(x, y, roomName);
-    if (creep.pos.roomName === roomName) {
-      //creep.move(25, 25);
-      //console.log(creep.name, 'has arrived at destination room', creep.room.name);
+    let safeX = x;
+    let safeY = y;
+    if(safeX === 0)
+      safeX = 1;
+    if(safeX === 49)
+      safeX = 48;
+    if(safeY === 0)
+      safeY = 1;
+    if(safeY === 49)
+      safeY = 48;
+    rallyTarget = new RoomPosition(safeX, safeY, roomName);
+    if (creep.pos.roomName === roomName && !creepOnEdge(creep)) {
+      // creep.move(25, 25);
+      console.log(creep.name, 'has arrived at destination room', creep.room.name);
       if (creep.memory.whenArrive)
         changeActivity(creep, creep.memory.whenArrive);
       else

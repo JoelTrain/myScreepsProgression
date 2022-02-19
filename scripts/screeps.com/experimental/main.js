@@ -14,11 +14,10 @@ const { assignRemoteHarvesters } = require('./assignRemoteHarvesters');
 function freeOldMem() {
   if (Object.keys(Game.creeps).length < 5)
     Game.notify('low creeps!', 120);
-  for (var i in Memory.creeps) {
+  for (let i in Memory.creeps) {
     const creep = Game.creeps[i];
     if (!creep) {
       delete Memory.creeps[i];
-      continue;
     }
   }
 }
@@ -185,8 +184,8 @@ function main() {
     // Game.notify(errorMessage);
     throw new Error(errorMessage);
   }
-  if (Game.time % 10 === 0)
-    console.log(Game.time, `${Game.cpu.getUsed()}/${Game.cpu.bucket}/${Game.cpu.tickLimit}`);
+  if (Game.time % 1000 === 0)
+    console.log(`tick cpuUsed/cpuBucket/cpuTickLimit`, Game.time, `${Game.cpu.getUsed()}/${Game.cpu.bucket}/${Game.cpu.tickLimit}`);
 
 }
 
