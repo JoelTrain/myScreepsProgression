@@ -3,8 +3,6 @@
   "version": "1.0.0",
   "description": "Playing the game screeps and each commit is further progress along.",
   "main": "main.js",
-  "dependencies": {},
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,5 +15,14 @@
   "bugs": {
     "url": "https://github.com/JoelTrain/myScreepsProgression/issues"
   },
-  "homepage": "https://github.com/JoelTrain/myScreepsProgression#readme"
+  "homepage": "https://github.com/JoelTrain/myScreepsProgression#readme",
+  "dependencies": {
+    "@types/lodash": "^4.14.178",
+    "@types/screeps": "^3.2.4",
+    "grunt-screeps": "^1.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0",
+    "grunt": "^1.4.1"
+  }
 }
