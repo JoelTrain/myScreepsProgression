@@ -37,7 +37,7 @@ function activityBuilding(creep) {
     }
   }
   if (!targets.length) {
-    console.log(creep.name, "no build targets, going repair");
+    console.log(creep.name, 'no build targets, going repair');
     changeActivity(creep, 'repair');
     return;
   }

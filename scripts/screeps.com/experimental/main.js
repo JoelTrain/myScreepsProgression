@@ -185,7 +185,7 @@ function main() {
     throw new Error(errorMessage);
   }
   if (Game.time % 1000 === 0)
-    console.log(`tick cpuUsed/cpuBucket/cpuTickLimit`, Game.time, `${Game.cpu.getUsed()}/${Game.cpu.bucket}/${Game.cpu.tickLimit}`);
+    console.log('tick cpuUsed/cpuBucket/cpuTickLimit', Game.time, `${Game.cpu.getUsed()}/${Game.cpu.bucket}/${Game.cpu.tickLimit}`);
 
 }
 

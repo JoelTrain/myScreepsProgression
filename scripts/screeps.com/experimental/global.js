@@ -101,7 +101,7 @@ global.logCreepCounts = function () {
   for (const room of Object.values(Game.rooms)) {
     logCreepCountsForRoom(room);
   }
-  return "Manual call complete.";
+  return 'Manual call complete.';
 };
 
 global.logCreepCountsForRoom = function (room) {
