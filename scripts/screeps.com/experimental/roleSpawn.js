@@ -3,6 +3,8 @@ const { creepCountsPerRoom } = require('./creepCountsPerRoom');
 const { spawnType } = require('./spawnType');
 const { bodyCost } = require('./bodyCost');
 
+// This is the role spawn file.
+
 const attackingCreepCount = _.reduce(Game.creeps, (accum, creep) => {
   if (creep.memory.rallyPoint === 'AttackMove')
     return accum + 1;
