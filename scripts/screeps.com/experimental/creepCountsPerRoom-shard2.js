@@ -23,6 +23,6 @@ function creepCountsPerRoom(roomName) {
   if(counts === undefined){
     return defaultCounts;
   }
-};
+}
 
 module.exports = { creepCountsPerRoom };

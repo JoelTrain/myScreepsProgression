@@ -7,7 +7,7 @@ function posOnEdge(pos){
 }
 
 function creepOnEdge(creep) {
-  return posOnEdge(creep.pos)
+  return posOnEdge(creep.pos);
 }
 
 function getMoveDir(creep){

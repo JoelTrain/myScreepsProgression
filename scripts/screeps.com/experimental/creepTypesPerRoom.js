@@ -9,13 +9,6 @@ const creepTypeSizes = {
   undefined: creepTypes,
 };
 
-const roomToTypes = {
-  E5S31: 'large',
-  E9S32: 'max',
-  E12S42: 'medium',
-};
-
-// @TODO add a function the determines size from room energy max capacity
 
 function creepTypesPerRoom(roomName) {
 
@@ -33,8 +26,6 @@ function creepTypesPerRoom(roomName) {
   else if(energyMax <= 2000)
     roomSize = 'large';
 
-  // old behavior
-  // return creepTypeSizes[roomToTypes[roomName]];
   return creepTypeSizes[roomSize];
 }
 
