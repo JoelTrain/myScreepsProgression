@@ -12,7 +12,7 @@ const small = {
 };
 
 const medium = {
-  body: workCarryMoveBody,
+  body: workCarryMoveBody(16),
   memory: {
     role: 'harvester',
     activity: 'harvest',
@@ -23,7 +23,7 @@ const medium = {
 };
 
 const large = {
-  body: workCarryMoveBody,
+  body: workCarryMoveBody(16),
   memory: {
     role: 'harvester',
     activity: 'harvest',

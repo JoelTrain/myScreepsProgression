@@ -1,7 +1,7 @@
 const { workCarryMoveBody } = require('./workCarryMoveBody');
 
 const creepTypeRemoteBuilder = {
-  body: workCarryMoveBody,
+  body: workCarryMoveBody(16),
   memory: {
     role: 'remoteBuilder',
     activity: 'move to rally point',

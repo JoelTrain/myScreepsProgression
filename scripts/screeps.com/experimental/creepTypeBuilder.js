@@ -1,7 +1,7 @@
 const { workCarryMoveBody } = require('./workCarryMoveBody');
 
 const creepTypeBuilder = {
-  body: workCarryMoveBody,
+  body: workCarryMoveBody(16),
   memory: {
     role: 'builder',
     activity: 'withdraw',
