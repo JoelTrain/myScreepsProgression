@@ -34,7 +34,7 @@ function activityPickup(creep) {
   }));
 
   targets.push(...creep.room.find(FIND_STRUCTURES, {
-    filter: object => object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= creep.store.getFreeCapacity()
+    filter: object => object.structureType === STRUCTURE_CONTAINER && object.store.getUsedCapacity() >= creep.store.getFreeCapacity() && !object.pos.findInRange(object.room.controller, 2)
   }));
 
   targets.push(...creep.room.find(FIND_STRUCTURES, {
@@ -66,7 +66,7 @@ function activityPickup(creep) {
   // picking up from storage might cause endless cycle of pickup and transfer
   if (!targets.length)
     targets.push(...creep.room.find(FIND_STRUCTURES, {
-      filter: object => object.structureType === STRUCTURE_STORAGE && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity()
+      filter: object => object.structureType === STRUCTURE_STORAGE && object.store.getUsedCapacity(RESOURCE_ENERGY) >= creep.store.getFreeCapacity() && !object.pos.findInRange(object.room.controller, 2)
     }));
 
   if (!targets.length)
