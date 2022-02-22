@@ -2,6 +2,7 @@
 "use strict";
 var https = require('https');
 var fs = require('fs');
+const { version } = require('os');
 var uglify = false; // Set to true to uglify files before upload. ES6 is *not* supported-- https://github.com/mishoo/UglifyJS2/issues/448
 
 // Watch git
@@ -42,7 +43,7 @@ var modules = {};
 function refreshLocalBranch() {
 	modules = {};
 	fs.readdirSync('./scripts/screeps.com/experimental/').forEach(function(file) {
-		if (file !== 'sync.js' && /\.js$/.test(file)) {
+		if (file !== 'sync.js' && file !== version.js && /\.js$/.test(file)) {
 			modules[file.replace( /\.js$/, '')] = crush(branch, file, fs.readFileSync(`./scripts/screeps.com/experimental/${file}`, 'utf8'));
 		}
 	});
@@ -53,7 +54,7 @@ schedulePush();
 // Watch for local changes
 var pushTimeout;
 fs.watch('./scripts/screeps.com/experimental/', function(ev, file) {
-	if (file !== 'sync.js' && /\.js$/.test(file)) {
+	if (file !== 'sync.js' && file !== version.js && /\.js$/.test(file)) {
 		try {
 			modules[file.replace(/\.js$/, '')] = crush(branch, file, fs.readFileSync(`./scripts/screeps.com/experimental/${file}`, 'utf8'));
 		} catch (err) {
@@ -65,6 +66,9 @@ fs.watch('./scripts/screeps.com/experimental/', function(ev, file) {
 
 // Push changes to screeps.com
 function schedulePush() {
+	const timeString = new Date().toLocaleString();
+	modules['version'] = `global.SCRIPT_VERSION = '${timeString}';`;
+
 	if (pushTimeout) {
 		clearTimeout(pushTimeout);
 	}
@@ -82,7 +86,10 @@ function schedulePush() {
 		});
 		req.end(JSON.stringify({ branch: branch, modules: modules }));
 		req.on('response', function(res) {
-			console.log('HTTP Status '+ res.statusCode);
+			// console.log('HTTP Status '+ res.statusCode);
+			if(res.statusCode === 200) {
+				console.log(`Committed to Screeps account "${process.env.screepsEmail}" branch "${branch}" at ${timeString}.`);
+			}
 		});
 	}, 50);
 }
