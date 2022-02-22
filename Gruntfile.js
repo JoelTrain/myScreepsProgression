@@ -6,7 +6,7 @@ module.exports = function(grunt) {
         screeps: {
             options: {
                 email: `${process.env.screepsEmail}`,
-                token: `${process.env.screepsPassword}`,
+                token: `${process.env.screepsToken}`,
                 branch: 'experimental',
                 // server: 'season',
                 ptr: false,
