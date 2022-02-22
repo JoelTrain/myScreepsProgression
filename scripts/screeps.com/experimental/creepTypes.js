@@ -15,8 +15,23 @@ const { creepTypeManual } = require('./creepTypeManual');
 
 // @TODO determine body size dynamically from energy capacity max based on limb proportions
 
-
 // tiny room creep types need to be less than or equal 550 (Room controller level 2)
+const creepTypesTiny = {
+  basic: creepTypeBasic,
+  defender: creepTypeDefender,
+  harvester: creepTypeHarvester.small,
+  heavyHarvester: creepTypeHeavyHarvester.small,
+  carrier: creepTypeCarrier,
+  tank: creepTypeTank,
+  attacker: creepTypeAttacker.small,
+  builder: creepTypeBuilder,
+  repairer: creepTypeRepairer,
+  remoteBuilder: creepTypeRemoteBuilder,
+  upgrader: creepTypeUpgrader.small,
+  claimer: creepTypeClaimer.small,
+  manual: creepTypeManual,
+};
+
 // small room creep types need to be less than or equal 800 (Room controller level 3)
 const creepTypesSmall = {
   basic: creepTypeBasic,
@@ -85,4 +100,4 @@ const creepTypesMax = {
   manual: creepTypeManual,
 };
 
-module.exports = { creepTypesSmall, creepTypes, creepTypesLarge, creepTypesMax };
+module.exports = { creepTypesTiny, creepTypesSmall, creepTypes, creepTypesLarge, creepTypesMax };
