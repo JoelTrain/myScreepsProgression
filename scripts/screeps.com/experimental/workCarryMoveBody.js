@@ -7,7 +7,11 @@ function workCarryMoveBody(totalLimbCount) {
   const carryLimbCount = Math.floor(totalLimbCount / 4);
   const moveLimbCount = Math.floor(totalLimbCount / 2);
 
-  return new Array(totalLimbCount).fill(WORK, 0, workLimbCount).fill(CARRY, workLimbCount, carryLimbCount).fill(MOVE, carryLimbCount, moveLimbCount);
+  const a = workLimbCount;
+  const b = a + carryLimbCount;
+  const c = a + b + moveLimbCount;
+
+  return new Array(totalLimbCount).fill(WORK, 0, a).fill(CARRY, a, b).fill(MOVE, b, c);
 }
 
 module.exports = { workCarryMoveBody };
