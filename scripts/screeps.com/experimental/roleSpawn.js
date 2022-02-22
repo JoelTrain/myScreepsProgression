@@ -3,8 +3,6 @@ const { creepCountsPerRoom } = require('./creepCountsPerRoom');
 const { spawnType } = require('./spawnType');
 const { bodyCost } = require('./bodyCost');
 
-// This is the role spawn file.
-
 const attackingCreepCount = _.reduce(Game.creeps, (accum, creep) => {
   if (creep.memory.rallyPoint === 'AttackMove')
     return accum + 1;
@@ -175,6 +173,8 @@ function runSpawn(spawner) {
     const costOfBody = bodyCost(typeToBuild.body);
     if (costOfBody > roomMax) {
       console.log(`Trying to save for ${typeToBuild.memory.role}, but bodyCost: ${costOfBody} is more than roomMax: ${roomMax} in ${spawner.room.name}.`);
+      console.log(typeToBuild);
+      console.log(typeToBuild.body);
       if(countsForThisRoom['basic'] < 5) {
         spawnType(spawner, creepTypesForThisRoom.basic);
         return;
