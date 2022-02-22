@@ -30,7 +30,7 @@ function activityTransferring(creep) {
     if (creep.getActiveBodyparts(WORK) > 0)
       changeActivityToRandomPickFromList(creep, ['repair', 'build', 'build', 'upgrade']);
     else {
-      if (!moveOffOfStructure(creep) && creep.memory.dropoffPos) {
+      if (!moveOffOfStructure(creep) && creep.memory.dropoffPos && creep.memory.dropoffPos.roomName !== creep.room.name) {
         creep.memory.targetPos = creep.memory.dropoffPos;
         changeActivity(creep, 'move to room');
       }
