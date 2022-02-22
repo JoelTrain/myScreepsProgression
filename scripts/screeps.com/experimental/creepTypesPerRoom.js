@@ -23,8 +23,8 @@ function creepTypesPerRoom(roomName) {
     roomSize = 'small';
   else if(energyMax <= 1300)
     roomSize = 'medium';
-  else if(energyMax <= 2000)
-    roomSize = 'large';
+  else if(energyMax <= 1800)
+    roomSize = 'medium';
 
   return creepTypeSizes[roomSize];
 }
