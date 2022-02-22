@@ -5,6 +5,12 @@
 
 require('./global');
 
+require('version');
+if(!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION != SCRIPT_VERSION) {
+    Memory.SCRIPT_VERSION = SCRIPT_VERSION;
+    console.log('New code uplodated');
+}
+
 const { runCommon } = require('./roleCommon');
 const { runCarrier } = require('./roleCarrier');
 const { runSpawn } = require('./roleSpawn');
