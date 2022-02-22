@@ -124,7 +124,9 @@ global.logCreepCountsForRoom = function (room) {
 
     const currentCount = countsForThisRoom[role];
     let maxCount = 0;
-    if (creepMaxCountsForRoom[role])
+    if(creepMaxCountsForRoom === undefined)
+      console.log('max counts undefined for', room.name);
+    if (creepMaxCountsForRoom && creepMaxCountsForRoom[role])
       maxCount = creepMaxCountsForRoom[role];
     if (currentCount > 0)
       output += `${role} ${currentCount}/${maxCount}\n`;
