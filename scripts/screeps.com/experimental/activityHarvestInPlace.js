@@ -56,7 +56,7 @@ function activityHarvestInPlace(creep) {
     containersWithSpaceByActiveSources.push(container);
   }
 
-  console.log(creep.room.name, ':total/creepless/creepless-source-adj/csa-space', containers.length, containersWithoutCreepsOnTop.length, freeContainersByActiveSources.length, containersWithSpaceByActiveSources.length);
+  // console.log(creep.room.name, ':total/creepless/creepless-source-adj/csa-space', containers.length, containersWithoutCreepsOnTop.length, freeContainersByActiveSources.length, containersWithSpaceByActiveSources.length);
       // && object.store.getFreeCapacity() > 0
         // || object.pos.findInRange(FIND_DEPOSITS, 1).length
         // || object.pos.findInRange(FIND_MINERALS, 1, { filter: min => min.mineralAmount > 0 && min.pos.lookFor(LOOK_STRUCTURES).length }))});
